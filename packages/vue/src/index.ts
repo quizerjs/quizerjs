@@ -6,6 +6,7 @@
 
 export { default as QuizComponent } from './QuizComponent.vue';
 export { default as QuizBlock } from './QuizBlock.vue';
+export { default as QuizEditor } from './QuizEditor.vue';
 export { useQuiz } from './composables/useQuiz';
 export { useQuizValidation } from './composables/useQuizValidation';
 export type * from './types';

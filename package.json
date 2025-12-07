@@ -18,7 +18,13 @@
     "clean": "pnpm -r clean",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "demo:dev": "pnpm --filter @quizerjs/demo dev",
+    "demo:build": "pnpm --filter @quizerjs/demo build",
+    "demo:preview": "pnpm --filter @quizerjs/demo preview",
+    "demo-vue:dev": "pnpm --filter @quizerjs/demo-vue dev",
+    "demo-vue:build": "pnpm --filter @quizerjs/demo-vue build",
+    "demo-vue:preview": "pnpm --filter @quizerjs/demo-vue preview"
   },
   "keywords": [
     "quiz",

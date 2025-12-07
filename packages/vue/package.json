@@ -9,7 +9,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "source": "./src/index.ts"
     }
   },
   "files": [
@@ -25,7 +26,8 @@
   },
   "dependencies": {
     "@quizerjs/dsl": "workspace:*",
-    "@quizerjs/core": "workspace:*"
+    "@quizerjs/core": "workspace:*",
+    "@quizerjs/quizerjs": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

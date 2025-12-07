@@ -88,6 +88,8 @@ export default defineConfig({
             { text: 'RFC 0002: 架构设计', link: '/rfc/0002-architecture-design' },
             { text: 'RFC 0003: React 集成设计', link: '/rfc/0003-react-integration' },
             { text: 'RFC 0004: 演示站点架构设计', link: '/rfc/0004-demo-site-architecture' },
+            { text: 'RFC 0005: 编辑器核心组件设计', link: '/rfc/0005-editor-core' },
+            { text: 'RFC 0006: 播放器核心组件设计', link: '/rfc/0006-player-core' },
           ],
         },
       ],

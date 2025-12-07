@@ -52,7 +52,3 @@ export interface UseQuizReturn {
   /** 检查答案是否正确 */
   isAnswerCorrect: (question: Question, answer: any) => boolean;
 }
-
-import type { Ref } from 'vue';
-
-// 修复导入顺序
