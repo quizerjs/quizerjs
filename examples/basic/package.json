@@ -1,0 +1,22 @@
+{
+  "name": "quizerjs-basic-example",
+  "version": "0.0.1",
+  "description": "quizerjs 基础使用示例",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@quizerjs/core": "workspace:*",
+    "@quizerjs/editorjs-tool": "workspace:*",
+    "@editorjs/editorjs": "^2.28.0",
+    "@wsxjs/wsx-core": "^0.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
+  }
+}
