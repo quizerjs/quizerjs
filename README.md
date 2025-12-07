@@ -148,6 +148,12 @@ interface QuizToolConfig {
 }
 ```
 
+## 文档
+
+- [DSL 规范文档](./docs/DSL.md) - Quiz DSL 完整规范
+- [DSL API 参考](./docs/DSL-API.md) - API 详细文档
+- [RFC 文档](./docs/rfc/) - 技术规范和架构设计
+
 ## 开发
 
 ```bash

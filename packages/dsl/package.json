@@ -1,19 +1,23 @@
 {
-  "name": "@quizerjs/editorjs-tool",
+  "name": "@quizerjs/dsl",
   "version": "0.0.1",
-  "description": "quizerjs 的 Editor.js 工具插件",
+  "description": "quizerjs Quiz DSL 定义和验证库",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
+    },
+    "./schema": {
+      "default": "./schema.json"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "schema.json"
   ],
   "scripts": {
     "build": "tsup",
@@ -21,19 +25,18 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist"
   },
-  "dependencies": {
-    "@quizerjs/core": "workspace:*",
-    "@editorjs/editorjs": "^2.28.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.10.0",
+    "@vitest/coverage-v8": "^1.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "@editorjs/editorjs": "^2.28.0"
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.0"
   },
   "license": "MIT",
   "publishConfig": {
@@ -42,6 +45,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wsxjs/quizerjs.git",
-    "directory": "packages/editorjs-tool"
+    "directory": "packages/dsl"
   }
 }

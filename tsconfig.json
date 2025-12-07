@@ -3,7 +3,7 @@
     "target": "ES2020",
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "jsx": "react",
+    "jsx": "wsx",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
     "declaration": true,
@@ -22,4 +22,3 @@
   },
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }
-

@@ -1,15 +1,15 @@
 {
-  "name": "@quizerjs/editorjs-tool",
+  "name": "@quizerjs/vue",
   "version": "0.0.1",
-  "description": "quizerjs 的 Editor.js 工具插件",
+  "description": "quizerjs Vue 3 集成包",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "files": [
@@ -18,22 +18,25 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.vue",
+    "lint:fix": "eslint src --ext .ts,.vue --fix",
+    "typecheck": "vue-tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@quizerjs/core": "workspace:*",
-    "@editorjs/editorjs": "^2.28.0"
+    "@quizerjs/dsl": "workspace:*",
+    "@quizerjs/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
+    "@vitejs/plugin-vue": "^5.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "@editorjs/editorjs": "^2.28.0"
+    "typescript": "^5.3.3",
+    "vue": "^3.4.0",
+    "vue-tsc": "^1.8.0"
   },
   "license": "MIT",
   "publishConfig": {
@@ -42,6 +45,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wsxjs/quizerjs.git",
-    "directory": "packages/editorjs-tool"
+    "directory": "packages/vue"
   }
 }

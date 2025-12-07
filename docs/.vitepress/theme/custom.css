@@ -1,0 +1,28 @@
+/**
+ * 自定义样式
+ */
+
+:root {
+  --vp-c-brand: #3eaf7c;
+  --vp-c-brand-light: #4abf8a;
+  --vp-c-brand-lighter: #5dd39e;
+  --vp-c-brand-dark: #2d8f5f;
+  --vp-c-brand-darker: #1f6f47;
+}
+
+/* 代码块样式 */
+.vp-code-group .tabs {
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* 示例代码块 */
+.vp-code-group {
+  margin: 1.5rem 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .VPHome {
+    padding: 2rem 1rem;
+  }
+}

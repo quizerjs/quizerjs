@@ -15,7 +15,10 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "keywords": [
     "quiz",
@@ -29,7 +32,8 @@
   "devDependencies": {
     "@types/node": "^20.10.0",
     "prettier": "^3.1.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitepress": "^1.0.0"
   },
   "engines": {
     "node": ">=16.0.0",

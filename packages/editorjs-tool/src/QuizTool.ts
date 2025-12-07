@@ -214,4 +214,3 @@ export class QuizTool implements BlockTool {
     };
   }
 }
-

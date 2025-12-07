@@ -1,0 +1,48 @@
+# RFC 文档
+
+本目录包含 quizerjs 项目的 RFC（Request for Comments）文档，用于记录技术规范、架构设计和设计决策。
+
+## RFC 列表
+
+### 已发布
+
+- [RFC 0001: Quiz DSL 规范](./0001-quiz-dsl-specification.md) - 定义 Quiz DSL 的数据格式和验证规则
+- [RFC 0002: 架构设计](./0002-architecture-design.md) - 整体架构和包结构设计
+- [RFC 0003: React 集成设计](./0003-react-integration.md) - React 包装器的 API 设计
+- [RFC 0004: 演示站点架构设计](./0004-demo-site-architecture.md) - quizerjs.io 演示站点设计
+
+### 草案中
+
+- RFC 0005: Vue 集成设计（计划中）
+- RFC 0006: 主题系统设计（计划中）
+- RFC 0007: 插件系统设计（计划中）
+
+## RFC 流程
+
+1. **提案**: 创建新的 RFC 文档，状态为"草案"
+2. **讨论**: 在 GitHub Issues 或 Discussions 中讨论
+3. **修订**: 根据反馈修订 RFC
+4. **批准**: 核心团队批准后，状态改为"已批准"
+5. **实施**: 按照 RFC 实施功能
+6. **完成**: 实施完成后，状态改为"已完成"
+
+## RFC 状态
+
+- **草案 (Draft)**: 正在讨论中
+- **已批准 (Approved)**: 已批准，准备实施
+- **实施中 (Implementing)**: 正在实施
+- **已完成 (Completed)**: 实施完成
+- **已废弃 (Deprecated)**: 不再使用
+
+## 贡献指南
+
+1. 创建新的 RFC 文档，编号递增
+2. 使用 Markdown 格式
+3. 包含必要的章节：摘要、动机、设计、实施等
+4. 提交 PR 并等待审查
+
+## 参考
+
+- [Rust RFC Process](https://github.com/rust-lang/rfcs)
+- [React RFC Process](https://github.com/reactjs/rfcs)
+
