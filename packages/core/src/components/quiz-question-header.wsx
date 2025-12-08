@@ -23,7 +23,10 @@ export class QuizQuestionHeader extends LightComponent {
   private editableElement: HTMLElement | null = null;
 
   constructor() {
-    super({ styles });
+    super({
+      styles,
+      styleName: 'quiz-question-header',
+    });
   }
 
   static get observedAttributes() {

@@ -13,13 +13,9 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: {
-        index: 'src/index.ts',
-        editor: 'src/editor/index.ts',
-        player: 'src/player/index.ts',
-      },
+      entry: 'src/index.ts',
       formats: ['es', 'cjs'],
-      fileName: (format, entryName) => `${entryName}/index.${format === 'es' ? 'mjs' : 'js'}`,
+      fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
     },
     rollupOptions: {
       external: [

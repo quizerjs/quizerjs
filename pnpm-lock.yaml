@@ -80,8 +80,8 @@ importers:
         specifier: workspace:*
         version: link:../dsl
       '@wsxjs/wsx-core':
-        specifier: ^0.0.6
-        version: 0.0.6(typescript@5.9.3)
+        specifier: ^0.0.7
+        version: 0.0.7(typescript@5.9.3)
       marked:
         specifier: ^11.0.0
         version: 11.2.0
@@ -147,8 +147,8 @@ importers:
         specifier: workspace:*
         version: link:../dsl
       '@wsxjs/wsx-core':
-        specifier: ^0.0.6
-        version: 0.0.6(typescript@5.9.3)
+        specifier: ^0.0.7
+        version: 0.0.7(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
@@ -1134,8 +1134,8 @@ packages:
     peerDependencies:
       typescript: '>=4.7.0'
 
-  '@wsxjs/wsx-core@0.0.6':
-    resolution: {integrity: sha512-Ef4m0sj5JgkZExo4Zu1GPhFfrC+/Y06EnZh9/miXniwN1ATC46ZmnMni0eGujeBQJMsWmtLOkNdn45XXYpD+og==}
+  '@wsxjs/wsx-core@0.0.7':
+    resolution: {integrity: sha512-iLQDYmldbjcRQ3hhYyHnrVUSyydUVZr3Fmy4apW1ipSIDxQVREiAF00ViTJRetNWYEeLKJgy12vHw2/S4jrpXA==}
     peerDependencies:
       typescript: '>=4.7.0'
 
@@ -2989,7 +2989,7 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@wsxjs/wsx-core@0.0.6(typescript@5.9.3)':
+  '@wsxjs/wsx-core@0.0.7(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 

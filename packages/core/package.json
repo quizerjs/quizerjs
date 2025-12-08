@@ -28,7 +28,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@wsxjs/wsx-core": "^0.0.6",
+    "@wsxjs/wsx-core": "^0.0.7",
     "@quizerjs/dsl": "workspace:*",
     "marked": "^11.0.0",
     "turndown": "^7.1.3"
@@ -44,7 +44,7 @@
     "vitest": "^1.0.0"
   },
   "peerDependencies": {
-    "@wsxjs/wsx-core": "^0.0.6"
+    "@wsxjs/wsx-core": "^0.0.7"
   },
   "license": "MIT",
   "publishConfig": {

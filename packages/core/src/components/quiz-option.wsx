@@ -45,6 +45,7 @@ export class QuizOption extends LightComponent {
   private setReadonly = (value: boolean) => this.readonlyState[1](value);
 
   private textElement: HTMLElement | null = null;
+  private isSetup = false; // 防止重复设置事件监听器
 
   constructor() {
     super({
@@ -63,6 +64,13 @@ export class QuizOption extends LightComponent {
         this.setOptionId(newValue || '');
         break;
       case 'text':
+        // 只在元素不存在或内容不同时更新，避免打断用户输入
+        if (this.textElement && this.textElement.innerHTML !== newValue) {
+          // 检查元素是否正在被编辑（有焦点）
+          if (document.activeElement !== this.textElement) {
+            this.textElement.innerHTML = newValue || '';
+          }
+        }
         this.setTextState(newValue || '');
         break;
       case 'selected':
@@ -76,53 +84,57 @@ export class QuizOption extends LightComponent {
         break;
       case 'readonly':
         this.setReadonly(newValue === 'true');
+        if (this.textElement) {
+          this.isSetup = false;
+          this.setupTextElement();
+        }
         break;
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.setupTextElement();
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // 清理事件监听器
+    if (this.textElement) {
+      this.textElement.removeEventListener('input', this.handleInput);
+      this.textElement.removeEventListener('blur', this.handleBlur);
+      this.textElement.removeEventListener('keydown', this.handleKeyDown);
+    }
+    this.isSetup = false;
   }
 
   private setupTextElement() {
-    if (!this.textElement) return;
+    if (!this.textElement || this.isSetup) return;
 
     const isReadonly = this.readonly();
 
     // 设置 contentEditable
     this.textElement.contentEditable = isReadonly ? 'false' : 'true';
+    this.textElement.setAttribute('contenteditable', isReadonly ? 'false' : 'true');
+    this.textElement.setAttribute('spellcheck', 'true');
 
-    // 设置属性以确保可编辑性
+    // 只在非只读模式下添加事件监听器
     if (!isReadonly) {
-      this.textElement.setAttribute('contenteditable', 'true');
-      this.textElement.setAttribute('spellcheck', 'true');
-      // 监听输入变化
-      this.textElement.addEventListener('input', this.handleInput);
-      this.textElement.addEventListener('blur', this.handleBlur);
-      this.textElement.addEventListener('focus', () => {
-        // 聚焦时确保可以编辑
-        if (this.textElement) {
-          this.textElement.contentEditable = 'true';
-        }
-      });
-    } else {
-      this.textElement.setAttribute('contenteditable', 'false');
+      // 移除旧的监听器（如果存在）
       this.textElement.removeEventListener('input', this.handleInput);
       this.textElement.removeEventListener('blur', this.handleBlur);
+      this.textElement.removeEventListener('keydown', this.handleKeyDown);
+
+      // 添加新的监听器
+      this.textElement.addEventListener('input', this.handleInput);
+      this.textElement.addEventListener('blur', this.handleBlur);
+      this.textElement.addEventListener('keydown', this.handleKeyDown);
     }
+
+    this.isSetup = true;
   }
 
+  private handleKeyDown = (e: KeyboardEvent) => {};
+
   private handleInput = (e: Event) => {
-    const target = e.target as HTMLElement;
-    const html = target.innerHTML;
-    this.setTextState(html);
-    this.dispatchEvent(
-      new CustomEvent('textchange', {
-        detail: { optionId: this.optionId(), text: html },
-        bubbles: true,
-      })
-    );
+    // 不在 input 时触发事件，避免父组件重新渲染导致焦点丢失
+    // 只在 blur 时触发事件和更新状态
+    // 这样可以避免每次输入都导致组件重新渲染
   };
 
   private handleBlur = () => {
@@ -217,11 +229,44 @@ export class QuizOption extends LightComponent {
         <div
           className="quiz-option-text"
           ref={el => {
-            this.textElement = el;
-            this.setupTextElement();
+            if (el && el !== this.textElement) {
+              // 清理旧元素的事件监听器
+              if (this.textElement) {
+                this.textElement.removeEventListener('input', this.handleInput);
+                this.textElement.removeEventListener('blur', this.handleBlur);
+                this.textElement.removeEventListener('keydown', this.handleKeyDown);
+              }
+
+              const wasFocused = document.activeElement === this.textElement;
+              this.textElement = el;
+              this.isSetup = false;
+
+              // 初始化内容（只在元素为空或内容不同时设置）
+              const currentText = this.text();
+              if (!el.innerHTML || (el.innerHTML !== currentText && !wasFocused)) {
+                el.innerHTML = currentText || '';
+              }
+
+              this.setupTextElement();
+
+              // 如果之前有焦点，恢复焦点
+              if (wasFocused && el) {
+                // 使用 setTimeout 确保在下一个事件循环中恢复焦点
+                setTimeout(() => {
+                  if (el && document.activeElement !== el) {
+                    el.focus();
+                    // 将光标移到末尾
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    range.collapse(false);
+                    const selection = window.getSelection();
+                    selection?.removeAllRanges();
+                    selection?.addRange(range);
+                  }
+                }, 0);
+              }
+            }
           }}
-          innerHTML={this.text()}
-          contentEditable={!isReadonly}
         />
         {!isReadonly && (
           <div className="quiz-option-actions">
