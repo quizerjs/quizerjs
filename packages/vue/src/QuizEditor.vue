@@ -6,22 +6,25 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { QuizEditor } from '@quizerjs/quizerjs';
 import type { QuizEditorOptions } from '@quizerjs/quizerjs';
-import type { OutputData } from '@editorjs/editorjs';
+import type { QuizDSL } from '@quizerjs/dsl';
 
 export interface QuizEditorProps {
-  /** 初始数据（可选） */
-  initialData?: OutputData;
+  /** 初始 DSL 数据（可选） */
+  initialDSL?: QuizDSL;
+  /** 只读模式（可选，默认 false） */
+  readOnly?: boolean;
 }
 
 export interface QuizEditorEmits {
   /** 数据变化事件 */
-  (e: 'change', data: OutputData): void;
+  (e: 'change', dsl: QuizDSL): void;
   /** 保存事件 */
-  (e: 'save', data: OutputData): void;
+  (e: 'save', dsl: QuizDSL): void;
 }
 
 const props = withDefaults(defineProps<QuizEditorProps>(), {
-  initialData: undefined,
+  initialDSL: undefined,
+  readOnly: false,
 });
 
 const emit = defineEmits<QuizEditorEmits>();
@@ -35,31 +38,18 @@ onMounted(async () => {
   try {
     const options: QuizEditorOptions = {
       container: editorContainer.value,
+      initialDSL: props.initialDSL,
+      readOnly: props.readOnly,
+      onChange: (dsl) => {
+        emit('change', dsl);
+      },
+      onSave: (dsl) => {
+        emit('save', dsl);
+      },
     };
-
-    if (props.initialData) {
-      options.initialData = props.initialData;
-    }
 
     editor = new QuizEditor(options);
     await editor.init();
-
-    // 定期检查数据变化（Editor.js 没有内置的 onChange 事件）
-    const interval = setInterval(async () => {
-      if (editor) {
-        try {
-          const data = await editor.save();
-          emit('change', data);
-        } catch (error) {
-          // 忽略保存错误（可能编辑器正在初始化）
-        }
-      }
-    }, 1000);
-
-    // 清理定时器
-    onBeforeUnmount(() => {
-      clearInterval(interval);
-    });
   } catch (error) {
     console.error('初始化 QuizEditor 失败:', error);
   }
@@ -72,14 +62,33 @@ onBeforeUnmount(async () => {
   }
 });
 
+watch(
+  () => props.initialDSL,
+  async (newDsl) => {
+    if (editor && newDsl) {
+      await editor.load(newDsl);
+    }
+  },
+  { deep: true }
+);
+
+watch(
+  () => props.readOnly,
+  (newReadOnly) => {
+    if (editor) {
+      editor.getEditorInstance()?.readOnly.toggle(newReadOnly);
+    }
+  }
+);
+
 /**
  * 保存编辑器数据
  */
-const save = async (): Promise<OutputData | null> => {
+const save = async (): Promise<QuizDSL | null> => {
   if (!editor) return null;
-  const data = await editor.save();
-  emit('save', data);
-  return data;
+  const dsl = await editor.save();
+  emit('save', dsl);
+  return dsl;
 };
 
 /**
@@ -87,12 +96,26 @@ const save = async (): Promise<OutputData | null> => {
  */
 defineExpose({
   save,
+  load: async (dsl: QuizDSL) => {
+    if (editor) {
+      await editor.load(dsl);
+    }
+  },
+  clear: async () => {
+    if (editor) {
+      await editor.clear();
+    }
+  },
+  isDirty: () => editor?.isDirty || false,
   getEditorInstance: () => editor?.getEditorInstance() || null,
 });
 </script>
 
 <style scoped>
 .quiz-editor {
-  min-height: 400px;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>

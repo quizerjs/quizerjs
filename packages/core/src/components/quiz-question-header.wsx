@@ -1,0 +1,123 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * 问题标题组件
+ * 用于 Editor.js 工具中编辑问题标题（H3 样式）
+ * 支持 contentEditable 和 Editor.js inline tools
+ */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import styles from './quiz-question-header.css?inline';
+
+@autoRegister({ tagName: 'quiz-question-header' })
+export class QuizQuestionHeader extends LightComponent {
+  // 响应式状态
+  private textState = this.useState('text', '');
+  private readonlyState = this.useState('readonly', false);
+
+  // Getter/setter
+  private text = () => this.textState[0]();
+  private setTextState = (value: string) => this.textState[1](value);
+  private readonly = () => this.readonlyState[0]();
+  private setReadonly = (value: boolean) => this.readonlyState[1](value);
+
+  private editableElement: HTMLElement | null = null;
+
+  constructor() {
+    super({ styles });
+  }
+
+  static get observedAttributes() {
+    return ['text', 'readonly'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'text':
+        this.setTextState(newValue || '');
+        break;
+      case 'readonly':
+        this.setReadonly(newValue === 'true');
+        break;
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.setupEditableElement();
+  }
+
+  private setupEditableElement() {
+    if (!this.editableElement) return;
+
+    const isReadonly = this.readonly();
+
+    // 设置 contentEditable
+    this.editableElement.contentEditable = isReadonly ? 'false' : 'true';
+
+    // 监听输入变化
+    if (!isReadonly) {
+      this.editableElement.addEventListener('input', this.handleInput);
+      this.editableElement.addEventListener('blur', this.handleBlur);
+    }
+  }
+
+  private handleInput = (e: Event) => {
+    const target = e.target as HTMLElement;
+    const html = target.innerHTML;
+    this.dispatchEvent(
+      new CustomEvent('textchange', {
+        detail: html,
+        bubbles: true,
+      })
+    );
+  };
+
+  private handleBlur = () => {
+    if (this.editableElement) {
+      const html = this.editableElement.innerHTML;
+      this.dispatchEvent(
+        new CustomEvent('textblur', {
+          detail: html,
+          bubbles: true,
+        })
+      );
+    }
+  };
+
+  /**
+   * 获取当前文本（HTML 格式）
+   */
+  getText(): string {
+    return this.editableElement?.innerHTML || '';
+  }
+
+  /**
+   * 设置文本（HTML 格式）
+   */
+  setText(html: string): void {
+    if (this.editableElement) {
+      this.editableElement.innerHTML = html;
+    }
+  }
+
+  render() {
+    const isReadonly = this.readonly();
+    const className = isReadonly
+      ? 'quiz-question-header-readonly'
+      : 'quiz-question-header-editable';
+
+    return (
+      <div className="quiz-question-header">
+        <h3
+          className={className}
+          ref={el => {
+            this.editableElement = el;
+            this.setupEditableElement();
+          }}
+          innerHTML={this.text()}
+          contentEditable={!isReadonly}
+        />
+      </div>
+    );
+  }
+}

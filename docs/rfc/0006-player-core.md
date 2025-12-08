@@ -286,9 +286,9 @@ class QuizPlayer {
       slide.className = 'swiper-slide';
       
       // 使用 @quizerjs/core 的 QuizBlock 渲染问题
-      const quizBlock = new QuizBlock();
-      quizBlock.setAttribute('data-question', JSON.stringify(question));
-      quizBlock.setAttribute('data-mode', 'view');
+      // QuizBlock 是纯 UI 组件，不需要 mode 参数
+      const quizBlock = document.createElement('quiz-block');
+      quizBlock.setAttribute('data-quiz-data', JSON.stringify({ questions: [question] }));
       slide.appendChild(quizBlock);
       
       swiperSlideWrapper.appendChild(slide);
@@ -346,9 +346,9 @@ class QuizPlayer {
     // 渲染每个问题
     dsl.quiz.questions.forEach((question) => {
       // 使用 @quizerjs/core 的 QuizBlock 渲染问题
-      const quizBlock = new QuizBlock();
-      quizBlock.setAttribute('data-question', JSON.stringify(question));
-      quizBlock.setAttribute('data-mode', 'view');
+      // QuizBlock 是纯 UI 组件，不需要 mode 参数
+      const quizBlock = document.createElement('quiz-block');
+      quizBlock.setAttribute('data-quiz-data', JSON.stringify({ questions: [question] }));
       
       // 监听答案变更
       quizBlock.addEventListener('answer-change', (event: CustomEvent) => {
@@ -477,9 +477,9 @@ class QuizPlayer {
 
 QuizPlayer 需要使用 `@quizerjs/core` 中的组件：
 
-- `QuizBlock`: 渲染单个问题
-- `Question`: 问题组件
-- `Option`: 选项组件
+- `QuizBlock`: 纯 UI 组件，用于渲染测验问题和收集答案。不需要 mode 参数，通过 `disabled` 和 `result` 属性控制显示状态。
+- `QuizQuestion`: 问题显示组件
+- `QuizOption`: 选项显示组件
 - `calculateScore`: 分数计算函数
 
 ### @quizerjs/dsl 功能

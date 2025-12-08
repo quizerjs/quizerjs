@@ -1,0 +1,82 @@
+.quiz-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.quiz-option:hover {
+  border-color: #4a90e2;
+  background-color: #f5f8ff;
+}
+
+.quiz-option-selected {
+  border-color: #4a90e2;
+  background-color: #e8f2ff;
+}
+
+.quiz-option-radio,
+.quiz-option-checkbox {
+  margin-top: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.quiz-option-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  color: #333333;
+  line-height: 1.5;
+  padding: 4px 0;
+  border: none;
+  outline: none;
+  min-height: 1.5em;
+  cursor: text;
+}
+
+.quiz-option-text:empty::before {
+  content: '输入选项文本...';
+  color: #999999;
+}
+
+.quiz-option-text:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.quiz-option-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.quiz-option-button {
+  padding: 4px 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #666666;
+  transition: all 0.2s ease;
+}
+
+.quiz-option-button:hover {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+  background-color: #fff1f0;
+}
+
+.quiz-option-readonly .quiz-option-text {
+  cursor: default;
+}
+
+.quiz-option-readonly .quiz-option-actions {
+  display: none;
+}

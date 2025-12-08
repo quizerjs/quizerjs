@@ -1,0 +1,136 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { createLogger } from '@wsxjs/wsx-core';
+import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
+import { QuestionType } from '@quizerjs/dsl';
+
+// 导入 @quizerjs/core 以触发 wsx 组件自动注册
+import '@quizerjs/core';
+
+const logger = createLogger('MultipleChoiceTool');
+
+import type { MultipleChoiceData } from './types';
+
+/**
+ * 多选题 Editor.js 工具
+ * 使用 wsx 组件构建
+ */
+export default class MultipleChoiceTool implements BlockTool {
+  private data: MultipleChoiceData;
+  private readOnly: boolean;
+  private wrapper: HTMLElement;
+  private questionHeaderComponent: any = null;
+  private questionDescriptionComponent: any = null;
+  private optionListComponent: any = null;
+
+  static get toolbox() {
+    return {
+      title: '多选题',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+        <rect x="7" y="7" width="10" height="10" rx="1" fill="currentColor"/>
+      </svg>`,
+    };
+  }
+
+  static get isReadOnlySupported() {
+    return true;
+  }
+
+  constructor(options?: BlockToolConstructorOptions<MultipleChoiceData>) {
+    // 确保数据格式正确，即使 options?.data 存在也要检查 question 属性
+    const providedData = options?.data as MultipleChoiceData | undefined;
+    this.data = {
+      ...providedData,
+      question: providedData?.question || {
+        id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: QuestionType.MULTIPLE_CHOICE,
+        text: '',
+        options: [],
+      },
+    } as MultipleChoiceData;
+    this.readOnly = options?.readOnly || false;
+  }
+
+  render(): HTMLElement {
+    const question = this.data.question;
+
+    this.wrapper = (
+      <div className="quiz-multiple-choice-tool">
+        <quiz-question-header
+          text={question.text || ''}
+          readonly={this.readOnly ? 'true' : 'false'}
+          ontextchange={(e: CustomEvent) => {
+            question.text = e.detail;
+          }}
+          ref={(component: any) => {
+            this.questionHeaderComponent = component;
+          }}
+        ></quiz-question-header>
+        <quiz-question-description
+          text={question.description || ''}
+          readonly={this.readOnly ? 'true' : 'false'}
+          ontextchange={(e: CustomEvent) => {
+            question.description = e.detail;
+          }}
+          ref={(component: any) => {
+            this.questionDescriptionComponent = component;
+          }}
+        ></quiz-question-description>
+        <quiz-option-list
+          options={JSON.stringify(question.options || [])}
+          type={QuestionType.MULTIPLE_CHOICE}
+          readonly={this.readOnly ? 'true' : 'false'}
+          onoptionschange={(e: CustomEvent) => {
+            question.options = e.detail.options;
+          }}
+          ref={(component: any) => {
+            this.optionListComponent = component;
+          }}
+        ></quiz-option-list>
+      </div>
+    ) as unknown as HTMLElement;
+
+    return this.wrapper;
+  }
+
+  save(): MultipleChoiceData {
+    if (this.questionHeaderComponent?.getText) {
+      this.data.question.text = this.questionHeaderComponent.getText();
+    }
+    if (this.questionDescriptionComponent?.getText) {
+      this.data.question.description = this.questionDescriptionComponent.getText();
+    }
+    if (this.optionListComponent?.getOptions) {
+      this.data.question.options = this.optionListComponent.getOptions();
+    }
+    logger.info('Saving multiple choice question data', this.data);
+    return this.data;
+  }
+
+  validate(savedData: MultipleChoiceData): boolean {
+    const question = savedData.question;
+    if (!question.text || question.text.trim().length === 0) {
+      return false;
+    }
+    if (!question.options || question.options.length < 2) {
+      return false;
+    }
+    const hasCorrectAnswer = question.options.some(opt => opt.isCorrect);
+    if (!hasCorrectAnswer) {
+      return false;
+    }
+    return true;
+  }
+
+  renderSettings(): HTMLElement {
+    return (
+      <div style="padding: 16px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">多选题设置</label>
+        <p style="color: #666; font-size: 14px;">
+          使用 wsx 组件构建的多选题编辑器。支持编辑问题标题、描述和选项。
+        </p>
+      </div>
+    ) as unknown as HTMLElement;
+  }
+}

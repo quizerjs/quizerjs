@@ -1,2 +1,2 @@
-export { QuizEditor } from './editor';
-export type { QuizEditorOptions } from './editor';
+export { QuizEditor } from './editor/QuizEditor';
+export type { QuizEditorOptions } from './editor/QuizEditor';

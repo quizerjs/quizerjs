@@ -7,7 +7,12 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+  "include": [
+    "src/**/*",
+    "src/**/*.wsx",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/__tests__/**/*.test.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
-

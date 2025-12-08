@@ -175,6 +175,20 @@ export interface QuizSettings {
 }
 
 /**
+ * 章节数据
+ */
+export interface Section {
+  /** 章节唯一标识 */
+  id: string;
+  /** 章节标题 */
+  title: string;
+  /** 章节描述 */
+  description?: string;
+  /** 章节中的问题列表 */
+  questions: Question[];
+}
+
+/**
  * 测验数据
  */
 export interface Quiz {
@@ -188,8 +202,10 @@ export interface Quiz {
   metadata?: QuizMetadata;
   /** 测验设置 */
   settings?: QuizSettings;
-  /** 问题列表 */
-  questions: Question[];
+  /** 问题列表（向后兼容，如果存在 sections 则忽略） */
+  questions?: Question[];
+  /** 章节列表（可选，用于组织问题） */
+  sections?: Section[];
 }
 
 /**

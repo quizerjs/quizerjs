@@ -104,18 +104,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-// 注意：在实际使用中，您需要从已构建的包中导入
-// import { validateQuizDSL } from '@quizerjs/dsl';
-// import type { QuizDSL, Question } from '@quizerjs/dsl';
+import type { QuizDSL, Question } from '@quizerjs/dsl';
 
-// 为了演示，我们使用内联类型定义
-type QuizDSL = any;
-type Question = any;
+// 答案类型：单选题和文本输入为 string，多选题为 string[]，判断题为 boolean
+type AnswerValue = string | string[] | boolean;
 
 const loading = ref(true);
 const error = ref<string | null>(null);
 const quiz = ref<QuizDSL | null>(null);
-const answers = ref<Record<string, any>>({});
+const answers = ref<Record<string, AnswerValue>>({});
 const submitted = ref(false);
 const score = ref<number | null>(null);
 
@@ -180,7 +177,7 @@ onMounted(() => {
   loading.value = false;
 });
 
-function handleAnswer(questionId: string, answer: any) {
+function handleAnswer(questionId: string, answer: AnswerValue) {
   answers.value[questionId] = answer;
 }
 
@@ -195,7 +192,7 @@ function handleMultipleChoice(questionId: string, optionId: string, event: Event
   }
 }
 
-function isAnswerCorrect(question: Question, userAnswer: any): boolean {
+function isAnswerCorrect(question: Question, userAnswer: AnswerValue): boolean {
   switch (question.type) {
     case 'single_choice':
       const option = question.options.find(opt => opt.id === userAnswer);

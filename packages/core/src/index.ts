@@ -5,15 +5,16 @@
 // 导出类型定义
 export * from './types';
 
-// 导出组件
-export { QuizBlock } from './components/QuizBlock.wsx';
-export { QuizQuestion } from './components/Question.wsx';
-export { QuizOption } from './components/Option.wsx';
+// 导出组件（通过 autoRegister 自动注册，这里仅导入以触发注册）
+// 编辑器相关组件
+import './components/quiz-option.wsx';
+import './components/quiz-option-list.wsx';
+import './components/quiz-question-header.wsx';
+import './components/quiz-question-description.wsx';
 
 // 导出工具函数
-export {
-  calculateQuestionScore,
-  checkAnswer,
-  calculateQuizResult,
-} from './utils/quizCalculator';
+export { calculateQuestionScore, checkAnswer, calculateQuizResult } from './utils/quizCalculator';
 
+// 导出转换器
+export { dslToBlock, blockToDSL } from './transformer';
+export type { EditorJSOutput, EditorJSBlock, EditorJSQuestionData } from './transformer';

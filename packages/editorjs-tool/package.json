@@ -16,21 +16,31 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "@quizerjs/core": "workspace:*",
-    "@editorjs/editorjs": "^2.28.0"
+    "@quizerjs/dsl": "workspace:*",
+    "@editorjs/editorjs": "^2.28.0",
+    "@wsxjs/wsx-core": "^0.0.6"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.3.3"
+    "@vitest/coverage-v8": "^1.0.0",
+    "@wsxjs/wsx-vite-plugin": "^0.0.5",
+    "happy-dom": "^12.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.6.0",
+    "vitest": "^1.0.0"
   },
   "peerDependencies": {
     "@editorjs/editorjs": "^2.28.0"
@@ -41,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wsxjs/quizerjs.git",
+    "url": "git+https://github.com/quizerjs/quizerjs.git",
     "directory": "packages/editorjs-tool"
   }
 }

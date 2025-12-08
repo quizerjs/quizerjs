@@ -1,10 +1,19 @@
 import { defineConfig } from 'vitepress';
+import path from 'path';
 
 export default defineConfig({
   title: 'quizerjs',
   description: '一个使用 Editor.js 和 wsx 构建测验的开源库',
   base: '/quizerjs/',
   lang: 'zh-CN',
+
+  vite: {
+    resolve: {
+      alias: {
+        '@quizerjs/dsl': path.resolve(__dirname, '../../packages/dsl/src'),
+      },
+    },
+  },
 
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],

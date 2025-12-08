@@ -1,0 +1,35 @@
+.quiz-question-header {
+  margin-bottom: 12px;
+}
+
+.quiz-question-header-editable {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333333;
+  line-height: 1.5;
+  padding: 8px 0;
+  border: none;
+  outline: none;
+  min-height: 1.5em;
+  cursor: text;
+}
+
+.quiz-question-header-editable:empty::before {
+  content: '输入问题标题...';
+  color: #999999;
+}
+
+.quiz-question-header-editable:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.quiz-question-header-readonly {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333333;
+  line-height: 1.5;
+  padding: 8px 0;
+  cursor: default;
+}

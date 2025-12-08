@@ -4,7 +4,8 @@
   "description": "一个使用 Editor.js 和 wsx 构建测验的开源库",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "demos/*"
   ],
   "scripts": {
     "build": "pnpm -r build",
@@ -19,9 +20,9 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "demo:dev": "pnpm --filter @quizerjs/demo dev",
-    "demo:build": "pnpm --filter @quizerjs/demo build",
-    "demo:preview": "pnpm --filter @quizerjs/demo preview",
+    "demo:dev": "pnpm --filter @quizerjs/demo-vanilla dev",
+    "demo:build": "pnpm --filter @quizerjs/demo-vanilla build",
+    "demo:preview": "pnpm --filter @quizerjs/demo-vanilla preview",
     "demo-vue:dev": "pnpm --filter @quizerjs/demo-vue dev",
     "demo-vue:build": "pnpm --filter @quizerjs/demo-vue build",
     "demo-vue:preview": "pnpm --filter @quizerjs/demo-vue preview"

@@ -1,0 +1,212 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * 选项列表组件
+ * 用于 Editor.js 工具中管理选项列表
+ * 支持添加、删除、重新排序选项
+ */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { QuestionType } from '@quizerjs/dsl';
+import type { Option } from '@quizerjs/dsl';
+// WSX 组件自动注册，无需手动注册
+import './quiz-option.wsx';
+import styles from './quiz-option-list.css?inline';
+
+@autoRegister({ tagName: 'quiz-option-list' })
+export class QuizOptionList extends LightComponent {
+  // 响应式状态
+  private optionsState = this.useState('options', [] as Option[]);
+  private typeState = this.useState('type', QuestionType.SINGLE_CHOICE);
+  private readonlyState = this.useState('readonly', false);
+
+  // Getter/setter
+  private options = () => this.optionsState[0]();
+  private setOptions = (value: Option[]) => this.optionsState[1](value);
+  private type = () => this.typeState[0]();
+  private setType = (value: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) =>
+    this.typeState[1](value);
+  private readonly = () => this.readonlyState[0]();
+  private setReadonly = (value: boolean) => this.readonlyState[1](value);
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'quiz-option-list',
+    });
+  }
+
+  static get observedAttributes() {
+    return ['options', 'type', 'readonly'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'options':
+        try {
+          const options = JSON.parse(newValue || '[]');
+          this.setOptions(Array.isArray(options) ? options : []);
+        } catch {
+          this.setOptions([]);
+        }
+        break;
+      case 'type':
+        this.setType(
+          (newValue as QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) ||
+            QuestionType.SINGLE_CHOICE
+        );
+        break;
+      case 'readonly':
+        this.setReadonly(newValue === 'true');
+        break;
+    }
+  }
+
+  private generateOptionId(): string {
+    return `opt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private handleAddOption = () => {
+    const isReadonly = this.readonly();
+    if (isReadonly) return;
+
+    const newOption: Option = {
+      id: this.generateOptionId(),
+      text: '',
+      isCorrect: false,
+    };
+
+    const currentOptions = this.options();
+    this.setOptions([...currentOptions, newOption]);
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.options() },
+        bubbles: true,
+      })
+    );
+  };
+
+  private handleOptionSelect = (e: CustomEvent) => {
+    const { optionId, selected } = e.detail;
+    const currentOptions = this.options();
+    const option = currentOptions.find(opt => opt.id === optionId);
+    if (!option) return;
+
+    const currentType = this.type();
+
+    if (currentType === QuestionType.SINGLE_CHOICE) {
+      // 单选题：只能选择一个
+      const updatedOptions = currentOptions.map(opt => ({
+        ...opt,
+        isCorrect: opt.id === optionId && selected,
+      }));
+      this.setOptions(updatedOptions);
+    } else {
+      // 多选题：可以多选
+      const updatedOptions = currentOptions.map(opt =>
+        opt.id === optionId ? { ...opt, isCorrect: selected } : opt
+      );
+      this.setOptions(updatedOptions);
+    }
+
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.options() },
+        bubbles: true,
+      })
+    );
+  };
+
+  private handleOptionTextChange = (e: CustomEvent) => {
+    const { optionId, text } = e.detail;
+    const currentOptions = this.options();
+    const updatedOptions = currentOptions.map(opt =>
+      opt.id === optionId ? { ...opt, text } : opt
+    );
+    this.setOptions(updatedOptions);
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.options() },
+        bubbles: true,
+      })
+    );
+  };
+
+  private handleOptionDelete = (e: CustomEvent) => {
+    const { optionId } = e.detail;
+    const currentOptions = this.options();
+    this.setOptions(currentOptions.filter(opt => opt.id !== optionId));
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.options() },
+        bubbles: true,
+      })
+    );
+  };
+
+  /**
+   * 获取选项列表
+   */
+  getOptions(): Option[] {
+    return [...this.options()];
+  }
+
+  /**
+   * 设置选项列表
+   */
+  setOptionsList(options: Option[]): void {
+    this.setOptions([...options]);
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.options() },
+        bubbles: true,
+      })
+    );
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // 监听子组件事件
+    this.addEventListener('select', this.handleOptionSelect as EventListener);
+    this.addEventListener('textchange', this.handleOptionTextChange as EventListener);
+    this.addEventListener('delete', this.handleOptionDelete as EventListener);
+  }
+
+  render() {
+    const isReadonly = this.readonly();
+    const currentType = this.type();
+    const currentOptions = this.options();
+
+    return (
+      <div className="quiz-option-list">
+        <div className="quiz-option-list-header">
+          <div className="quiz-option-list-title">选项</div>
+          {!isReadonly && (
+            <button
+              className="quiz-option-list-add-button"
+              onClick={this.handleAddOption}
+              type="button"
+            >
+              + 添加选项
+            </button>
+          )}
+        </div>
+        <div className="quiz-option-list-items">
+          {currentOptions.length === 0 ? (
+            <div className="quiz-option-list-empty">暂无选项，点击"添加选项"开始</div>
+          ) : (
+            currentOptions.map(option => (
+              <quiz-option
+                key={option.id}
+                optionid={option.id}
+                text={option.text}
+                selected={option.isCorrect ? 'true' : 'false'}
+                type={currentType}
+                readonly={isReadonly ? 'true' : 'false'}
+              />
+            ))
+          )}
+        </div>
+      </div>
+    );
+  }
+}

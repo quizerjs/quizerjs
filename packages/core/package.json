@@ -9,30 +9,42 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@wsxjs/wsx-core": "^0.0.5"
+    "@wsxjs/wsx-core": "^0.0.6",
+    "@quizerjs/dsl": "workspace:*",
+    "marked": "^11.0.0",
+    "turndown": "^7.1.3"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.3.3"
+    "@types/marked": "^6.0.0",
+    "@types/turndown": "^5.0.5",
+    "@wsxjs/wsx-vite-plugin": "^0.0.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.6.0",
+    "vitest": "^1.0.0"
   },
   "peerDependencies": {
-    "@wsxjs/wsx-core": "^0.0.5"
+    "@wsxjs/wsx-core": "^0.0.6"
   },
   "license": "MIT",
   "publishConfig": {

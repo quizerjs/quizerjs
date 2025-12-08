@@ -1,0 +1,142 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { createLogger } from '@wsxjs/wsx-core';
+import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
+import { QuestionType } from '@quizerjs/dsl';
+
+// 导入 @quizerjs/core 以触发 wsx 组件自动注册
+import '@quizerjs/core';
+
+const logger = createLogger('TrueFalseTool');
+
+import type { TrueFalseData } from './types';
+
+/**
+ * 判断题 Editor.js 工具
+ * 使用 wsx 组件构建
+ */
+export default class TrueFalseTool implements BlockTool {
+  private data: TrueFalseData;
+  private readOnly: boolean;
+  private wrapper: HTMLElement;
+  private questionHeaderComponent: any = null;
+  private questionDescriptionComponent: any = null;
+  private trueFalseSelect: HTMLSelectElement | null = null;
+
+  static get toolbox() {
+    return {
+      title: '判断题',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+      </svg>`,
+    };
+  }
+
+  static get isReadOnlySupported() {
+    return true;
+  }
+
+  constructor(options?: BlockToolConstructorOptions<TrueFalseData>) {
+    // 确保数据格式正确，即使 options?.data 存在也要检查 question 属性
+    const providedData = options?.data as TrueFalseData | undefined;
+    this.data = {
+      ...providedData,
+      question: providedData?.question || {
+        id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: QuestionType.TRUE_FALSE,
+        text: '',
+        correctAnswer: true,
+      },
+    } as TrueFalseData;
+    this.readOnly = options?.readOnly || false;
+  }
+
+  render(): HTMLElement {
+    const question = this.data.question;
+    const currentAnswer =
+      typeof question.correctAnswer === 'boolean' ? question.correctAnswer : true;
+
+    this.wrapper = (
+      <div className="quiz-true-false-tool">
+        <quiz-question-header
+          text={question.text || ''}
+          readonly={this.readOnly ? 'true' : 'false'}
+          ontextchange={(e: CustomEvent) => {
+            question.text = e.detail;
+          }}
+          ref={(component: any) => {
+            this.questionHeaderComponent = component;
+          }}
+        ></quiz-question-header>
+        <quiz-question-description
+          text={question.description || ''}
+          readonly={this.readOnly ? 'true' : 'false'}
+          ontextchange={(e: CustomEvent) => {
+            question.description = e.detail;
+          }}
+          ref={(component: any) => {
+            this.questionDescriptionComponent = component;
+          }}
+        ></quiz-question-description>
+        <div style="margin-top: 16px; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #333;">
+            正确答案：
+          </label>
+          <select
+            disabled={this.readOnly}
+            value={currentAnswer ? 'true' : 'false'}
+            onchange={(e: Event) => {
+              question.correctAnswer = (e.target as HTMLSelectElement).value === 'true';
+            }}
+            style="width: 100%; padding: 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; background-color: #ffffff;"
+            ref={(select: HTMLSelectElement) => {
+              this.trueFalseSelect = select;
+            }}
+          >
+            <option value="true">正确</option>
+            <option value="false">错误</option>
+          </select>
+        </div>
+      </div>
+    ) as unknown as HTMLElement;
+
+    return this.wrapper;
+  }
+
+  save(): TrueFalseData {
+    if (this.questionHeaderComponent?.getText) {
+      this.data.question.text = this.questionHeaderComponent.getText();
+    }
+    if (this.questionDescriptionComponent?.getText) {
+      this.data.question.description = this.questionDescriptionComponent.getText();
+    }
+    if (this.trueFalseSelect) {
+      this.data.question.correctAnswer = this.trueFalseSelect.value === 'true';
+    }
+    logger.info('Saving true/false question data', this.data);
+    return this.data;
+  }
+
+  validate(savedData: TrueFalseData): boolean {
+    const question = savedData.question;
+    if (!question.text || question.text.trim().length === 0) {
+      return false;
+    }
+    if (typeof question.correctAnswer !== 'boolean') {
+      return false;
+    }
+    return true;
+  }
+
+  renderSettings(): HTMLElement {
+    return (
+      <div style="padding: 16px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">判断题设置</label>
+        <p style="color: #666; font-size: 14px;">
+          使用 wsx 组件构建的判断题编辑器。支持编辑问题标题、描述和正确答案。
+        </p>
+      </div>
+    ) as unknown as HTMLElement;
+  }
+}

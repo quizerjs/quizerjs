@@ -34,8 +34,8 @@
 
 **文档结构层次**：
 1. **H1 - 文档级别**（Quiz）：
-   - `title`: 文档标题（H1，显示在编辑器顶部，不作为 block）
-   - `description`: 文档描述（显示在编辑器顶部，不作为 block）
+   - `title`: 文档标题（H1，作为第一个 header block，level 1）
+   - `description`: 文档描述（可选，作为紧跟 H1 的 paragraph block）
    - `sections`: 文档章节数组
 
 2. **H2 - 章节级别**（Section）：
@@ -53,7 +53,7 @@
 
 **文档结构示例**：
 ```
-H1: Quiz Name (quiz.title) - 编辑器顶部，不作为 block
+H1: Quiz Name (quiz.title) - header block (level 1)
   H2: Section 1 (section.title) - header block (level 2)
     H3: Quiz 1 (question.title) - quiz-question-header (H3 样式)
       - description (quiz-question-description) - 问题描述
@@ -117,8 +117,8 @@ H1: Quiz Name (quiz.title) - 编辑器顶部，不作为 block
 ```
 
 **Editor.js Blocks 映射**：
-- **H1 - 文档标题**：不在 blocks 中，显示在编辑器顶部（从 DSL 的 `quiz.title` 读取）
-- **H1 - 文档描述**：不在 blocks 中，显示在编辑器顶部（从 DSL 的 `quiz.description` 读取，可选）
+- **H1 - 文档标题**：`header` block (level 1)，作为第一个 block
+- **文档描述**：`paragraph` block，紧跟 H1（可选）
 - **H2 - Section Header**：`header` block (level 2)
 - **Section Description**：`paragraph` block（可选）
 - **H3 - Question Block**：`quiz-single-choice` / `quiz-multiple-choice` / `quiz-text-input` / `quiz-true-false` block
@@ -284,10 +284,12 @@ class QuizEditor {
   /**
    * 初始化编辑器
    * 必须在创建实例后调用
-   * 
+   *
    * 编辑器布局：
-   * - 顶部：H1 文档标题和描述（从 DSL 的 quiz.title/description 读取，不作为 block）
-   * - 主体：Editor.js blocks（H2 sections + H3 questions）
+   * - Editor.js blocks 包含完整的文档结构
+   * - H1 文档标题（第一个 header block, level 1）
+   * - 文档描述（可选，paragraph block）
+   * - H2 sections + H3 questions
    */
   init(): Promise<void>;
   
@@ -399,13 +401,17 @@ class QuizEditor {
       },
       header: {
         class: Header,
+        config: {
+          levels: [1, 2, 3, 4], // 支持 H1-H4（H1 用于文档标题，H2-H4 用于章节）
+          defaultLevel: 2,
+        },
       },
     };
-    
+
     this.editor = new EditorJS({
       holder: this.container,
       tools,
-      data: this.options.initialDSL 
+      data: this.options.initialDSL
         ? this.convertFromDSL(this.options.initialDSL)
         : undefined,
       readOnly: this.options.readOnly ?? false,
@@ -414,67 +420,37 @@ class QuizEditor {
       },
       ...this.options.config,
     });
-    
+
     await this.editor.isReady;
-  }
-  
-  /**
-   * 渲染文档标题和描述（H1，显示在编辑器顶部，不作为 block）
-   */
-  private renderDocumentHeader(): void {
-    const headerContainer = document.createElement('div');
-    headerContainer.className = 'quiz-editor-document-header';
-    
-    // H1 文档标题
-    const titleElement = document.createElement('h1');
-    titleElement.className = 'quiz-editor-title';
-    titleElement.contentEditable = !this.options.readOnly;
-    titleElement.textContent = this.currentDSL?.quiz.title || '请输入测验标题';
-    titleElement.setAttribute('data-placeholder', '请输入测验标题');
-    
-    titleElement.addEventListener('blur', () => {
-      if (this.currentDSL) {
-        this.currentDSL.quiz.title = titleElement.textContent || '';
-        this.isDirtyFlag = true;
-      }
-    });
-    
-    // 文档描述
-    const descriptionElement = document.createElement('div');
-    descriptionElement.className = 'quiz-editor-description';
-    descriptionElement.contentEditable = !this.options.readOnly;
-    descriptionElement.textContent = this.currentDSL?.quiz.description || '';
-    descriptionElement.setAttribute('data-placeholder', '请输入测验描述（可选）');
-    
-    descriptionElement.addEventListener('blur', () => {
-      if (this.currentDSL) {
-        this.currentDSL.quiz.description = descriptionElement.textContent || '';
-        this.isDirtyFlag = true;
-      }
-    });
-    
-    headerContainer.appendChild(titleElement);
-    headerContainer.appendChild(descriptionElement);
-    this.container.insertBefore(headerContainer, this.container.firstChild);
   }
   
   private async handleBlockChange(): Promise<void> {
     this.isDirtyFlag = true;
-    const dsl = await this.dsl;
+    const dsl = await this.save();
     this.options.onChange?.(dsl);
   }
   
   /**
    * 将 Quiz DSL 转换为 Editor.js 块格式
    * 使用 @quizerjs/core 的转换器
+   *
+   * 转换逻辑：
+   * - quiz.title → header block (level 1)
+   * - quiz.description → paragraph block（可选）
+   * - sections → header blocks (level 2) + questions
    */
   private convertFromDSL(dsl: QuizDSL): EditorJSOutput {
     return dslToBlock(dsl);
   }
-  
+
   /**
    * 将 Editor.js 块格式转换为 Quiz DSL
    * 使用 @quizerjs/core 的转换器
+   *
+   * 转换逻辑：
+   * - 第一个 header block (level 1) → quiz.title
+   * - 紧跟的 paragraph block → quiz.description（可选）
+   * - header blocks (level 2) → sections
    */
   private convertToDSL(editorData: EditorJSOutput): QuizDSL {
     return blockToDSL(editorData);
@@ -638,10 +614,31 @@ class QuizEditorError extends Error {
 
 // 错误代码
 enum QuizEditorErrorCode {
+  // 初始化错误
   NOT_INITIALIZED = 'NOT_INITIALIZED',
+  EDITOR_INIT_FAILED = 'EDITOR_INIT_FAILED',
+
+  // DSL 验证错误
   INVALID_DSL = 'INVALID_DSL',
+  DSL_SCHEMA_ERROR = 'DSL_SCHEMA_ERROR',
+
+  // 编辑器操作错误
   EDITOR_ERROR = 'EDITOR_ERROR',
+  BLOCK_RENDER_ERROR = 'BLOCK_RENDER_ERROR',
+
+  // 转换错误
   CONVERSION_ERROR = 'CONVERSION_ERROR',
+  MARKDOWN_PARSE_ERROR = 'MARKDOWN_PARSE_ERROR',
+  HTML_PARSE_ERROR = 'HTML_PARSE_ERROR',
+
+  // 组件错误
+  COMPONENT_RENDER_ERROR = 'COMPONENT_RENDER_ERROR',
+  COMPONENT_STATE_ERROR = 'COMPONENT_STATE_ERROR',
+
+  // 数据同步错误
+  STATE_SYNC_ERROR = 'STATE_SYNC_ERROR',
+  SAVE_ERROR = 'SAVE_ERROR',
+  LOAD_ERROR = 'LOAD_ERROR',
 }
 ```
 
@@ -656,88 +653,23 @@ QuizEditor 需要使用 `@quizerjs/editorjs-tool` 中的工具：
 - `TextInputTool`: 文本输入题块工具
 - `TrueFalseTool`: 判断题块工具
 
-**工具实现设计**：每个工具使用 `@quizerjs/core` 中的 wsx 组件来渲染：
-
-```typescript
-import { QuizQuestion } from '@quizerjs/core';
-import { BlockTool } from '@editorjs/editorjs';
-import { Question, QuestionType } from '@quizerjs/dsl';
-// 使用 Heroicons (MIT 许可证)
-import { CircleStackIcon } from '@heroicons/react/24/outline';
-
-export class SingleChoiceTool implements BlockTool {
-  private wrapper: HTMLElement | null = null;
-  private question: Question;
-  
-  static get toolbox() {
-    return {
-      title: '单选题',
-      // 使用 Heroicons SVG (可以直接使用 SVG 字符串或导入)
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
-    };
-  }
-  
-  constructor({ data }: { data?: { question: Question } }) {
-    this.question = data?.question || this.getDefaultQuestion();
-  }
-  
-  render(): HTMLElement {
-    this.wrapper = document.createElement('div');
-    
-    // 使用 wsx 组件渲染问题
-    const questionElement = document.createElement('quiz-question');
-    questionElement.setAttribute('data-question', JSON.stringify(this.question));
-    questionElement.setAttribute('data-mode', 'edit');
-    
-    // 监听编辑事件
-    questionElement.addEventListener('question-change', (e: CustomEvent) => {
-      this.question = e.detail.question;
-    });
-    
-    this.wrapper.appendChild(questionElement);
-    return this.wrapper;
-  }
-  
-  save(): { question: Question } {
-    // 从 wsx 组件获取最新数据
-    const questionElement = this.wrapper?.querySelector('quiz-question');
-    if (questionElement) {
-      const questionData = questionElement.getAttribute('data-question');
-      if (questionData) {
-        this.question = JSON.parse(questionData);
-      }
-    }
-    
-    return { question: this.question };
-  }
-  
-  private getDefaultQuestion(): Question {
-    return {
-      id: `q-${Date.now()}`,
-      type: QuestionType.SINGLE_CHOICE,
-      text: '请输入问题',
-      options: [
-        { id: 'o1', text: '选项 1', isCorrect: false },
-        { id: 'o2', text: '选项 2', isCorrect: false },
-      ],
-    };
-  }
-}
-```
+**工具实现设计**：每个工具使用 `@quizerjs/core` 中的**细粒度 wsx 组件**来组合渲染：
 
 **关键设计点**：
 1. **使用 JSX 语法**：工具使用 `/** @jsxImportSource @wsxjs/wsx-core */` 和 JSX 创建 wsx 组件
-2. **直接导入 wsx 组件**：`import './QuizQuestion.wsx'` 导入 wsx 组件文件
-3. **JSX 属性传递**：通过 JSX 属性传递数据（`question={...}`, `mode="edit"`），wsx 自动转换为组件 props
-4. **事件监听**：通过 `onquestionchange` 等事件属性监听组件变化
+2. **直接导入 wsx 组件**：`import './QuizQuestionHeader.wsx'` 导入 wsx 组件文件
+3. **JSX 属性传递**：通过 JSX 属性传递数据（`text={...}`, `readonly="false"`），wsx 自动转换为组件 props
+4. **事件监听**：通过 `ontextchange` 等事件属性监听组件变化
 5. **ref 获取实例**：使用 `ref` 获取组件实例，在 `save()` 时调用组件方法获取数据
 6. **状态管理**：wsx 组件内部管理所有状态和 UI，工具只维护数据副本用于 Editor.js
+7. **细粒度组件组合**：工具组合多个细粒度组件（`quiz-question-header`、`quiz-option-list` 等）构建编辑界面
 
 **重要**：工具的正确实现方式：
 - 使用 JSX 创建 wsx 组件（不是 `document.createElement`）
 - 通过 JSX 属性传递数据（不是 `setAttribute`）
 - 通过事件属性监听变化（不是 `addEventListener`）
 - 使用 ref 获取组件实例，调用方法获取数据
+- 使用细粒度组件组合，而不是单一的大组件
 
 ### @quizerjs/core wsx 组件扩展
 
@@ -1068,14 +1000,18 @@ export class MultipleChoiceTool implements BlockTool {
 
 #### 3. 文本输入题工具 (TextInputTool)
 
-**实现**：
+**实现**：使用细粒度组件，但不需要选项列表组件
 
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 
 import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
 import { Question, QuestionType } from '@quizerjs/dsl';
-import './QuizQuestion.wsx';
+import './QuizQuestionHeader.wsx';
+import './QuizQuestionDescription.wsx';
+import './QuizCorrectAnswer.wsx';
+import './QuizPoints.wsx';
+import './QuizExplanation.wsx';
 
 export interface TextInputData extends BlockToolData {
   question: Question;
@@ -1084,8 +1020,12 @@ export interface TextInputData extends BlockToolData {
 export class TextInputTool implements BlockTool {
   private data: TextInputData;
   private readOnly: boolean;
-  private component: any;
   private wrapper: HTMLElement;
+  private questionHeaderComponent: any;
+  private questionDescriptionComponent: any;
+  private correctAnswerComponent: any;
+  private pointsComponent: any;
+  private explanationComponent: any;
   
   static get toolbox() {
     return {
@@ -1103,31 +1043,93 @@ export class TextInputTool implements BlockTool {
   }
   
   render(): HTMLElement {
-    this.wrapper = (
-      <div>
-        <quiz-question
-          question={JSON.stringify(this.data.question)}
-          mode="edit"
+    return (
+      <div class="quiz-editor-block">
+        <quiz-question-header
+          text={this.data.question.text}
           readonly={this.readOnly ? "true" : "false"}
-          onquestionchange={(e: CustomEvent<{ question: Question }>) => {
-            this.data.question = e.detail.question;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.text = e.detail.text;
           }}
           ref={(component: any) => {
-            this.component = component;
+            this.questionHeaderComponent = component;
           }}
-        ></quiz-question>
+        ></quiz-question-header>
+        
+        {this.data.question.description && (
+          <quiz-question-description
+            description={this.data.question.description}
+            readonly={this.readOnly ? "true" : "false"}
+            ondescriptionchange={(e: CustomEvent<{ description: string }>) => {
+              this.data.question.description = e.detail.description;
+            }}
+            ref={(component: any) => {
+              this.questionDescriptionComponent = component;
+            }}
+          ></quiz-question-description>
+        )}
+        
+        <quiz-correct-answer
+          correctAnswer={typeof this.data.question.correctAnswer === 'string' 
+            ? this.data.question.correctAnswer 
+            : ''}
+          caseSensitive={this.data.question.caseSensitive || false}
+          readonly={this.readOnly ? "true" : "false"}
+          oncorrectanswerchange={(e: CustomEvent<{ correctAnswer: string | string[]; caseSensitive?: boolean }>) => {
+            this.data.question.correctAnswer = e.detail.correctAnswer;
+            if (e.detail.caseSensitive !== undefined) {
+              this.data.question.caseSensitive = e.detail.caseSensitive;
+            }
+          }}
+          ref={(component: any) => {
+            this.correctAnswerComponent = component;
+          }}
+        ></quiz-correct-answer>
+        
+        <quiz-points
+          points={this.data.question.points?.toString() || "10"}
+          readonly={this.readOnly ? "true" : "false"}
+          onpointschange={(e: CustomEvent<{ points: number }>) => {
+            this.data.question.points = e.detail.points;
+          }}
+          ref={(component: any) => {
+            this.pointsComponent = component;
+          }}
+        ></quiz-points>
+        
+        <quiz-explanation
+          explanation={this.data.question.explanation || ""}
+          readonly={this.readOnly ? "true" : "false"}
+          onexplanationchange={(e: CustomEvent<{ explanation: string }>) => {
+            this.data.question.explanation = e.detail.explanation;
+          }}
+          ref={(component: any) => {
+            this.explanationComponent = component;
+          }}
+        ></quiz-explanation>
       </div>
     );
-    
-    return this.wrapper;
   }
   
   save(): TextInputData {
-    if (this.component && typeof this.component.getQuestion === 'function') {
-      const question = this.component.getQuestion();
-      if (question) {
-        this.data.question = question;
-      }
+    if (this.questionHeaderComponent && typeof this.questionHeaderComponent.getText === 'function') {
+      this.data.question.text = this.questionHeaderComponent.getText();
+    }
+    
+    if (this.questionDescriptionComponent && typeof this.questionDescriptionComponent.getDescription === 'function') {
+      this.data.question.description = this.questionDescriptionComponent.getDescription();
+    }
+    
+    if (this.correctAnswerComponent && typeof this.correctAnswerComponent.getCorrectAnswer === 'function') {
+      this.data.question.correctAnswer = this.correctAnswerComponent.getCorrectAnswer();
+    }
+    
+    if (this.pointsComponent && typeof this.pointsComponent.getPoints === 'function') {
+      this.data.question.points = this.pointsComponent.getPoints();
+    }
+    
+    if (this.explanationComponent && typeof this.explanationComponent.getExplanation === 'function') {
+      this.data.question.explanation = this.explanationComponent.getExplanation();
     }
     
     return this.data;
@@ -1147,14 +1149,18 @@ export class TextInputTool implements BlockTool {
 
 #### 4. 判断题工具 (TrueFalseTool)
 
-**实现**：
+**实现**：使用细粒度组件，使用 `quiz-correct-answer` 组件选择 true/false
 
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 
 import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
 import { Question, QuestionType } from '@quizerjs/dsl';
-import './QuizQuestion.wsx';
+import './QuizQuestionHeader.wsx';
+import './QuizQuestionDescription.wsx';
+import './QuizCorrectAnswer.wsx';
+import './QuizPoints.wsx';
+import './QuizExplanation.wsx';
 
 export interface TrueFalseData extends BlockToolData {
   question: Question;
@@ -1163,8 +1169,12 @@ export interface TrueFalseData extends BlockToolData {
 export class TrueFalseTool implements BlockTool {
   private data: TrueFalseData;
   private readOnly: boolean;
-  private component: any;
   private wrapper: HTMLElement;
+  private questionHeaderComponent: any;
+  private questionDescriptionComponent: any;
+  private correctAnswerComponent: any;
+  private pointsComponent: any;
+  private explanationComponent: any;
   
   static get toolbox() {
     return {
@@ -1183,18 +1193,63 @@ export class TrueFalseTool implements BlockTool {
   
   render(): HTMLElement {
     this.wrapper = (
-      <div>
-        <quiz-question
-          question={JSON.stringify(this.data.question)}
-          mode="edit"
+      <div class="quiz-editor-block">
+        <quiz-question-header
+          text={this.data.question.text}
           readonly={this.readOnly ? "true" : "false"}
-          onquestionchange={(e: CustomEvent<{ question: Question }>) => {
-            this.data.question = e.detail.question;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.text = e.detail.text;
           }}
           ref={(component: any) => {
-            this.component = component;
+            this.questionHeaderComponent = component;
           }}
-        ></quiz-question>
+        ></quiz-question-header>
+        
+        {this.data.question.description && (
+          <quiz-question-description
+            description={this.data.question.description}
+            readonly={this.readOnly ? "true" : "false"}
+            ondescriptionchange={(e: CustomEvent<{ description: string }>) => {
+              this.data.question.description = e.detail.description;
+            }}
+            ref={(component: any) => {
+              this.questionDescriptionComponent = component;
+            }}
+          ></quiz-question-description>
+        )}
+        
+        <quiz-correct-answer
+          correctAnswer={this.data.question.correctAnswer ? "true" : "false"}
+          readonly={this.readOnly ? "true" : "false"}
+          oncorrectanswerchange={(e: CustomEvent<{ correctAnswer: boolean }>) => {
+            this.data.question.correctAnswer = e.detail.correctAnswer;
+          }}
+          ref={(component: any) => {
+            this.correctAnswerComponent = component;
+          }}
+        ></quiz-correct-answer>
+        
+        <quiz-points
+          points={this.data.question.points?.toString() || "10"}
+          readonly={this.readOnly ? "true" : "false"}
+          onpointschange={(e: CustomEvent<{ points: number }>) => {
+            this.data.question.points = e.detail.points;
+          }}
+          ref={(component: any) => {
+            this.pointsComponent = component;
+          }}
+        ></quiz-points>
+        
+        <quiz-explanation
+          explanation={this.data.question.explanation || ""}
+          readonly={this.readOnly ? "true" : "false"}
+          onexplanationchange={(e: CustomEvent<{ explanation: string }>) => {
+            this.data.question.explanation = e.detail.explanation;
+          }}
+          ref={(component: any) => {
+            this.explanationComponent = component;
+          }}
+        ></quiz-explanation>
       </div>
     );
     
@@ -1202,11 +1257,25 @@ export class TrueFalseTool implements BlockTool {
   }
   
   save(): TrueFalseData {
-    if (this.component && typeof this.component.getQuestion === 'function') {
-      const question = this.component.getQuestion();
-      if (question) {
-        this.data.question = question;
-      }
+    if (this.questionHeaderComponent && typeof this.questionHeaderComponent.getText === 'function') {
+      this.data.question.text = this.questionHeaderComponent.getText();
+    }
+    
+    if (this.questionDescriptionComponent && typeof this.questionDescriptionComponent.getDescription === 'function') {
+      this.data.question.description = this.questionDescriptionComponent.getDescription();
+    }
+    
+    if (this.correctAnswerComponent && typeof this.correctAnswerComponent.getCorrectAnswer === 'function') {
+      const answer = this.correctAnswerComponent.getCorrectAnswer();
+      this.data.question.correctAnswer = answer === "true" || answer === true;
+    }
+    
+    if (this.pointsComponent && typeof this.pointsComponent.getPoints === 'function') {
+      this.data.question.points = this.pointsComponent.getPoints();
+    }
+    
+    if (this.explanationComponent && typeof this.explanationComponent.getExplanation === 'function') {
+      this.data.question.explanation = this.explanationComponent.getExplanation();
     }
     
     return this.data;
@@ -1253,11 +1322,66 @@ export class TrueFalseTool implements BlockTool {
    - 工具通过 `ref` 获取组件实例，调用 `getQuestion()` 方法
    - 返回完整的 `Question` 对象
 
+### wsx 组件开发规范
+
+**wsxjs 基本要求**：
+- **文件扩展名**：`.wsx`（不是 `.wsx.ts`）
+- **组件定义**：必须是类组件，继承 `WebComponent<Props>`
+- **装饰器**：使用 `@autoRegister()` 自动注册为自定义元素
+- **Props 类型**：通过泛型传递，例如 `WebComponent<QuizQuestionHeaderProps>`
+- **JSX 配置**：需要配置 `jsxImportSource` 为 `@wsxjs/wsx-core/jsx`
+- **样式**：使用 Shadow DOM，通过 `super({ styles })` 传递
+
+**标准组件模板**：
+```typescript
+import { WebComponent, autoRegister } from '@wsxjs/wsx-core';
+
+const styles = `
+  .component-class {
+    /* 组件样式 */
+  }
+`;
+
+interface ComponentProps {
+  prop1: string;
+  prop2?: boolean;
+  onEvent?: (data: any) => void;
+}
+
+@autoRegister()
+export class ComponentName extends WebComponent<ComponentProps> {
+  constructor() {
+    super({ styles });
+  }
+
+  // 私有方法（事件处理器）
+  private handleEvent = (e: Event) => {
+    // 处理事件
+    this.props.onEvent?.(data);
+  };
+
+  // 渲染方法
+  render() {
+    const { prop1, prop2 } = this.props;
+    return (
+      <div className="component-class">
+        {/* JSX 内容 */}
+      </div>
+    );
+  }
+
+  // 公共方法（供外部调用）
+  public getData(): any {
+    return this.props.prop1;
+  }
+}
+```
+
 ### wsx 组件设计（细粒度组件）
 
 `@quizerjs/core` 需要提供以下细粒度 wsx 组件，供 Editor.js 工具组合使用：
 
-#### 1. `quiz-question-header` - 问题标题组件
+#### 1. `quiz-question-header.wsx` - 问题标题组件
 
 **职责**：编辑问题标题（支持 Editor.js inline tools）
 
@@ -1269,13 +1393,15 @@ export class TrueFalseTool implements BlockTool {
 - `textchange` - 文本变化时触发（CustomEvent<{ text: string }>）
 
 **方法**：
-- `getText(): string` - 获取当前文本（包含 HTML 格式）
+- `getText(): string` - 获取当前文本（**HTML 格式**，供 Editor.js 使用）
 
 **实现要点**：
 - 使用 `contentEditable` div
 - 启用 Editor.js inline toolbar（通过 Block Tool 配置 `inlineToolbar: true`）
 - 支持加粗、斜体、链接等格式化
-- 保存时返回 HTML 格式的文本（或纯文本，根据 DSL 需求）
+- **保存时返回 HTML 格式的文本**（例如：`<strong>加粗</strong>`、`<em>斜体</em>`、`<a href="url">链接</a>`）
+- Editor.js inline tools 直接操作 HTML，组件返回 HTML
+- **格式转换由转换器处理**：`blockToDSL` 将 HTML 转换为 Markdown 存储到 DSL
 
 #### 2. `quiz-question-description` - 问题描述组件
 
@@ -1300,21 +1426,36 @@ export class TrueFalseTool implements BlockTool {
 - **格式转换由转换器处理**：`blockToDSL` 将 HTML 转换为 Markdown 存储到 DSL
 - 可选显示（如果 description 为空，不显示该组件）
 
-#### 3. `quiz-option-list` - 选项列表组件（像文档编辑一样）
+#### 3. `quiz-option-list.wsx` - 选项列表组件
 
-**职责**：管理选项列表，提供类似文档编辑的体验
+**职责**：管理选项列表，提供灵活的编辑体验
 
 **属性**：
 - `options: string` - JSON 字符串，选项数组
 - `type: "single" | "multiple"` - 单选或多选
 - `readonly: "true" | "false"` - 是否只读
 
-**编辑体验**：
-- **每行一个 choice**：每个 choice 是一个可编辑的行
-- **Enter 键**：在当前 choice 下方创建新 choice（像列表编辑一样）
+**双重交互方式**（提升用户体验）：
+
+**方式 1：键盘交互（类文档编辑，提升效率）**
+- **Enter 键**：在当前 choice 下方创建新 choice
 - **Backspace 在空行**：删除当前 choice（至少保留 2 个 choice）
+- **适用场景**：高级用户、快速编辑
+
+**方式 2：显式按钮（降低学习成本）**
+- **"+ 添加选项" 按钮**：点击添加新 choice
+- **"×" 删除按钮**：每个选项右侧的删除按钮
+- **适用场景**：新手用户、明确操作
+
+**通用交互**：
 - **点击单选/复选框**：标记正确答案
 - **内联编辑**：直接点击 choice 文本进行编辑
+- **拖拽排序**：支持拖拽调整选项顺序（可选）
+
+**实现要点**：
+- 两种方式可以同时使用，互不冲突
+- 键盘交互在焦点在输入框时生效
+- 按钮交互始终可见且可用
 
 **事件**：
 - `optionadd` - 添加选项时触发（CustomEvent<{ option: Option }>）
@@ -1373,7 +1514,7 @@ export class TrueFalseTool implements BlockTool {
 **方法**：
 - `getPoints(): number` - 获取当前分值
 
-#### 5. `quiz-explanation` - 解析说明组件
+#### 6. `quiz-explanation` - 解析说明组件
 
 **职责**：编辑解析说明
 
@@ -1518,18 +1659,23 @@ const editor = new QuizEditor({
       id: 'quiz-1',
       title: 'JavaScript 基础测验',
       description: '测试你对 JavaScript 基础知识的理解',
-      questions: [
+      sections: [
         {
-          id: 'q1',
-          type: QuestionType.SINGLE_CHOICE,
-          text: '以下哪个是 JavaScript 的框架？',
-          options: [
-            { id: 'o1', text: 'React' },
-            { id: 'o2', text: 'Python' },
-            { id: 'o3', text: 'Java' },
+          id: 'section-1',
+          title: '基础概念',
+          questions: [
+            {
+              id: 'q1',
+              type: QuestionType.SINGLE_CHOICE,
+              text: '以下哪个是 JavaScript 的框架？',
+              options: [
+                { id: 'o1', text: 'React', isCorrect: true },
+                { id: 'o2', text: 'Python', isCorrect: false },
+                { id: 'o3', text: 'Java', isCorrect: false },
+              ],
+              points: 10,
+            },
           ],
-          correctAnswer: 'o1',
-          points: 10,
         },
       ],
     },
@@ -1568,7 +1714,7 @@ await editor.load({
   quiz: {
     id: 'quiz-2',
     title: '新的测验',
-    questions: [],
+    sections: [],
   },
 });
 
@@ -1602,11 +1748,18 @@ await editor.load(dsl);
 6. 📋 编写单元测试
 
 ### 阶段 3: Editor.js 工具实现
-1. 📋 在 `@quizerjs/core` 中实现 `QuizQuestion` wsx 组件（支持编辑模式）
-2. 📋 实现 SingleChoiceTool（使用 `QuizQuestion` wsx 组件）
-3. 📋 实现 MultipleChoiceTool（使用 `QuizQuestion` wsx 组件）
-4. 📋 实现 TextInputTool（使用 `QuizQuestion` wsx 组件）
-5. 📋 实现 TrueFalseTool（使用 `QuizQuestion` wsx 组件）
+1. 📋 在 `@quizerjs/core` 中实现细粒度 wsx 组件：
+   - `quiz-question-header.wsx` - 问题标题组件
+   - `quiz-question-description.wsx` - 问题描述组件
+   - `quiz-option-list.wsx` - 选项列表组件
+   - `quiz-option.wsx` - 单个选项组件
+   - `quiz-correct-answer.wsx` - 正确答案组件
+   - `quiz-points.wsx` - 分值组件
+   - `quiz-explanation.wsx` - 解析说明组件
+2. 📋 实现 SingleChoiceTool（使用细粒度 wsx 组件）
+3. 📋 实现 MultipleChoiceTool（使用细粒度 wsx 组件）
+4. 📋 实现 TextInputTool（使用细粒度 wsx 组件）
+5. 📋 实现 TrueFalseTool（使用细粒度 wsx 组件）
 6. 📋 编写工具单元测试
 
 ### 阶段 4: 集成和优化
@@ -1629,12 +1782,25 @@ await editor.load(dsl);
 └── turndown 或类似的 HTML-to-Markdown 转换库 (必需，用于 blockToDSL 转换)
 ```
 
-**格式转换依赖**：
+**格式转换策略和依赖**：
+
+**为什么使用 Markdown**：
+- **Quiz Player 需求**：播放器使用 Markdown 格式渲染问题和解析
+- **可读性**：Markdown 格式便于阅读、编辑和版本控制
+- **DSL 标准化**：统一使用 Markdown 作为 DSL 的文本格式标准
+
+**转换流程**：
+- **编辑时**：DSL (Markdown) → `dslToBlock` (使用 `marked`) → HTML (Editor.js)
+- **保存时**：Editor.js (HTML) → `blockToDSL` (使用 `turndown`) → DSL (Markdown)
+
+**转换依赖**：
 - **`marked`**：将 DSL 中的 Markdown 转换为 HTML（`dslToBlock` 使用）
 - **`turndown`**：将 Editor.js blocks 中的 HTML 转换为 Markdown（`blockToDSL` 使用）
-- **转换发生在转换器中**，不在 wsx 组件中
-- wsx 组件只负责返回 HTML 格式（Editor.js 需要 HTML）
-- DSL 存储 Markdown 格式（便于阅读和编辑）
+
+**职责分离**：
+- **wsx 组件**：只负责返回 HTML 格式（Editor.js inline tools 需要 HTML）
+- **转换器**：负责 Markdown ↔ HTML 转换（在 @quizerjs/core 中实现）
+- **DSL 存储**：统一使用 Markdown 格式
 
 ## 转换器设计（@quizerjs/core）
 
@@ -1652,9 +1818,43 @@ await editor.load(dsl);
 ```typescript
 /**
  * 将 Quiz DSL 转换为 Editor.js 块格式（纯函数）
- * 如果 DSL 中有 title 和 description，会自动转换为 header 和 paragraph 块
+ *
+ * 转换规则：
+ * 1. quiz.title → header block (level 1)，作为第一个 block
+ * 2. quiz.description → paragraph block（可选，紧跟 H1）
+ * 3. sections[].title → header block (level 2)
+ * 4. sections[].description → paragraph block（可选）
+ * 5. sections[].questions → quiz-* blocks
+ *
+ * Markdown → HTML 转换：使用 `marked` 库
  */
-function dslToBlock(dsl: QuizDSL): EditorJSOutput;
+function dslToBlock(dsl: QuizDSL): EditorJSOutput {
+  const blocks = [];
+
+  // 1. H1 文档标题（必需，作为第一个 block）
+  blocks.push({
+    type: 'header',
+    data: {
+      text: marked(dsl.quiz.title), // Markdown → HTML
+      level: 1
+    }
+  });
+
+  // 2. 文档描述（可选）
+  if (dsl.quiz.description) {
+    blocks.push({
+      type: 'paragraph',
+      data: {
+        text: marked(dsl.quiz.description) // Markdown → HTML
+      }
+    });
+  }
+
+  // 3. 处理 sections 和 questions...
+  // （展开 sections，为每个 section 创建 header block + questions）
+
+  return { blocks };
+}
 ```
 
 ### Block → DSL 转换函数
@@ -1662,9 +1862,45 @@ function dslToBlock(dsl: QuizDSL): EditorJSOutput;
 ```typescript
 /**
  * 将 Editor.js 块格式转换为 Quiz DSL（纯函数）
- * 从块中提取元数据（title 从 header 块，description 从 paragraph 块）
+ *
+ * 转换规则：
+ * 1. 第一个 header block (level 1) → quiz.title
+ * 2. 紧跟 H1 的 paragraph block → quiz.description（可选）
+ * 3. header block (level 2) → sections[].title
+ * 4. header 后的 paragraph block → sections[].description（可选）
+ * 5. quiz-* blocks → sections[].questions
+ *
+ * HTML → Markdown 转换：使用 `turndown` 库
  */
-function blockToDSL(editorData: EditorJSOutput): QuizDSL;
+function blockToDSL(editorData: EditorJSOutput): QuizDSL {
+  const blocks = editorData.blocks;
+
+  // 1. 从第一个 header block (level 1) 提取标题
+  const titleBlock = blocks.find(b => b.type === 'header' && b.data.level === 1);
+  const title = titleBlock
+    ? turndown(titleBlock.data.text) // HTML → Markdown
+    : '未命名测验';
+
+  // 2. 从紧跟标题的 paragraph block 提取描述
+  const titleIndex = blocks.indexOf(titleBlock);
+  const descBlock = blocks[titleIndex + 1];
+  const description = (descBlock?.type === 'paragraph')
+    ? turndown(descBlock.data.text) // HTML → Markdown
+    : '';
+
+  // 3. 处理 sections 和 questions...
+  // （根据 header blocks (level 2) 分组，构建 sections）
+
+  return {
+    version: '1.0.0',
+    quiz: {
+      id: generateId(),
+      title,
+      description,
+      sections: [...] // 构建的 sections
+    }
+  };
+}
 ```
 
 ### 使用示例
@@ -1700,10 +1936,140 @@ const dsl = blockToDSL(editorData);
 - 无法添加自定义问题类型（v1）
 - 无法添加自定义 Editor.js 工具（v1）
 
+## 性能优化（v1.1+）
+
+### 虚拟滚动（大量问题场景）
+
+**适用场景**：问题数量 > 100 时
+
+**实现策略**：
+- 只渲染可见区域的 blocks（视口内 + 上下缓冲区）
+- 使用 `IntersectionObserver` 监听 blocks 的可见性
+- 动态加载和卸载 wsx 组件实例
+- 减少 DOM 节点数量，提升滚动性能
+
+**示例实现**：
+```typescript
+class QuizEditor {
+  private observer: IntersectionObserver;
+
+  private setupVirtualScrolling() {
+    if (!this.shouldUseVirtualScrolling()) return;
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.renderBlock(entry.target);
+        } else {
+          this.unrenderBlock(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '200px' // 缓冲区
+    });
+  }
+
+  private shouldUseVirtualScrolling(): boolean {
+    return this.currentDSL?.quiz.sections
+      .reduce((count, s) => count + s.questions.length, 0) > 100;
+  }
+}
+```
+
+### 组件懒加载（v1.1+，可选优化）
+
+**注意**：v1 版本使用静态导入，所有工具在初始化时加载。组件懒加载是 v1.1+ 的可选优化。
+
+**策略**（如果实现）：
+- wsx 组件按需加载（使用静态导入，但延迟初始化）
+- 减少初始加载时间
+- 提升首屏渲染速度
+
+**实现方式**（不使用动态 import）：
+- 所有工具类使用静态导入
+- 延迟实例化工具，只在需要时创建实例
+- 使用工厂模式管理工具实例
+
+### 状态更新优化
+
+**Debounce onChange 事件**：
+```typescript
+class QuizEditor {
+  private onChangeDebounced = debounce(async () => {
+    const dsl = await this.save();
+    this.options.onChange?.(dsl);
+  }, 300); // 300ms 防抖
+
+  private async handleBlockChange(): Promise<void> {
+    this.isDirtyFlag = true;
+    this.onChangeDebounced();
+  }
+}
+```
+
+**批量更新 DSL**：
+- 收集多个小的状态变更
+- 批量提交，减少重渲染次数
+
+### 内存优化
+
+**及时释放资源**：
+```typescript
+class QuizEditor {
+  async destroy(): Promise<void> {
+    // 清理 Observer
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    // 清理事件监听
+    this.removeEventListeners();
+
+    // 销毁 Editor.js
+    if (this.editor) {
+      await this.editor.destroy();
+      this.editor = null;
+    }
+
+    // 清理引用
+    this.currentDSL = null;
+  }
+}
+```
+
+### 性能监控
+
+**关键指标**：
+- **初始化时间**：从创建实例到 `editor.isReady`
+- **渲染时间**：DSL 转换 + blocks 渲染
+- **保存时间**：blocks 转换为 DSL
+- **内存占用**：大量问题时的内存使用
+
+**监控实现**：
+```typescript
+class QuizEditor {
+  private metrics = {
+    initTime: 0,
+    renderTime: 0,
+    saveTime: 0,
+  };
+
+  async init(): Promise<void> {
+    const start = performance.now();
+    // ... 初始化逻辑
+    this.metrics.initTime = performance.now() - start;
+    console.log('Editor init time:', this.metrics.initTime, 'ms');
+  }
+}
+```
+
+---
+
 ## 参考
 
 - [RFC 0001: Quiz DSL 规范](./0001-quiz-dsl-specification.md)
 - [RFC 0002: 架构设计](./0002-architecture-design.md)
 - [Editor.js 文档](https://editorjs.io/)
 - [Editor.js 工具开发指南](https://editorjs.io/tools-api)
+- [wsxjs GitHub](https://github.com/wsxjs/wsxjs)
 
