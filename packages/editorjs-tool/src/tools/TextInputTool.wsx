@@ -1,7 +1,13 @@
 /** @jsxImportSource @wsxjs/wsx-core */
 
 import { createLogger } from '@wsxjs/wsx-core';
-import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
+import type {
+  BlockTool,
+  BlockToolConstructorOptions,
+  BlockToolData,
+  BlockAPI,
+  API,
+} from '@editorjs/editorjs';
 import { QuestionType } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
@@ -10,6 +16,7 @@ import '@quizerjs/core';
 const logger = createLogger('TextInputTool');
 
 import type { TextInputData } from './types';
+import type { QuizQuestionHeaderComponent, QuizQuestionDescriptionComponent } from './editor-api';
 
 /**
  * 文本输入题 Editor.js 工具
@@ -19,8 +26,10 @@ export default class TextInputTool implements BlockTool {
   private data: TextInputData;
   private readOnly: boolean;
   private wrapper: HTMLElement;
-  private questionHeaderComponent: any = null;
-  private questionDescriptionComponent: any = null;
+  private block: BlockAPI;
+  private api: API;
+  private questionHeaderComponent: QuizQuestionHeaderComponent | null = null;
+  private questionDescriptionComponent: QuizQuestionDescriptionComponent | null = null;
   private correctAnswerInput: HTMLInputElement | null = null;
 
   static get toolbox() {
@@ -49,6 +58,8 @@ export default class TextInputTool implements BlockTool {
       },
     } as TextInputData;
     this.readOnly = options?.readOnly || false;
+    this.block = options!.block;
+    this.api = options!.api;
   }
 
   render(): HTMLElement {
@@ -60,20 +71,22 @@ export default class TextInputTool implements BlockTool {
         <quiz-question-header
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent) => {
-            question.text = e.detail;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            question.text = e.detail.text;
+            this.block.dispatchChange();
           }}
-          ref={(component: any) => {
+          ref={(component: QuizQuestionHeaderComponent) => {
             this.questionHeaderComponent = component;
           }}
         ></quiz-question-header>
         <quiz-question-description
           text={question.description || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent) => {
-            question.description = e.detail;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            question.description = e.detail.text;
+            this.block.dispatchChange();
           }}
-          ref={(component: any) => {
+          ref={(component: QuizQuestionDescriptionComponent) => {
             this.questionDescriptionComponent = component;
           }}
         ></quiz-question-description>
@@ -87,6 +100,7 @@ export default class TextInputTool implements BlockTool {
             disabled={this.readOnly}
             oninput={(e: Event) => {
               question.correctAnswer = (e.target as HTMLInputElement).value;
+              this.block.dispatchChange();
             }}
             style="width: 100%; padding: 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px;"
             ref={(input: HTMLInputElement) => {
@@ -116,12 +130,13 @@ export default class TextInputTool implements BlockTool {
 
   validate(savedData: TextInputData): boolean {
     const question = savedData.question;
-    if (!question.text || question.text.trim().length === 0) {
+    // 在编辑过程中，只要 question 对象存在就允许，不进行严格验证
+    // 严格验证应该在最终保存时进行，而不是在每次 onChange 时
+    // 这样可以确保编辑过程中的所有更改都能触发 onChange 回调
+    if (!question) {
       return false;
     }
-    if (!question.correctAnswer || String(question.correctAnswer).trim().length === 0) {
-      return false;
-    }
+    // 允许部分数据为空，这样编辑过程中可以正常触发 onChange
     return true;
   }
 

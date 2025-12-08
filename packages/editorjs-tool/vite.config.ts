@@ -19,24 +19,13 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: {
-        index: 'src/index.ts',
-        'tools/SingleChoiceTool': 'src/tools/SingleChoiceTool.wsx',
-        'tools/MultipleChoiceTool': 'src/tools/MultipleChoiceTool.wsx',
-        'tools/TextInputTool': 'src/tools/TextInputTool.wsx',
-        'tools/TrueFalseTool': 'src/tools/TrueFalseTool.wsx',
-      },
+      entry: 'src/index.ts',
       formats: ['es', 'cjs'],
-      fileName: (format, entryName) => {
-        if (entryName === 'index') {
-          return `index.${format === 'es' ? 'mjs' : 'js'}`;
-        }
-        return `${entryName}.${format === 'es' ? 'mjs' : 'js'}`;
-      },
+      fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
     },
+    sourcemap: true, // 生成 source map
     rollupOptions: {
       external: ['@quizerjs/core', '@quizerjs/dsl', '@editorjs/editorjs', '@wsxjs/wsx-core'],
     },
   },
 });
-

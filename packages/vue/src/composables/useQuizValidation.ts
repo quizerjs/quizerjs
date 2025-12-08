@@ -3,7 +3,7 @@
  */
 
 import { ref, computed } from 'vue';
-import { validateQuizDSL, type ValidationResult } from '@quizerjs/dsl';
+import { validateQuizDSL, ValidationErrorCode, type ValidationResult } from '@quizerjs/dsl';
 import type { QuizDSL } from '@quizerjs/dsl';
 
 export function useQuizValidation() {
@@ -13,7 +13,13 @@ export function useQuizValidation() {
     if (!dsl) {
       validationResult.value = {
         valid: false,
-        errors: [{ code: 'E1000', path: '', message: 'DSL 不能为空' }],
+        errors: [
+          {
+            code: ValidationErrorCode.DSL_MUST_BE_OBJECT,
+            path: '',
+            message: 'DSL 不能为空',
+          },
+        ],
       };
       return validationResult.value;
     }

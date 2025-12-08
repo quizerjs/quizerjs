@@ -31,9 +31,7 @@ export function useQuiz(options: UseQuizOptions = {}): UseQuizReturn {
         return option?.isCorrect || false;
 
       case 'multiple_choice':
-        const selectedOptions = question.options.filter(opt =>
-          userAnswer?.includes(opt.id)
-        );
+        const selectedOptions = question.options.filter(opt => userAnswer?.includes(opt.id));
         const correctOptions = question.options.filter(opt => opt.isCorrect);
         return (
           selectedOptions.length === correctOptions.length &&
@@ -63,7 +61,19 @@ export function useQuiz(options: UseQuizOptions = {}): UseQuizReturn {
     let totalScore = 0;
     let maxScore = 0;
 
-    dsl.value.quiz.questions.forEach(question => {
+    // 收集所有问题（从 sections 或 questions）
+    const allQuestions: Question[] = [];
+    if (dsl.value.quiz.sections) {
+      dsl.value.quiz.sections.forEach(section => {
+        if (section.questions) {
+          allQuestions.push(...section.questions);
+        }
+      });
+    } else if (dsl.value.quiz.questions) {
+      allQuestions.push(...dsl.value.quiz.questions);
+    }
+
+    allQuestions.forEach(question => {
       const points = question.points || 1;
       maxScore += points;
 
@@ -100,4 +110,3 @@ export function useQuiz(options: UseQuizOptions = {}): UseQuizReturn {
     isAnswerCorrect,
   };
 }
-

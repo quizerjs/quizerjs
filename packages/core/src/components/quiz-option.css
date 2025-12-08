@@ -32,22 +32,33 @@
   font-size: 0.9375rem;
   color: #333333;
   line-height: 1.5;
-  padding: 4px 0;
-  border: none;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
   outline: none;
   min-height: 1.5em;
   cursor: text;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.quiz-option-text:hover {
+  border-color: #4a90e2;
 }
 
 .quiz-option-text:empty::before {
   content: '输入选项文本...';
   color: #999999;
+  pointer-events: none;
 }
 
 .quiz-option-text:focus {
   outline: 2px solid #4a90e2;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline-offset: 0;
+  border-color: #4a90e2;
+  background-color: #ffffff;
 }
 
 .quiz-option-actions {

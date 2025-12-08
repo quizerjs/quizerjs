@@ -10,6 +10,11 @@ import '@quizerjs/core';
 const logger = createLogger('MultipleChoiceTool');
 
 import type { MultipleChoiceData } from './types';
+import type {
+  QuizQuestionHeaderComponent,
+  QuizQuestionDescriptionComponent,
+  QuizOptionListComponent,
+} from './editor-api';
 
 /**
  * 多选题 Editor.js 工具
@@ -19,9 +24,11 @@ export default class MultipleChoiceTool implements BlockTool {
   private data: MultipleChoiceData;
   private readOnly: boolean;
   private wrapper: HTMLElement;
-  private questionHeaderComponent: any = null;
-  private questionDescriptionComponent: any = null;
-  private optionListComponent: any = null;
+  private block: BlockAPI;
+  private api: API;
+  private questionHeaderComponent: QuizQuestionHeaderComponent | null = null;
+  private questionDescriptionComponent: QuizQuestionDescriptionComponent | null = null;
+  private optionListComponent: QuizOptionListComponent | null = null;
 
   static get toolbox() {
     return {
@@ -50,6 +57,8 @@ export default class MultipleChoiceTool implements BlockTool {
       },
     } as MultipleChoiceData;
     this.readOnly = options?.readOnly || false;
+    this.block = options!.block;
+    this.api = options!.api;
   }
 
   render(): HTMLElement {
@@ -60,20 +69,22 @@ export default class MultipleChoiceTool implements BlockTool {
         <quiz-question-header
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent) => {
-            question.text = e.detail;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            question.text = e.detail.text;
+            this.block.dispatchChange();
           }}
-          ref={(component: any) => {
+          ref={(component: QuizQuestionHeaderComponent) => {
             this.questionHeaderComponent = component;
           }}
         ></quiz-question-header>
         <quiz-question-description
           text={question.description || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent) => {
-            question.description = e.detail;
+          ontextchange={(e: CustomEvent<{ text: string }>) => {
+            question.description = e.detail.text;
+            this.block.dispatchChange();
           }}
-          ref={(component: any) => {
+          ref={(component: QuizQuestionDescriptionComponent) => {
             this.questionDescriptionComponent = component;
           }}
         ></quiz-question-description>
@@ -83,8 +94,9 @@ export default class MultipleChoiceTool implements BlockTool {
           readonly={this.readOnly ? 'true' : 'false'}
           onoptionschange={(e: CustomEvent) => {
             question.options = e.detail.options;
+            this.block.dispatchChange();
           }}
-          ref={(component: any) => {
+          ref={(component: QuizOptionListComponent) => {
             this.optionListComponent = component;
           }}
         ></quiz-option-list>

@@ -93,10 +93,23 @@ export class QuizOption extends LightComponent {
     // 设置 contentEditable
     this.textElement.contentEditable = isReadonly ? 'false' : 'true';
 
-    // 监听输入变化
+    // 设置属性以确保可编辑性
     if (!isReadonly) {
+      this.textElement.setAttribute('contenteditable', 'true');
+      this.textElement.setAttribute('spellcheck', 'true');
+      // 监听输入变化
       this.textElement.addEventListener('input', this.handleInput);
       this.textElement.addEventListener('blur', this.handleBlur);
+      this.textElement.addEventListener('focus', () => {
+        // 聚焦时确保可以编辑
+        if (this.textElement) {
+          this.textElement.contentEditable = 'true';
+        }
+      });
+    } else {
+      this.textElement.setAttribute('contenteditable', 'false');
+      this.textElement.removeEventListener('input', this.handleInput);
+      this.textElement.removeEventListener('blur', this.handleBlur);
     }
   }
 

@@ -2,24 +2,24 @@
   "name": "@quizerjs/quizerjs",
   "version": "0.0.1",
   "description": "quizerjs 主包 - 提供测验编辑器和播放器",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index/index.js",
+  "module": "./dist/index/index.mjs",
+  "types": "./dist/index/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "import": "./dist/index/index.mjs",
+      "require": "./dist/index/index.js",
       "source": "./src/index.ts"
     },
     "./editor": {
-      "types": "./dist/editor/index.d.ts",
+      "types": "./dist/editor.d.ts",
       "import": "./dist/editor/index.mjs",
       "require": "./dist/editor/index.js",
       "source": "./src/editor/index.ts"
     },
     "./player": {
-      "types": "./dist/player/index.d.ts",
+      "types": "./dist/player.d.ts",
       "import": "./dist/player/index.mjs",
       "require": "./dist/player/index.js",
       "source": "./src/player/index.ts"

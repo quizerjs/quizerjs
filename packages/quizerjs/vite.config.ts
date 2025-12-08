@@ -25,6 +25,7 @@ export default defineConfig({
       external: [
         '@quizerjs/dsl',
         '@quizerjs/core',
+        '@quizerjs/editorjs-tool',
         '@editorjs/editorjs',
         '@editorjs/paragraph',
         '@editorjs/header',

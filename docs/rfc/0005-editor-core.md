@@ -10,6 +10,9 @@
 
 **重要架构决策**: DSL ↔ Block 转换逻辑在 `@quizerjs/core` 包中实现，通过转换器（Transformer）提供。QuizEditor 使用这些转换器而不是自己实现转换逻辑，这符合单一职责原则，转换逻辑可被多个组件复用。
 
+**相关文档**：
+- [Editor.js 工具开发指南](../guides/editorjs-tool-development.md) - 详细说明如何使用 wsx 编写 Editor.js Block Tool
+
 ## 动机
 
 - 明确编辑器的详细 API 设计

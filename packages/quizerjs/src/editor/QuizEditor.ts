@@ -1,4 +1,4 @@
-import EditorJS, { type OutputData } from '@editorjs/editorjs';
+import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 import Header from '@editorjs/header';
 import {
@@ -8,6 +8,7 @@ import {
   TrueFalseTool,
 } from '@quizerjs/editorjs-tool';
 import { dslToBlock, blockToDSL } from '@quizerjs/core';
+import type { EditorJSOutput, EditorJSBlock } from '@quizerjs/core';
 import type { QuizDSL } from '@quizerjs/dsl';
 import { validateQuizDSL } from '@quizerjs/dsl';
 
@@ -91,7 +92,7 @@ export class QuizEditor {
         // 标准 Editor.js 工具
         paragraph: Paragraph,
         header: {
-          class: Header,
+          class: Header as any, // Editor.js Header 类型定义不完整，使用 any 绕过
           config: {
             levels: [1, 2, 3, 4], // 支持 H1-H4（H1 用于文档标题，H2-H4 用于章节）
             defaultLevel: 2,
@@ -155,7 +156,13 @@ export class QuizEditor {
     }
 
     const editorData = await this.editor.save();
-    const dsl = blockToDSL(editorData);
+    // 类型转换：Editor.js 的 OutputData 转换为 EditorJSOutput
+    const editorJSOutput: EditorJSOutput = {
+      blocks: editorData.blocks as EditorJSBlock[],
+      time: editorData.time,
+      version: editorData.version,
+    };
+    const dsl = blockToDSL(editorJSOutput);
 
     this.currentDSL = dsl;
     this.isDirtyFlag = false;
