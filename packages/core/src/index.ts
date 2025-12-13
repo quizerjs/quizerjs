@@ -11,6 +11,8 @@ import './components/quiz-option.wsx';
 import './components/quiz-option-list.wsx';
 import './components/quiz-question-header.wsx';
 import './components/quiz-question-description.wsx';
+// 播放器组件
+import './components/quiz-player.wsx';
 
 // 导出工具函数
 export { calculateQuestionScore, checkAnswer, calculateQuizResult } from './utils/quizCalculator';

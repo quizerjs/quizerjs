@@ -5,7 +5,7 @@
  * 支持编辑选项文本、设置正确答案、删除选项
  */
 
-import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import { QuestionType } from '@quizerjs/dsl';
 import styles from './quiz-option.css?inline';
 
@@ -24,28 +24,15 @@ interface QuizOptionProps {
 
 @autoRegister({ tagName: 'quiz-option' })
 export class QuizOption extends LightComponent {
-  // 响应式状态
-  private optionIdState = this.useState('optionId', '');
-  private textState = this.useState('text', '');
-  private selectedState = this.useState('selected', false);
-  private typeState = this.useState('type', QuestionType.SINGLE_CHOICE);
-  private readonlyState = this.useState('readonly', false);
-
-  // Getter/setter
-  private optionId = () => this.optionIdState[0]();
-  private setOptionId = (value: string) => this.optionIdState[1](value);
-  private text = () => this.textState[0]();
-  private setTextState = (value: string) => this.textState[1](value);
-  private selected = () => this.selectedState[0]();
-  private setSelected = (value: boolean) => this.selectedState[1](value);
-  private type = () => this.typeState[0]();
-  private setType = (value: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) =>
-    this.typeState[1](value);
-  private readonly = () => this.readonlyState[0]();
-  private setReadonly = (value: boolean) => this.readonlyState[1](value);
+  // 响应式状态 - 使用 @state 装饰器
+  @state private optionId = '';
+  @state private text = '';
+  @state private selected = false;
+  @state private type: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE =
+    QuestionType.SINGLE_CHOICE;
+  @state private readonly = false;
 
   private textElement: HTMLElement | null = null;
-  private isSetup = false; // 防止重复设置事件监听器
 
   constructor() {
     super({
@@ -61,35 +48,35 @@ export class QuizOption extends LightComponent {
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'optionid':
-        this.setOptionId(newValue || '');
+        this.optionId = newValue || '';
         break;
       case 'text':
-        // 只在元素不存在或内容不同时更新，避免打断用户输入
-        if (this.textElement && this.textElement.innerHTML !== newValue) {
-          // 检查元素是否正在被编辑（有焦点）
-          if (document.activeElement !== this.textElement) {
+        // 不更新 text 状态，避免重新渲染（RFC 0007）
+        // 只在元素没有焦点且内容不同时更新 DOM，避免打断用户输入
+        if (this.textElement && document.activeElement !== this.textElement) {
+          if (this.textElement.innerHTML !== newValue) {
             this.textElement.innerHTML = newValue || '';
           }
         }
-        this.setTextState(newValue || '');
         break;
       case 'selected':
-        this.setSelected(newValue === 'true');
+        this.selected = newValue === 'true';
         break;
       case 'type':
-        this.setType(
+        this.type =
           (newValue as QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) ||
-            QuestionType.SINGLE_CHOICE
-        );
+          QuestionType.SINGLE_CHOICE;
         break;
       case 'readonly':
-        this.setReadonly(newValue === 'true');
-        if (this.textElement) {
-          this.isSetup = false;
-          this.setupTextElement();
-        }
+        this.readonly = newValue === 'true';
+        this.setupTextElement();
         break;
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.setupTextElement();
   }
 
   disconnectedCallback() {
@@ -97,53 +84,38 @@ export class QuizOption extends LightComponent {
     // 清理事件监听器
     if (this.textElement) {
       this.textElement.removeEventListener('input', this.handleInput);
-      this.textElement.removeEventListener('blur', this.handleBlur);
-      this.textElement.removeEventListener('keydown', this.handleKeyDown);
     }
-    this.isSetup = false;
   }
 
   private setupTextElement() {
-    if (!this.textElement || this.isSetup) return;
+    if (!this.textElement) return;
 
-    const isReadonly = this.readonly();
+    const isReadonly = this.readonly;
 
-    // 设置 contentEditable
+    // 显式设置 contentEditable（与 quiz-question-header 保持一致）
+    // 这确保了即使组件重新渲染，contentEditable 也会被正确设置
     this.textElement.contentEditable = isReadonly ? 'false' : 'true';
-    this.textElement.setAttribute('contenteditable', isReadonly ? 'false' : 'true');
     this.textElement.setAttribute('spellcheck', 'true');
+
+    // 清理旧的事件监听器
+    this.textElement.removeEventListener('input', this.handleInput);
 
     // 只在非只读模式下添加事件监听器
     if (!isReadonly) {
-      // 移除旧的监听器（如果存在）
-      this.textElement.removeEventListener('input', this.handleInput);
-      this.textElement.removeEventListener('blur', this.handleBlur);
-      this.textElement.removeEventListener('keydown', this.handleKeyDown);
-
-      // 添加新的监听器
+      // 使用 input 事件监听任何变化，不需要 blur 事件
+      // 因为不会重新渲染，所以可以实时更新值
       this.textElement.addEventListener('input', this.handleInput);
-      this.textElement.addEventListener('blur', this.handleBlur);
-      this.textElement.addEventListener('keydown', this.handleKeyDown);
     }
-
-    this.isSetup = true;
   }
 
-  private handleKeyDown = (e: KeyboardEvent) => {};
-
-  private handleInput = (e: Event) => {
-    // 不在 input 时触发事件，避免父组件重新渲染导致焦点丢失
-    // 只在 blur 时触发事件和更新状态
-    // 这样可以避免每次输入都导致组件重新渲染
-  };
-
-  private handleBlur = () => {
+  private handleInput = () => {
     if (this.textElement) {
       const html = this.textElement.innerHTML;
-      this.setTextState(html);
+      // 不更新 text 状态，避免重新渲染
+      // 直接派发 textchange 事件，实时更新父组件的值
       this.dispatchEvent(
-        new CustomEvent('textblur', {
-          detail: { optionId: this.optionId(), text: html },
+        new CustomEvent('textchange', {
+          detail: { optionId: this.optionId, text: html },
           bubbles: true,
         })
       );
@@ -151,26 +123,26 @@ export class QuizOption extends LightComponent {
   };
 
   private handleSelect = () => {
-    const isReadonly = this.readonly();
+    const isReadonly = this.readonly;
     if (isReadonly) return;
 
-    const newSelected = !this.selected();
-    this.setSelected(newSelected);
+    const newSelected = !this.selected;
+    this.selected = newSelected;
     this.dispatchEvent(
       new CustomEvent('select', {
-        detail: { optionId: this.optionId(), selected: newSelected },
+        detail: { optionId: this.optionId, selected: newSelected },
         bubbles: true,
       })
     );
   };
 
   private handleDelete = () => {
-    const isReadonly = this.readonly();
+    const isReadonly = this.readonly;
     if (isReadonly) return;
 
     this.dispatchEvent(
       new CustomEvent('delete', {
-        detail: { optionId: this.optionId() },
+        detail: { optionId: this.optionId },
         bubbles: true,
       })
     );
@@ -197,17 +169,20 @@ export class QuizOption extends LightComponent {
    */
   getData(): { id: string; text: string; isCorrect: boolean } {
     return {
-      id: this.optionId(),
+      id: this.optionId,
       text: this.getText(),
-      isCorrect: this.selected(),
+      isCorrect: this.selected,
     };
   }
 
   render() {
-    const isReadonly = this.readonly();
-    const isSelected = this.selected();
-    const currentType = this.type();
+    const isReadonly = this.readonly;
+    const isSelected = this.selected;
+    const currentType = this.type;
     const inputType = currentType === QuestionType.SINGLE_CHOICE ? 'radio' : 'checkbox';
+    // 只在初始渲染时使用 text 状态，之后由 contentEditable 维护
+    // 使用 optionid 作为 key 的一部分，确保组件在选项变化时正确更新
+    const initialText = this.text;
 
     const classNames = ['quiz-option'];
     if (isSelected) classNames.push('quiz-option-selected');
@@ -228,43 +203,23 @@ export class QuizOption extends LightComponent {
         />
         <div
           className="quiz-option-text"
+          innerHTML={initialText}
+          contentEditable={!isReadonly}
           ref={el => {
             if (el && el !== this.textElement) {
               // 清理旧元素的事件监听器
               if (this.textElement) {
                 this.textElement.removeEventListener('input', this.handleInput);
-                this.textElement.removeEventListener('blur', this.handleBlur);
-                this.textElement.removeEventListener('keydown', this.handleKeyDown);
               }
-
-              const wasFocused = document.activeElement === this.textElement;
+              // 保存引用
               this.textElement = el;
-              this.isSetup = false;
-
               // 初始化内容（只在元素为空或内容不同时设置）
-              const currentText = this.text();
-              if (!el.innerHTML || (el.innerHTML !== currentText && !wasFocused)) {
-                el.innerHTML = currentText || '';
+              const currentContent = el.innerHTML;
+              if (!currentContent || currentContent !== initialText) {
+                el.innerHTML = initialText || '';
               }
-
+              // 设置事件监听器
               this.setupTextElement();
-
-              // 如果之前有焦点，恢复焦点
-              if (wasFocused && el) {
-                // 使用 setTimeout 确保在下一个事件循环中恢复焦点
-                setTimeout(() => {
-                  if (el && document.activeElement !== el) {
-                    el.focus();
-                    // 将光标移到末尾
-                    const range = document.createRange();
-                    range.selectNodeContents(el);
-                    range.collapse(false);
-                    const selection = window.getSelection();
-                    selection?.removeAllRanges();
-                    selection?.addRange(range);
-                  }
-                }, 0);
-              }
             }
           }}
         />

@@ -203,6 +203,15 @@ const handleSave = async (dsl: QuizDSL) => {
   overflow: hidden;
 }
 
+/* 面板内容区 - 关键 flex 布局 */
+.panel-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Editor 样式 */
 .panel-content :deep(.quiz-editor) {
   flex: 1;

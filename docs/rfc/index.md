@@ -12,12 +12,13 @@
 - [RFC 0004: 演示站点架构设计](./0004-demo-site-architecture.md) - quizerjs.io 演示站点设计
 - [RFC 0005: 编辑器核心组件设计](./0005-editor-core.md) - QuizEditor 的详细 API 设计
 - [RFC 0006: 播放器核心组件设计](./0006-player-core.md) - QuizPlayer 的详细 API 设计
+- [RFC 0007: 选项列表渲染优化](./0007-option-list-render-optimization.md) - 优化选项列表渲染以避免焦点丢失
 
 ### 草案中
 
-- RFC 0006: Vue 集成设计（计划中）
-- RFC 0007: 主题系统设计（计划中）
-- RFC 0008: 插件系统设计（计划中）
+- RFC 0008: Vue 集成设计（计划中）
+- RFC 0009: 主题系统设计（计划中）
+- RFC 0010: 插件系统设计（计划中）
 
 ## RFC 流程
 

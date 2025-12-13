@@ -5,20 +5,14 @@
  * 支持 contentEditable 和 Editor.js inline tools
  */
 
-import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import styles from './quiz-question-header.css?inline';
 
 @autoRegister({ tagName: 'quiz-question-header' })
 export class QuizQuestionHeader extends LightComponent {
-  // 响应式状态
-  private textState = this.useState('text', '');
-  private readonlyState = this.useState('readonly', false);
-
-  // Getter/setter
-  private text = () => this.textState[0]();
-  private setTextState = (value: string) => this.textState[1](value);
-  private readonly = () => this.readonlyState[0]();
-  private setReadonly = (value: boolean) => this.readonlyState[1](value);
+  // 响应式状态 - 使用 @state 装饰器
+  @state private text = '';
+  @state private readonly = false;
 
   private editableElement: HTMLElement | null = null;
 
@@ -36,10 +30,10 @@ export class QuizQuestionHeader extends LightComponent {
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'text':
-        this.setTextState(newValue || '');
+        this.text = newValue || '';
         break;
       case 'readonly':
-        this.setReadonly(newValue === 'true');
+        this.readonly = newValue === 'true';
         break;
     }
   }
@@ -49,37 +43,39 @@ export class QuizQuestionHeader extends LightComponent {
     this.setupEditableElement();
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // 清理事件监听器
+    if (this.editableElement) {
+      this.editableElement.removeEventListener('input', this.handleInput);
+    }
+  }
+
   private setupEditableElement() {
     if (!this.editableElement) return;
 
-    const isReadonly = this.readonly();
+    const isReadonly = this.readonly;
 
     // 设置 contentEditable
     this.editableElement.contentEditable = isReadonly ? 'false' : 'true';
 
-    // 监听输入变化
+    // 清理旧的事件监听器
+    this.editableElement.removeEventListener('input', this.handleInput);
+
+    // 使用 input 事件监听任何变化，不需要 blur 事件
+    // 因为不会重新渲染，所以可以实时更新值
     if (!isReadonly) {
       this.editableElement.addEventListener('input', this.handleInput);
-      this.editableElement.addEventListener('blur', this.handleBlur);
     }
   }
 
-  private handleInput = (e: Event) => {
-    const target = e.target as HTMLElement;
-    const html = target.innerHTML;
-    this.dispatchEvent(
-      new CustomEvent('textchange', {
-        detail: { text: html },
-        bubbles: true,
-      })
-    );
-  };
-
-  private handleBlur = () => {
+  private handleInput = () => {
     if (this.editableElement) {
       const html = this.editableElement.innerHTML;
+      // 不更新 textState，避免重新渲染
+      // 直接派发 textchange 事件，实时更新父组件的值
       this.dispatchEvent(
-        new CustomEvent('textblur', {
+        new CustomEvent('textchange', {
           detail: { text: html },
           bubbles: true,
         })
@@ -104,7 +100,7 @@ export class QuizQuestionHeader extends LightComponent {
   }
 
   render() {
-    const isReadonly = this.readonly();
+    const isReadonly = this.readonly;
     const className = isReadonly
       ? 'quiz-question-header-readonly'
       : 'quiz-question-header-editable';
@@ -117,7 +113,7 @@ export class QuizQuestionHeader extends LightComponent {
             this.editableElement = el;
             this.setupEditableElement();
           }}
-          innerHTML={this.text()}
+          innerHTML={this.text}
           contentEditable={!isReadonly}
         />
       </div>

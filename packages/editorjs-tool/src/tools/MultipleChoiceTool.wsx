@@ -1,7 +1,13 @@
 /** @jsxImportSource @wsxjs/wsx-core */
 
 import { createLogger } from '@wsxjs/wsx-core';
-import type { BlockTool, BlockToolConstructorOptions, BlockToolData } from '@editorjs/editorjs';
+import type {
+  BlockTool,
+  BlockToolConstructorOptions,
+  BlockToolData,
+  BlockAPI,
+  API,
+} from '@editorjs/editorjs';
 import { QuestionType } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
@@ -92,8 +98,11 @@ export default class MultipleChoiceTool implements BlockTool {
           options={JSON.stringify(question.options || [])}
           type={QuestionType.MULTIPLE_CHOICE}
           readonly={this.readOnly ? 'true' : 'false'}
-          onoptionschange={(e: CustomEvent) => {
-            question.options = e.detail.options;
+          onoptionschange={() => {
+            // 符合 Editor.js 最佳实践：通知 Editor.js 有变化
+            // 不更新 this.data（总是从 option-list 读取值）
+            // 不更新属性（避免触发 quiz-option-list 重新渲染）
+            // quiz-option-list 内部已处理所有渲染，只通知 Editor.js 有变化
             this.block.dispatchChange();
           }}
           ref={(component: QuizOptionListComponent) => {
@@ -120,18 +129,27 @@ export default class MultipleChoiceTool implements BlockTool {
     return this.data;
   }
 
+  /**
+   * 验证多选题数据
+   * @param savedData - 多选题数据
+   * @returns - 是否有效
+   *
+   * 注意：使用宽松验证策略，只检查 question 对象是否存在。
+   * 这样编辑过程中的所有更改都能触发 onChange 回调，内联工具也能正常工作。
+   * 严格验证应该在最终保存时进行，而不是在每次 onChange 时。
+   *
+   * 如果 validate() 返回 false，Editor.js 会认为块无效，从而禁用内联工具栏，
+   * 导致加粗、斜体等内联工具无法使用。
+   */
   validate(savedData: MultipleChoiceData): boolean {
     const question = savedData.question;
-    if (!question.text || question.text.trim().length === 0) {
+    // 在编辑过程中，只要 question 对象存在就允许，不进行严格验证
+    // 严格验证应该在最终保存时进行，而不是在每次 onChange 时
+    // 这样可以确保编辑过程中的所有更改都能触发 onChange 回调，内联工具也能正常工作
+    if (!question) {
       return false;
     }
-    if (!question.options || question.options.length < 2) {
-      return false;
-    }
-    const hasCorrectAnswer = question.options.some(opt => opt.isCorrect);
-    if (!hasCorrectAnswer) {
-      return false;
-    }
+    // 允许部分数据为空，这样编辑过程中可以正常触发 onChange，内联工具也能正常工作
     return true;
   }
 

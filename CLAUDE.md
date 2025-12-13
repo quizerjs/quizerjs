@@ -40,7 +40,7 @@
 
 #### 核心框架
 - **TypeScript 5.3.3**: 类型安全的 JavaScript 超集
-- **wsxjs (@wsxjs/wsx-core ^0.0.5)**: Web Components 框架，用于构建可复用的组件
+- **wsxjs (@wsxjs/wsx-core ^0.0.7)**: Web Components 框架，用于构建可复用的组件
 - **Editor.js ^2.28.0**: 块样式编辑器框架
 
 #### 包管理
@@ -48,14 +48,16 @@
 - **pnpm workspaces**: Monorepo 工作空间管理
 
 #### 构建工具
-- **tsup ^8.0.0**: 基于 esbuild 的 TypeScript 打包工具
+- **Vite ^5.0.0**: 基于 esbuild 和 Rollup 的构建工具
   - 支持 ESM 和 CommonJS 双格式输出
-  - 自动生成类型定义文件
+  - 使用 `vite-plugin-dts` 自动生成类型定义文件
+  - 使用 `@wsxjs/wsx-vite-plugin` 处理 wsx 组件
 
 #### 开发工具
 - **ESLint**: 代码检查
 - **Prettier ^3.1.0**: 代码格式化
-- **TypeScript**: 类型检查和编译
+- **TypeScript ^5.3.3**: 类型检查和编译
+- **Vitest ^1.0.0**: 单元测试框架（基于 Vite）
 - **Husky**: Git hooks 管理（如已配置）
 
 #### DSL 与验证
@@ -73,16 +75,18 @@ quizerjs/
 │   ├── core/              # 核心 wsx 组件库
 │   │   ├── src/
 │   │   │   ├── components/    # wsx 组件
-│   │   │   │   ├── QuizBlock.wsx.ts    # 测验块组件
-│   │   │   │   ├── Question.wsx.ts      # 问题组件
-│   │   │   │   └── Option.wsx.ts        # 选项组件
+│   │   │   │   ├── quiz-option.wsx          # 选项组件
+│   │   │   │   ├── quiz-option-list.wsx     # 选项列表组件
+│   │   │   │   ├── quiz-question-header.wsx # 问题标题组件
+│   │   │   │   └── quiz-question-description.wsx # 问题描述组件
 │   │   │   ├── types.ts                 # 类型定义
 │   │   │   ├── utils/                   # 工具函数
 │   │   │   │   └── quizCalculator.ts    # 测验计算逻辑
-│   │   │   └── index.ts                 # 导出入口
+│   │   │   ├── transformer.ts          # DSL 与 Editor.js 转换器
+│   │   │   └── index.ts                # 导出入口
 │   │   ├── package.json
 │   │   ├── tsconfig.json
-│   │   └── tsup.config.ts
+│   │   └── vite.config.ts
 │   ├── dsl/               # Quiz DSL 定义和验证库
 │   │   ├── src/
 │   │   │   ├── types.ts                 # DSL 类型定义
@@ -94,15 +98,40 @@ quizerjs/
 │   │   ├── schema.json                  # JSON Schema 定义
 │   │   ├── package.json
 │   │   ├── tsconfig.json
-│   │   └── tsup.config.ts
-│   └── editorjs-tool/     # Editor.js 工具插件
+│   │   └── vite.config.ts
+│   ├── editorjs-tool/     # Editor.js 工具插件
+│   │   ├── src/
+│   │   │   ├── tools/                   # 工具实现
+│   │   │   │   ├── SingleChoiceTool.wsx      # 单选题工具
+│   │   │   │   ├── MultipleChoiceTool.wsx   # 多选题工具
+│   │   │   │   ├── TextInputTool.wsx        # 文本输入题工具
+│   │   │   │   ├── TrueFalseTool.wsx        # 判断题工具
+│   │   │   │   ├── editor-api.ts            # 编辑器 API
+│   │   │   │   └── types.ts                 # 类型定义
+│   │   │   └── index.ts
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   ├── vue/               # Vue 集成包
+│   │   ├── src/
+│   │   │   ├── QuizBlock.vue            # Vue 测验块组件
+│   │   │   ├── QuizComponent.vue        # Vue 测验组件
+│   │   │   ├── composables/             # Vue Composables
+│   │   │   │   ├── useQuiz.ts           # 测验逻辑
+│   │   │   │   └── useQuizValidation.ts # 验证逻辑
+│   │   │   └── index.ts
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   └── quizerjs/          # 高级 API 包
 │       ├── src/
-│       │   ├── QuizTool.ts              # Tool 实现
-│       │   ├── config.ts                # 配置选项
+│       │   ├── editor/                  # 编辑器相关
+│       │   │   └── QuizEditor.ts       # 测验编辑器
+│       │   ├── player/                  # 播放器相关
 │       │   └── index.ts
 │       ├── package.json
 │       ├── tsconfig.json
-│       └── tsup.config.ts
+│       └── vite.config.ts
 ├── examples/              # 示例项目
 │   └── basic/            # 基础示例
 ├── docs/                  # 项目文档
@@ -118,11 +147,9 @@ quizerjs/
 ```
 Editor.js 编辑器
   ↓
-QuizTool (Editor.js Tool)
+SingleChoiceTool / MultipleChoiceTool / TextInputTool / TrueFalseTool (Editor.js Tools)
   ↓
-QuizBlock (wsx 组件)
-  ↓
-QuizQuestion / QuizOption (wsx 子组件)
+quiz-option / quiz-option-list / quiz-question-header / quiz-question-description (wsx 组件)
   ↓
 用户交互 → 答案计算 → 结果展示
 ```
@@ -206,7 +233,8 @@ JSON 输出
 3. **TypeScript/wsxjs 编码规范**：
    - 使用 TypeScript 确保类型安全，严禁使用 `any` 类型
    - 使用 wsxjs 框架构建 Web Components，遵循 Web Components 标准
-   - 组件应以独立文件形式组织，使用 `.wsx.ts` 扩展名
+   - 组件应以独立文件形式组织，使用 `.wsx` 扩展名（不是 `.wsx.ts`）
+   - 组件文件命名使用 kebab-case（如 `quiz-option.wsx`）
    - 复杂组件应拆分为子组件，保持单一职责原则
    - 使用函数式编程范式，优先使用纯函数
    - 使用常量定义替代直接使用字符串，提高可维护性
@@ -255,7 +283,7 @@ JSON 输出
    - 分支覆盖率 (Branch): 100%
    - 函数覆盖率 (Funcs): 100%
    - 行覆盖率 (Lines): 100%
-   - 检查命令：`npm run test:unit:renderer -- <测试文件> --coverage`
+   - 检查命令：`pnpm test:coverage` 或 `vitest run --coverage`
    - 必须覆盖所有边界条件和异常处理
 
 3. **零 Lint 错误**

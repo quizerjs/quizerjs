@@ -3,9 +3,14 @@
  * 选项列表组件
  * 用于 Editor.js 工具中管理选项列表
  * 支持添加、删除、重新排序选项
+ *
+ * 渲染优化（RFC 0007）：
+ * - 使用 itemsState（响应式）用于渲染，只在添加/删除时更新
+ * - 使用 valuesMap（非响应式）存储文本值，更新时不触发渲染
+ * - 文本改变只更新 valuesMap，不触发重新渲染，避免焦点丢失
  */
 
-import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import { QuestionType } from '@quizerjs/dsl';
 import type { Option } from '@quizerjs/dsl';
 // WSX 组件自动注册，无需手动注册
@@ -14,19 +19,17 @@ import styles from './quiz-option-list.css?inline';
 
 @autoRegister({ tagName: 'quiz-option-list' })
 export class QuizOptionList extends LightComponent {
-  // 响应式状态
-  private optionsState = this.useState('options', [] as Option[]);
-  private typeState = this.useState('type', QuestionType.SINGLE_CHOICE);
-  private readonlyState = this.useState('readonly', false);
+  // 响应式状态 - 用于渲染的选项数组（只在添加/删除时更新）
+  @state private items: Option[] = [];
+  @state private type: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE =
+    QuestionType.SINGLE_CHOICE;
+  @state private readonly = false;
 
-  // Getter/setter
-  private options = () => this.optionsState[0]();
-  private setOptions = (value: Option[]) => this.optionsState[1](value);
-  private type = () => this.typeState[0]();
-  private setType = (value: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) =>
-    this.typeState[1](value);
-  private readonly = () => this.readonlyState[0]();
-  private setReadonly = (value: boolean) => this.readonlyState[1](value);
+  // 非响应式状态 - 存储选项文本值的 Map（更新时不触发渲染）
+  private valuesMap = new Map<string, string>();
+
+  // 添加选项按钮的引用
+  private addButtonRef: HTMLButtonElement | null = null;
 
   constructor() {
     super({
@@ -42,21 +45,35 @@ export class QuizOptionList extends LightComponent {
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'options':
-        try {
-          const options = JSON.parse(newValue || '[]');
-          this.setOptions(Array.isArray(options) ? options : []);
-        } catch {
-          this.setOptions([]);
+        const options = JSON.parse(newValue || '[]');
+        const parsedOptions = Array.isArray(options) ? options : [];
+
+        // 比较新旧选项 ID，只在添加/删除时更新
+        const currentIds = new Set(this.items.map(item => item.id));
+        const newIds = new Set(parsedOptions.map(opt => opt.id));
+        const idsChanged =
+          currentIds.size !== newIds.size || [...newIds].some(id => !currentIds.has(id));
+
+        if (idsChanged) {
+          // ID 变化：更新 items，触发渲染
+          this.items = parsedOptions;
+          // 重建 valuesMap
+          this.valuesMap.clear();
+          parsedOptions.forEach(opt => {
+            if (opt.text) {
+              this.valuesMap.set(opt.id, opt.text);
+            }
+          });
         }
+        // 如果只是内容变化（如 isCorrect），不更新 items，不触发渲染
         break;
       case 'type':
-        this.setType(
+        this.type =
           (newValue as QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) ||
-            QuestionType.SINGLE_CHOICE
-        );
+          QuestionType.SINGLE_CHOICE;
         break;
       case 'readonly':
-        this.setReadonly(newValue === 'true');
+        this.readonly = newValue === 'true';
         break;
     }
   }
@@ -65,9 +82,33 @@ export class QuizOptionList extends LightComponent {
     return `opt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  /**
+   * 派发 optionschange 事件
+   */
+  private dispatchOptionsChange(): void {
+    this.dispatchEvent(
+      new CustomEvent('optionschange', {
+        detail: { options: this.getOptions() },
+        bubbles: true,
+      })
+    );
+  }
+
   private handleAddOption = () => {
-    const isReadonly = this.readonly();
-    if (isReadonly) return;
+    console.log('[quiz-option-list] handleAddOption called', {
+      readonly: this.readonly,
+      currentItems: this.items.length,
+    });
+
+    const isReadonly = this.readonly;
+    if (isReadonly) {
+      console.log('[quiz-option-list] handleAddOption: readonly, returning');
+      return;
+    }
+
+    // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
+    const mergedItems = this.mergeItemsAndValues();
+    console.log('[quiz-option-list] handleAddOption: mergedItems', mergedItems.length);
 
     const newOption: Option = {
       id: this.generateOptionId(),
@@ -75,92 +116,105 @@ export class QuizOptionList extends LightComponent {
       isCorrect: false,
     };
 
-    const currentOptions = this.options();
-    this.setOptions([...currentOptions, newOption]);
-    this.dispatchEvent(
-      new CustomEvent('optionschange', {
-        detail: { options: this.options() },
-        bubbles: true,
-      })
-    );
+    // 创建新数组引用，确保 @state 能检测到变化
+    const newItems = [...mergedItems, newOption];
+    console.log('[quiz-option-list] handleAddOption: after push', newItems.length);
+
+    // 更新响应式状态，触发渲染
+    this.items = newItems;
+    console.log('[quiz-option-list] handleAddOption: items updated', this.items.length);
+
+    // 派发 optionschange 事件，通知 Editor.js 有变化
+    this.dispatchOptionsChange();
+    console.log('[quiz-option-list] handleAddOption: event dispatched');
   };
 
   private handleOptionSelect = (e: CustomEvent) => {
     const { optionId, selected } = e.detail;
-    const currentOptions = this.options();
-    const option = currentOptions.find(opt => opt.id === optionId);
+    const currentItems = this.items;
+    const option = currentItems.find(opt => opt.id === optionId);
     if (!option) return;
 
-    const currentType = this.type();
+    const currentType = this.type;
 
+    // 合并 items 和 valuesMap（使用追踪的文本值）
+    const mergedItems = this.mergeItemsAndValues();
+
+    let updatedItems: Option[];
     if (currentType === QuestionType.SINGLE_CHOICE) {
       // 单选题：只能选择一个
-      const updatedOptions = currentOptions.map(opt => ({
+      updatedItems = mergedItems.map(opt => ({
         ...opt,
         isCorrect: opt.id === optionId && selected,
       }));
-      this.setOptions(updatedOptions);
     } else {
       // 多选题：可以多选
-      const updatedOptions = currentOptions.map(opt =>
+      updatedItems = mergedItems.map(opt =>
         opt.id === optionId ? { ...opt, isCorrect: selected } : opt
       );
-      this.setOptions(updatedOptions);
     }
 
-    this.dispatchEvent(
-      new CustomEvent('optionschange', {
-        detail: { options: this.options() },
-        bubbles: true,
-      })
-    );
+    // 更新响应式状态，触发渲染
+    this.items = updatedItems;
+    // 派发 optionschange 事件，通知 Editor.js 有变化
+    this.dispatchOptionsChange();
   };
 
   private handleOptionTextChange = (e: CustomEvent) => {
     const { optionId, text } = e.detail;
-    const currentOptions = this.options();
-    const updatedOptions = currentOptions.map(opt =>
-      opt.id === optionId ? { ...opt, text } : opt
-    );
-    this.setOptions(updatedOptions);
-    this.dispatchEvent(
-      new CustomEvent('optionschange', {
-        detail: { options: this.options() },
-        bubbles: true,
-      })
-    );
+    // 只更新 valuesMap（非响应式），不触发重新渲染
+    // 不派发事件，避免触发 Editor.js 重新渲染
+    // 最新值会在 save() 时通过 getOptions() 获取
+    this.valuesMap.set(optionId, text);
   };
 
   private handleOptionDelete = (e: CustomEvent) => {
     const { optionId } = e.detail;
-    const currentOptions = this.options();
-    this.setOptions(currentOptions.filter(opt => opt.id !== optionId));
-    this.dispatchEvent(
-      new CustomEvent('optionschange', {
-        detail: { options: this.options() },
-        bubbles: true,
-      })
-    );
+    // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
+    const mergedItems = this.mergeItemsAndValues();
+    // 从 valuesMap 中移除
+    this.valuesMap.delete(optionId);
+    // 过滤删除的选项
+    const filteredItems = mergedItems.filter(opt => opt.id !== optionId);
+    // 更新响应式状态，触发渲染
+    this.items = filteredItems;
+    // 派发 optionschange 事件，通知 Editor.js 有变化
+    this.dispatchOptionsChange();
   };
 
   /**
-   * 获取选项列表
+   * 合并 items 和 values，生成完整的选项列表
+   * 用于在添加/删除时确保数据一致性
+   */
+  private mergeItemsAndValues(): Option[] {
+    return this.items.map(item => ({
+      ...item,
+      text: this.valuesMap.get(item.id) ?? item.text,
+    }));
+  }
+
+  /**
+   * 获取选项列表（合并 items 和 values）
+   * 用于保存和外部访问
    */
   getOptions(): Option[] {
-    return [...this.options()];
+    return this.mergeItemsAndValues();
   }
 
   /**
    * 设置选项列表
    */
   setOptionsList(options: Option[]): void {
-    this.setOptions([...options]);
-    this.dispatchEvent(
-      new CustomEvent('optionschange', {
-        detail: { options: this.options() },
-        bubbles: true,
-      })
-    );
+    // 更新 items（用于渲染）
+    this.items = [...options];
+    // 同步更新 valuesMap
+    this.valuesMap.clear();
+    options.forEach(opt => {
+      if (opt.text) {
+        this.valuesMap.set(opt.id, opt.text);
+      }
+    });
+    this.dispatchOptionsChange();
   }
 
   connectedCallback() {
@@ -171,10 +225,21 @@ export class QuizOptionList extends LightComponent {
     this.addEventListener('delete', this.handleOptionDelete as EventListener);
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    // 清理添加选项按钮的事件监听器
+    if (this.addButtonRef) {
+      this.addButtonRef.removeEventListener('click', this.handleAddOption);
+    }
+  }
+
   render() {
-    const isReadonly = this.readonly();
-    const currentType = this.type();
-    const currentOptions = this.options();
+    const isReadonly = this.readonly;
+    const currentType = this.type;
+    // 使用 items（用于渲染），只在添加/删除时更新
+    // quiz-option 组件通过 contentEditable 维护实际文本值
+    const currentItems = this.items;
+    console.log('[quiz-option-list] render: currentItems.length', currentItems.length);
 
     return (
       <div className="quiz-option-list">
@@ -183,21 +248,32 @@ export class QuizOptionList extends LightComponent {
           {!isReadonly && (
             <button
               className="quiz-option-list-add-button"
-              onClick={this.handleAddOption}
               type="button"
+              ref={(el: HTMLButtonElement) => {
+                // 清理旧的事件监听器
+                if (this.addButtonRef) {
+                  this.addButtonRef.removeEventListener('click', this.handleAddOption);
+                }
+                // 保存引用并添加事件监听器
+                this.addButtonRef = el;
+                if (el) {
+                  el.addEventListener('click', this.handleAddOption);
+                }
+              }}
             >
               + 添加选项
             </button>
           )}
         </div>
         <div className="quiz-option-list-items">
-          {currentOptions.length === 0 ? (
+          {currentItems.length === 0 ? (
             <div className="quiz-option-list-empty">暂无选项，点击"添加选项"开始</div>
           ) : (
-            currentOptions.map(option => (
+            currentItems.map(option => (
               <quiz-option
                 key={option.id}
                 optionid={option.id}
+                // 使用 item 的 text（初始值），实际文本由 quiz-option 的 contentEditable 维护
                 text={option.text}
                 selected={option.isCorrect ? 'true' : 'false'}
                 type={currentType}
