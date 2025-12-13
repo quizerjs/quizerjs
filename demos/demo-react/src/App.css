@@ -1,0 +1,162 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+/* 紧凑的顶部栏 - 类似 jsbin */
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.header-content {
+  width: 100%;
+}
+
+.app-header h1 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+  line-height: 1;
+}
+
+/* 主内容区 - 充分利用空间 */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  overflow: hidden;
+  background: #f5f5f5;
+  min-height: 0;
+}
+
+/* 面板样式 - 类似 jsbin 的标签页 */
+.editor-panel,
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.preview-panel {
+  border-right: none;
+}
+
+/* 面板标题栏 - 类似 jsbin 的标签 */
+.panel-header {
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 6px 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 预览区域样式 - 上下分栏 */
+.preview-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.preview-section:last-child {
+  border-bottom: none;
+}
+
+.section-header {
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 6px 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 面板内容区 - 关键 flex 布局 */
+.panel-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Editor 样式 */
+.panel-content .quiz-editor {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  padding: 12px;
+  overflow-y: auto;
+  background: #fff;
+  color: #333;
+}
+
+/* JsonViewer 样式调整 */
+.section-content .json-viewer {
+  border-radius: 0;
+}
+
+.section-content .json-viewer-highlight {
+  border-radius: 0;
+}
+
+.section-content .json-viewer-highlight pre {
+  padding: 12px;
+  margin: 0;
+}
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-panel {
+    border-top: 1px solid #e0e0e0;
+    border-right: none;
+  }
+}
+

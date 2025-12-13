@@ -1,0 +1,30 @@
+{
+  "name": "@quizerjs/demo-react",
+  "version": "0.0.1",
+  "description": "quizerjs Editor.js React 测试 Demo（私有）",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@quizerjs/core": "workspace:*",
+    "@quizerjs/dsl": "workspace:*",
+    "@quizerjs/quizerjs": "workspace:*",
+    "@quizerjs/react": "workspace:*",
+    "simple-syntax-highlighter": "^3.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@wsxjs/wsx-vite-plugin": "^0.0.10",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
+  }
+}
+

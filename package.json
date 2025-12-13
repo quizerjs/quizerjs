@@ -25,7 +25,10 @@
     "demo:preview": "pnpm --filter @quizerjs/demo-vanilla preview",
     "demo-vue:dev": "pnpm --filter @quizerjs/demo-vue dev",
     "demo-vue:build": "pnpm --filter @quizerjs/demo-vue build",
-    "demo-vue:preview": "pnpm --filter @quizerjs/demo-vue preview"
+    "demo-vue:preview": "pnpm --filter @quizerjs/demo-vue preview",
+    "demo-react:dev": "pnpm --filter @quizerjs/demo-react dev",
+    "demo-react:build": "pnpm --filter @quizerjs/demo-react build",
+    "demo-react:preview": "pnpm --filter @quizerjs/demo-react preview"
   },
   "keywords": [
     "quiz",
