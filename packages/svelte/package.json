@@ -1,15 +1,18 @@
 {
-  "name": "@quizerjs/react",
+  "name": "@quizerjs/svelte",
   "version": "0.0.1",
-  "description": "quizerjs React 集成包",
+  "description": "quizerjs Svelte 集成包",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "svelte": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
+      "svelte": "./dist/index.js",
       "source": "./src/index.ts"
     }
   },
@@ -19,9 +22,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.svelte",
+    "lint:fix": "eslint src --ext .ts,.svelte --fix",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -30,19 +33,16 @@
     "@quizerjs/quizerjs": "workspace:*"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "svelte": "^4.0.0"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/node": "^20.10.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.2.0",
+    "svelte": "^4.2.0",
+    "svelte-check": "^3.6.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.0",
-    "vite-plugin-dts": "^3.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "vite-plugin-dts": "^3.6.0"
   },
   "license": "MIT",
   "publishConfig": {
@@ -51,6 +51,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/quizerjs/quizerjs.git",
-    "directory": "packages/react"
+    "directory": "packages/svelte"
   }
 }

@@ -1,0 +1,27 @@
+{
+  "name": "@quizerjs/demo-svelte",
+  "version": "0.0.1",
+  "description": "quizerjs Editor.js Svelte 测试 Demo（私有）",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@quizerjs/core": "workspace:*",
+    "@quizerjs/dsl": "workspace:*",
+    "@quizerjs/quizerjs": "workspace:*",
+    "@quizerjs/svelte": "workspace:*",
+    "svelte": "^4.2.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@wsxjs/wsx-vite-plugin": "^0.0.10",
+    "svelte-preprocess": "^5.1.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
+  }
+}
+

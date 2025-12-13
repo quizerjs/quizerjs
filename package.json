@@ -28,7 +28,11 @@
     "demo-vue:preview": "pnpm --filter @quizerjs/demo-vue preview",
     "demo-react:dev": "pnpm --filter @quizerjs/demo-react dev",
     "demo-react:build": "pnpm --filter @quizerjs/demo-react build",
-    "demo-react:preview": "pnpm --filter @quizerjs/demo-react preview"
+    "demo-react:preview": "pnpm --filter @quizerjs/demo-react preview",
+    "build:svelte": "pnpm --filter @quizerjs/svelte build",
+    "demo-svelte:dev": "pnpm --filter @quizerjs/demo-svelte dev",
+    "demo-svelte:build": "pnpm --filter @quizerjs/demo-svelte build",
+    "demo-svelte:preview": "pnpm --filter @quizerjs/demo-svelte preview"
   },
   "keywords": [
     "quiz",
