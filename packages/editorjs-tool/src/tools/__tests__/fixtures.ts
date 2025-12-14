@@ -2,7 +2,7 @@
  * 测试夹具 - 用于 Editor.js 工具测试
  */
 
-import { QuestionType, type Option } from '@quizerjs/dsl';
+import { QuestionTypes, type Option } from '@quizerjs/dsl';
 import type { EditorJSQuestionData } from '@quizerjs/core';
 import type {
   SingleChoiceData,
@@ -24,7 +24,7 @@ export function createSingleChoiceData(overrides?: Partial<SingleChoiceData>): S
   return {
     question: {
       id: 'q1',
-      type: QuestionType.SINGLE_CHOICE,
+      type: QuestionTypes.SINGLE_CHOICE,
       text: '测试单选题',
       description: '这是测试描述',
       options: defaultOptions,
@@ -49,7 +49,7 @@ export function createMultipleChoiceData(
   return {
     question: {
       id: 'q1',
-      type: QuestionType.MULTIPLE_CHOICE,
+      type: QuestionTypes.MULTIPLE_CHOICE,
       text: '测试多选题',
       description: '这是测试描述',
       options: defaultOptions,
@@ -66,7 +66,7 @@ export function createTextInputData(overrides?: Partial<TextInputData>): TextInp
   return {
     question: {
       id: 'q1',
-      type: QuestionType.TEXT_INPUT,
+      type: QuestionTypes.TEXT_INPUT,
       text: '测试文本输入题',
       description: '这是测试描述',
       correctAnswer: '正确答案',
@@ -83,7 +83,7 @@ export function createTrueFalseData(overrides?: Partial<TrueFalseData>): TrueFal
   return {
     question: {
       id: 'q1',
-      type: QuestionType.TRUE_FALSE,
+      type: QuestionTypes.TRUE_FALSE,
       text: '测试判断题',
       description: '这是测试描述',
       correctAnswer: true,

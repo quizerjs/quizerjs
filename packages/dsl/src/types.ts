@@ -11,14 +11,27 @@
 export type DSLVersion = string;
 
 /**
- * 问题类型枚举
+ * 问题类型常量对象
  */
-export enum QuestionType {
-  SINGLE_CHOICE = 'single_choice', // 单选题
-  MULTIPLE_CHOICE = 'multiple_choice', // 多选题
-  TEXT_INPUT = 'text_input', // 文本输入题
-  TRUE_FALSE = 'true_false', // 判断题
-}
+export const QuestionTypes = {
+  SINGLE_CHOICE: 'single_choice', // 单选题
+  MULTIPLE_CHOICE: 'multiple_choice', // 多选题
+  TEXT_INPUT: 'text_input', // 文本输入题
+  TRUE_FALSE: 'true_false', // 判断题
+} as const;
+
+/**
+ * 问题类型联合类型（所有可能的问题类型）
+ */
+export type QuestionType = (typeof QuestionTypes)[keyof typeof QuestionTypes];
+
+/**
+ * 各问题类型的类型别名（从常量推导，保持类型安全）
+ */
+export type SingleChoiceType = typeof QuestionTypes.SINGLE_CHOICE;
+export type MultipleChoiceType = typeof QuestionTypes.MULTIPLE_CHOICE;
+export type TextInputType = typeof QuestionTypes.TEXT_INPUT;
+export type TrueFalseType = typeof QuestionTypes.TRUE_FALSE;
 
 /**
  * 难度级别
@@ -56,7 +69,7 @@ export interface SingleChoiceQuestion {
   /** 问题唯一标识 */
   id: string;
   /** 问题类型 */
-  type: QuestionType.SINGLE_CHOICE;
+  type: SingleChoiceType;
   /** 问题文本 */
   text: string;
   /** 选项列表 */
@@ -76,7 +89,7 @@ export interface MultipleChoiceQuestion {
   /** 问题唯一标识 */
   id: string;
   /** 问题类型 */
-  type: QuestionType.MULTIPLE_CHOICE;
+  type: MultipleChoiceType;
   /** 问题文本 */
   text: string;
   /** 选项列表 */
@@ -96,7 +109,7 @@ export interface TextInputQuestion {
   /** 问题唯一标识 */
   id: string;
   /** 问题类型 */
-  type: QuestionType.TEXT_INPUT;
+  type: TextInputType;
   /** 问题文本 */
   text: string;
   /** 正确答案（可以是字符串或字符串数组） */
@@ -118,7 +131,7 @@ export interface TrueFalseQuestion {
   /** 问题唯一标识 */
   id: string;
   /** 问题类型 */
-  type: QuestionType.TRUE_FALSE;
+  type: TrueFalseType;
   /** 问题文本 */
   text: string;
   /** 正确答案 */

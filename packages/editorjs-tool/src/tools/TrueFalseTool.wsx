@@ -2,7 +2,7 @@
 
 import { createLogger } from '@wsxjs/wsx-core';
 import type { BlockTool, BlockToolConstructorOptions, BlockAPI, API } from '@editorjs/editorjs';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
@@ -45,11 +45,14 @@ export default class TrueFalseTool implements BlockTool {
     const providedData = options?.data as TrueFalseData | undefined;
     this.data = {
       ...providedData,
-      question: providedData?.question || {
+      question: {
+        // 先设置默认值
         id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        type: QuestionType.TRUE_FALSE,
+        type: QuestionTypes.TRUE_FALSE,
         text: '',
         correctAnswer: true,
+        // 然后用 providedData 覆盖（确保所有属性都被正确传递）
+        ...providedData?.question,
       },
     } as TrueFalseData;
     this.readOnly = options?.readOnly || false;

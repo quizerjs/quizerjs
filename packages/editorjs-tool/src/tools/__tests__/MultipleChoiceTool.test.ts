@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import MultipleChoiceTool from '../MultipleChoiceTool.wsx';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 import { createMultipleChoiceData } from './fixtures';
 
 describe('MultipleChoiceTool', () => {
@@ -24,7 +24,7 @@ describe('MultipleChoiceTool', () => {
     it('应该使用默认数据创建实例', () => {
       const tool = new MultipleChoiceTool({});
       expect(tool).toBeInstanceOf(MultipleChoiceTool);
-      expect(tool['data'].question.type).toBe(QuestionType.MULTIPLE_CHOICE);
+      expect(tool['data'].question.type).toBe(QuestionTypes.MULTIPLE_CHOICE);
       expect(tool['data'].question.text).toBe('');
       expect(tool['data'].question.options).toEqual([]);
       expect(tool['readOnly']).toBe(false);

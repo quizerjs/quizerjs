@@ -11,7 +11,7 @@
  */
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes, type QuestionType } from '@quizerjs/dsl';
 import type { Option } from '@quizerjs/dsl';
 // WSX 组件自动注册，无需手动注册
 import './quiz-option.wsx';
@@ -21,8 +21,8 @@ import styles from './quiz-option-list.css?inline';
 export class QuizOptionList extends LightComponent {
   // 响应式状态 - 用于渲染的选项数组（只在添加/删除时更新）
   @state private items: Option[] = [];
-  @state private type: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE =
-    QuestionType.SINGLE_CHOICE;
+  @state private type: typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE =
+    QuestionTypes.SINGLE_CHOICE;
   @state private readonly = false;
 
   // 非响应式状态 - 存储选项文本值的 Map（更新时不触发渲染）
@@ -69,8 +69,8 @@ export class QuizOptionList extends LightComponent {
         break;
       case 'type':
         this.type =
-          (newValue as QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) ||
-          QuestionType.SINGLE_CHOICE;
+          (newValue as typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE) ||
+          QuestionTypes.SINGLE_CHOICE;
         break;
       case 'readonly':
         this.readonly = newValue === 'true';
@@ -141,7 +141,7 @@ export class QuizOptionList extends LightComponent {
     const mergedItems = this.mergeItemsAndValues();
 
     let updatedItems: Option[];
-    if (currentType === QuestionType.SINGLE_CHOICE) {
+    if (currentType === QuestionTypes.SINGLE_CHOICE) {
       // 单选题：只能选择一个
       updatedItems = mergedItems.map(opt => ({
         ...opt,
@@ -217,16 +217,12 @@ export class QuizOptionList extends LightComponent {
     this.dispatchOptionsChange();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  onConnected() {
     // 监听子组件事件
     this.addEventListener('select', this.handleOptionSelect as EventListener);
-    this.addEventListener('textchange', this.handleOptionTextChange as EventListener);
-    this.addEventListener('delete', this.handleOptionDelete as EventListener);
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
+  onDisconnected() {
     // 清理添加选项按钮的事件监听器
     if (this.addButtonRef) {
       this.addButtonRef.removeEventListener('click', this.handleAddOption);
@@ -239,7 +235,6 @@ export class QuizOptionList extends LightComponent {
     // 使用 items（用于渲染），只在添加/删除时更新
     // quiz-option 组件通过 contentEditable 维护实际文本值
     const currentItems = this.items;
-    console.log('[quiz-option-list] render: currentItems.length', currentItems.length);
 
     return (
       <div className="quiz-option-list">

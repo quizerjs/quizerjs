@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { validateQuizDSL, type ValidationError } from '../src/validator';
 import { ValidationErrorCode } from '../src/messages';
-import { QuestionType, type QuizDSL } from '../src/types';
+import { QuestionTypes, type QuizDSL } from '../src/types';
 import { createMinimalValidDSL, createFullValidDSL } from './fixtures';
 
 // 使用测试夹具
@@ -116,7 +116,7 @@ describe('validateQuizDSL', () => {
           title: 'Test',
           questions: [
             {
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [],
             },
@@ -158,7 +158,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
             },
           ],
         },
@@ -178,7 +178,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Q1',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -187,7 +187,7 @@ describe('validateQuizDSL', () => {
             },
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Q2',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -235,7 +235,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [{ id: 'o1', text: 'A', isCorrect: true }],
             },
@@ -257,7 +257,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -282,7 +282,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: false },
@@ -307,7 +307,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -331,7 +331,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.MULTIPLE_CHOICE,
+              type: QuestionTypes.MULTIPLE_CHOICE,
               text: 'Test',
               options: [{ id: 'o1', text: 'A', isCorrect: true }],
             },
@@ -353,7 +353,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.MULTIPLE_CHOICE,
+              type: QuestionTypes.MULTIPLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: false },
@@ -380,7 +380,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.MULTIPLE_CHOICE,
+              type: QuestionTypes.MULTIPLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -405,7 +405,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [{ id: 'o1', text: 'A', isCorrect: true }, 'not-object' as any],
             },
@@ -427,7 +427,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { text: 'A', isCorrect: true },
@@ -452,7 +452,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', isCorrect: true },
@@ -477,7 +477,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: 'true' as any },
@@ -502,7 +502,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.SINGLE_CHOICE,
+              type: QuestionTypes.SINGLE_CHOICE,
               text: 'Test',
               options: [
                 { id: 'o1', text: 'A', isCorrect: true },
@@ -529,7 +529,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TEXT_INPUT,
+              type: QuestionTypes.TEXT_INPUT,
               text: 'Test',
             },
           ],
@@ -550,7 +550,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TEXT_INPUT,
+              type: QuestionTypes.TEXT_INPUT,
               text: 'Test',
               correctAnswer: 'answer',
             },
@@ -569,7 +569,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TEXT_INPUT,
+              type: QuestionTypes.TEXT_INPUT,
               text: 'Test',
               correctAnswer: ['answer1', 'answer2'],
             },
@@ -588,7 +588,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TEXT_INPUT,
+              type: QuestionTypes.TEXT_INPUT,
               text: 'Test',
               correctAnswer: [],
             },
@@ -614,7 +614,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TRUE_FALSE,
+              type: QuestionTypes.TRUE_FALSE,
               text: 'Test',
               correctAnswer: 'true',
             },
@@ -638,7 +638,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TRUE_FALSE,
+              type: QuestionTypes.TRUE_FALSE,
               text: 'Test',
               correctAnswer: true,
             },
@@ -657,7 +657,7 @@ describe('validateQuizDSL', () => {
           questions: [
             {
               id: 'q1',
-              type: QuestionType.TRUE_FALSE,
+              type: QuestionTypes.TRUE_FALSE,
               text: 'Test',
               correctAnswer: false,
             },

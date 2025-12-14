@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import TextInputTool from '../TextInputTool.wsx';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 import { createTextInputData } from './fixtures';
 
 describe('TextInputTool', () => {
@@ -24,7 +24,7 @@ describe('TextInputTool', () => {
     it('应该使用默认数据创建实例', () => {
       const tool = new TextInputTool({});
       expect(tool).toBeInstanceOf(TextInputTool);
-      expect(tool['data'].question.type).toBe(QuestionType.TEXT_INPUT);
+      expect(tool['data'].question.type).toBe(QuestionTypes.TEXT_INPUT);
       expect(tool['data'].question.text).toBe('');
       expect(tool['data'].question.correctAnswer).toBe('');
     });

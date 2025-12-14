@@ -7,7 +7,7 @@
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import type { QuizDSL, Question } from '@quizerjs/dsl';
-import { QuestionType as QT } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 
 @autoRegister({ tagName: 'quiz-player' })
 export class QuizPlayer extends LightComponent {
@@ -139,11 +139,11 @@ export class QuizPlayer extends LightComponent {
     if (!question.correctAnswer || !userAnswer) return false;
 
     switch (question.type) {
-      case QT.SINGLE_CHOICE:
+      case QuestionTypes.SINGLE_CHOICE:
         const option = question.options?.find(opt => opt.id === userAnswer);
         return option?.isCorrect || false;
 
-      case QT.MULTIPLE_CHOICE:
+      case QuestionTypes.MULTIPLE_CHOICE:
         const selectedOptions = question.options?.filter(opt =>
           (userAnswer as string[]).includes(opt.id)
         );
@@ -153,7 +153,7 @@ export class QuizPlayer extends LightComponent {
           selectedOptions?.every(opt => opt.isCorrect) === true
         );
 
-      case QT.TEXT_INPUT:
+      case QuestionTypes.TEXT_INPUT:
         if (typeof question.correctAnswer === 'string') {
           return question.caseSensitive
             ? userAnswer === question.correctAnswer
@@ -162,7 +162,7 @@ export class QuizPlayer extends LightComponent {
           return (question.correctAnswer as string[]).includes(userAnswer);
         }
 
-      case QT.TRUE_FALSE:
+      case QuestionTypes.TRUE_FALSE:
         return userAnswer === question.correctAnswer;
 
       default:
@@ -224,7 +224,7 @@ export class QuizPlayer extends LightComponent {
               </h3>
 
               {/* 单选题 */}
-              {question.type === QT.SINGLE_CHOICE && question.options && (
+              {question.type === QuestionTypes.SINGLE_CHOICE && question.options && (
                 <div className="quiz-player-options">
                   {question.options.map(option => {
                     const isSelected = this.answers[question.id] === option.id;
@@ -251,7 +251,7 @@ export class QuizPlayer extends LightComponent {
               )}
 
               {/* 多选题 */}
-              {question.type === QT.MULTIPLE_CHOICE && question.options && (
+              {question.type === QuestionTypes.MULTIPLE_CHOICE && question.options && (
                 <div className="quiz-player-options">
                   {question.options.map(option => {
                     const selected = (this.answers[question.id] as string[]) || [];
@@ -283,7 +283,7 @@ export class QuizPlayer extends LightComponent {
               )}
 
               {/* 文本输入 */}
-              {question.type === QT.TEXT_INPUT && (
+              {question.type === QuestionTypes.TEXT_INPUT && (
                 <div className="quiz-player-text-input-wrapper">
                   <input
                     type="text"
@@ -299,7 +299,7 @@ export class QuizPlayer extends LightComponent {
               )}
 
               {/* 判断题 */}
-              {question.type === QT.TRUE_FALSE && (
+              {question.type === QuestionTypes.TRUE_FALSE && (
                 <div className="quiz-player-options">
                   <label
                     className={`quiz-player-option ${this.answers[question.id] === true ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}

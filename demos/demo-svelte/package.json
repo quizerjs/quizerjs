@@ -18,10 +18,9 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
-    "@wsxjs/wsx-vite-plugin": "^0.0.10",
+    "@wsxjs/wsx-vite-plugin": "^0.0.14",
     "svelte-preprocess": "^5.1.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.0"
   }
 }
-

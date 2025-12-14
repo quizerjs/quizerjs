@@ -8,7 +8,7 @@ import type {
   BlockAPI,
   API,
 } from '@editorjs/editorjs';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
@@ -55,11 +55,14 @@ export default class MultipleChoiceTool implements BlockTool {
     const providedData = options?.data as MultipleChoiceData | undefined;
     this.data = {
       ...providedData,
-      question: providedData?.question || {
+      question: {
+        // 先设置默认值
         id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        type: QuestionType.MULTIPLE_CHOICE,
+        type: QuestionTypes.MULTIPLE_CHOICE,
         text: '',
         options: [],
+        // 然后用 providedData 覆盖（确保所有属性都被正确传递）
+        ...providedData?.question,
       },
     } as MultipleChoiceData;
     this.readOnly = options?.readOnly || false;
@@ -96,7 +99,7 @@ export default class MultipleChoiceTool implements BlockTool {
         ></quiz-question-description>
         <quiz-option-list
           options={JSON.stringify(question.options || [])}
-          type={QuestionType.MULTIPLE_CHOICE}
+          type={QuestionTypes.MULTIPLE_CHOICE}
           readonly={this.readOnly ? 'true' : 'false'}
           onoptionschange={() => {
             // 符合 Editor.js 最佳实践：通知 Editor.js 有变化

@@ -4,7 +4,7 @@
  * 提供可重用的测试数据
  */
 
-import { QuestionType, type QuizDSL } from '../src/types';
+import { QuestionTypes, type QuizDSL } from '../src/types';
 
 /**
  * 创建最小的有效 DSL
@@ -18,7 +18,7 @@ export function createMinimalValidDSL(): QuizDSL {
       questions: [
         {
           id: 'q1',
-          type: QuestionType.SINGLE_CHOICE,
+          type: QuestionTypes.SINGLE_CHOICE,
           text: '测试问题',
           options: [
             { id: 'o1', text: '选项1', isCorrect: true },
@@ -55,7 +55,7 @@ export function createFullValidDSL(): QuizDSL {
       questions: [
         {
           id: 'q1',
-          type: QuestionType.SINGLE_CHOICE,
+          type: QuestionTypes.SINGLE_CHOICE,
           text: '单选题',
           options: [
             { id: 'o1', text: 'A', isCorrect: true },
@@ -70,7 +70,7 @@ export function createFullValidDSL(): QuizDSL {
         },
         {
           id: 'q2',
-          type: QuestionType.MULTIPLE_CHOICE,
+          type: QuestionTypes.MULTIPLE_CHOICE,
           text: '多选题',
           options: [
             { id: 'o1', text: 'A', isCorrect: true },
@@ -81,7 +81,7 @@ export function createFullValidDSL(): QuizDSL {
         },
         {
           id: 'q3',
-          type: QuestionType.TEXT_INPUT,
+          type: QuestionTypes.TEXT_INPUT,
           text: '文本输入',
           correctAnswer: 'answer',
           caseSensitive: false,
@@ -89,7 +89,7 @@ export function createFullValidDSL(): QuizDSL {
         },
         {
           id: 'q4',
-          type: QuestionType.TRUE_FALSE,
+          type: QuestionTypes.TRUE_FALSE,
           text: '判断题',
           correctAnswer: true,
           points: 5,

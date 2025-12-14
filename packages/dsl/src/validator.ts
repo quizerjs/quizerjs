@@ -8,6 +8,7 @@ import {
   QuizDSL,
   Question,
   QuestionType,
+  QuestionTypes,
   SingleChoiceQuestion,
   MultipleChoiceQuestion,
   TextInputQuestion,
@@ -54,7 +55,7 @@ function isNumber(value: unknown): value is number {
  * 类型守卫：检查是否为有效的 QuestionType
  */
 function isQuestionType(value: unknown): value is QuestionType {
-  return isString(value) && Object.values(QuestionType).includes(value as QuestionType);
+  return isString(value) && Object.values(QuestionTypes).includes(value as QuestionType);
 }
 
 /**
@@ -245,16 +246,16 @@ function validateQuestion<T extends Question>(
 
   // 根据问题类型进行特定验证
   switch (questionType) {
-    case QuestionType.SINGLE_CHOICE:
+    case QuestionTypes.SINGLE_CHOICE:
       errors.push(...validateSingleChoiceQuestion(q, path));
       break;
-    case QuestionType.MULTIPLE_CHOICE:
+    case QuestionTypes.MULTIPLE_CHOICE:
       errors.push(...validateMultipleChoiceQuestion(q, path));
       break;
-    case QuestionType.TEXT_INPUT:
+    case QuestionTypes.TEXT_INPUT:
       errors.push(...validateTextInputQuestion(q, path));
       break;
-    case QuestionType.TRUE_FALSE:
+    case QuestionTypes.TRUE_FALSE:
       errors.push(...validateTrueFalseQuestion(q, path));
       break;
   }

@@ -126,7 +126,7 @@ function questionToBlock(question: Question): EditorJSBlock<`quiz-${string}`> {
   const questionData: EditorJSQuestionData = {
     id: question.id,
     type: question.type,
-    text: question.text,
+    text: question.text || '',
   };
 
   // 处理可选字段（description 在 DSL 中不存在，但可能在 Editor.js 中使用）
@@ -231,6 +231,8 @@ export function dslToBlock(dsl: QuizDSL): EditorJSOutput {
       }
 
       // Section Questions
+      // 注意：不再将 section.title 合并到 question.text 中
+      // section.title 已经作为 H2 header block 显示，question.text 只包含问题文本
       for (const question of section.questions) {
         blocks.push(questionToBlock(question));
       }
@@ -264,6 +266,81 @@ function isHeaderBlock(block: EditorJSBlock): block is EditorJSBlock<'header'> {
  */
 function isParagraphBlock(block: EditorJSBlock): block is EditorJSBlock<'paragraph'> {
   return block.type === 'paragraph';
+}
+
+/**
+ * 从 question.text 中提取章节标题
+ * 支持格式：问题文本&nbsp;章节标题 或 问题文本 章节标题
+ * 返回 { questionText: 清理后的问题文本, sectionTitle: 提取的章节标题 } 或 null
+ */
+function extractSectionTitleFromQuestionText(htmlText: string): {
+  questionText: string;
+  sectionTitle: string;
+} | null {
+  if (!htmlText) {
+    return null;
+  }
+
+  // 尝试匹配格式：文本&nbsp;章节标题
+  // 查找最后一个 &nbsp; 或 &#160; 作为分隔符
+  const lastNbspIndex = htmlText.lastIndexOf('&nbsp;');
+  const lastNbsp160Index = htmlText.lastIndexOf('&#160;');
+  const separatorIndex = Math.max(lastNbspIndex, lastNbsp160Index);
+
+  if (separatorIndex >= 0) {
+    // 找到最后一个分隔符
+    const isNbsp = lastNbspIndex > lastNbsp160Index;
+    const separatorLength = isNbsp ? 6 : 6; // &nbsp; 和 &#160; 都是 6 个字符
+    const sectionTitleHTML = htmlText.substring(separatorIndex + separatorLength).trim();
+    const questionTextHTML = htmlText.substring(0, separatorIndex).trim();
+
+    if (sectionTitleHTML) {
+      // 将章节标题 HTML 转换为纯文本
+      const sectionTitle = turndownService.turndown(sectionTitleHTML).trim();
+
+      if (sectionTitle) {
+        return {
+          questionText: questionTextHTML,
+          sectionTitle,
+        };
+      }
+    }
+  }
+
+  // 如果没有找到 &nbsp;，尝试使用文本格式（多个连续空格或制表符）
+  const text = turndownService.turndown(htmlText).trim();
+  const spacePattern = /\s{2,}|\t/;
+  if (spacePattern.test(text)) {
+    const parts = text.split(/\s{2,}|\t/);
+    if (parts.length > 1) {
+      const sectionTitle = parts[parts.length - 1].trim();
+
+      if (sectionTitle) {
+        // 从原 HTML 中找到章节标题的位置并移除
+        // 先找到章节标题在转换后文本中的位置
+        const sectionTitleStartInText = text.lastIndexOf(sectionTitle);
+        if (sectionTitleStartInText > 0) {
+          // 找到对应的 HTML 位置（近似）
+          const textBeforeTitle = text.substring(0, sectionTitleStartInText);
+          // 尝试在 HTML 中找到对应的位置
+          const textBeforeTitleInHTML = turndownService.turndown(
+            htmlText.substring(0, htmlText.length)
+          );
+          const questionTextHTML = htmlText.substring(
+            0,
+            htmlText.length - (text.length - textBeforeTitle.length)
+          );
+
+          return {
+            questionText: questionTextHTML.trim(),
+            sectionTitle,
+          };
+        }
+      }
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -493,6 +570,8 @@ export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
       currentSection.description = turndownService.turndown(block.data.text || '');
     } else if (isQuizBlock(block)) {
       // Question block
+      // 注意：不再从 question.text 中提取章节标题
+      // section.title 通过前面的 H2 header block 确定
       const question = blockToQuestion(block);
       if (question) {
         if (currentSection) {

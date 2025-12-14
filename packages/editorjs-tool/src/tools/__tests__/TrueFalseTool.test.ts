@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import TrueFalseTool from '../TrueFalseTool.wsx';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 import { createTrueFalseData } from './fixtures';
 
 describe('TrueFalseTool', () => {
@@ -24,7 +24,7 @@ describe('TrueFalseTool', () => {
     it('应该使用默认数据创建实例', () => {
       const tool = new TrueFalseTool({});
       expect(tool).toBeInstanceOf(TrueFalseTool);
-      expect(tool['data'].question.type).toBe(QuestionType.TRUE_FALSE);
+      expect(tool['data'].question.type).toBe(QuestionTypes.TRUE_FALSE);
       expect(tool['data'].question.text).toBe('');
       expect(tool['data'].question.correctAnswer).toBe(true);
     });

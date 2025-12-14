@@ -12,7 +12,12 @@
           <span class="panel-title">Editor</span>
         </div>
         <div class="panel-content">
-          <QuizEditor ref="editorRef" @change="handleChange" @save="handleSave" />
+          <QuizEditor
+            ref="editorRef"
+            :initialDSL="spellingQuizDSL"
+            @change="handleChange"
+            @save="handleSave"
+          />
         </div>
       </div>
 
@@ -43,6 +48,7 @@ import { ref } from 'vue';
 import { QuizEditor } from '@quizerjs/vue';
 import type { QuizDSL } from '@quizerjs/dsl';
 import JsonViewer from './components/JsonViewer.vue';
+import { spellingQuizDSL } from './test-data/spelling-quiz';
 
 const dslPreview = ref<string>('');
 const blockDataPreview = ref<string>('');

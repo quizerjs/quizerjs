@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import SingleChoiceTool from '../SingleChoiceTool.wsx';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 import { createSingleChoiceData } from './fixtures';
 
 describe('SingleChoiceTool', () => {
@@ -24,7 +24,7 @@ describe('SingleChoiceTool', () => {
     it('应该使用默认数据创建实例', () => {
       const tool = new SingleChoiceTool({});
       expect(tool).toBeInstanceOf(SingleChoiceTool);
-      expect(tool['data'].question.type).toBe(QuestionType.SINGLE_CHOICE);
+      expect(tool['data'].question.type).toBe(QuestionTypes.SINGLE_CHOICE);
       expect(tool['data'].question.text).toBe('');
       expect(tool['data'].question.options).toEqual([]);
       expect(tool['readOnly']).toBe(false);

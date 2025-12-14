@@ -31,23 +31,26 @@ export class QuizQuestionHeader extends LightComponent {
     switch (name) {
       case 'text':
         this.text = newValue || '';
+        // 如果 editableElement 已经存在，立即更新内容
+        if (this.editableElement) {
+          this.editableElement.innerHTML = this.text;
+        }
         break;
       case 'readonly':
         this.readonly = newValue === 'true';
+        this.setupEditableElement();
         break;
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  onConnected() {
     this.setupEditableElement();
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    // 清理事件监听器
+  onDisconnected() {
     if (this.editableElement) {
       this.editableElement.removeEventListener('input', this.handleInput);
+      this.editableElement = null;
     }
   }
 
@@ -58,6 +61,11 @@ export class QuizQuestionHeader extends LightComponent {
 
     // 设置 contentEditable
     this.editableElement.contentEditable = isReadonly ? 'false' : 'true';
+
+    // 如果已经有 text 但 editableElement 为空，设置初始文本
+    if (this.text && !this.editableElement.innerHTML) {
+      this.editableElement.innerHTML = this.text;
+    }
 
     // 清理旧的事件监听器
     this.editableElement.removeEventListener('input', this.handleInput);

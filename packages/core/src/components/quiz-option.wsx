@@ -6,7 +6,7 @@
  */
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
-import { QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes, type QuestionType } from '@quizerjs/dsl';
 import styles from './quiz-option.css?inline';
 
 interface QuizOptionProps {
@@ -17,7 +17,7 @@ interface QuizOptionProps {
   /** 是否选中（作为正确答案） */
   selected?: string | boolean;
   /** 选项类型 */
-  type?: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE;
+  type?: typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE;
   /** 是否只读模式 */
   readonly?: string | boolean;
 }
@@ -28,8 +28,8 @@ export class QuizOption extends LightComponent {
   @state private optionId = '';
   @state private text = '';
   @state private selected = false;
-  @state private type: QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE =
-    QuestionType.SINGLE_CHOICE;
+  @state private type: typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE =
+    QuestionTypes.SINGLE_CHOICE;
   @state private readonly = false;
 
   private textElement: HTMLElement | null = null;
@@ -64,8 +64,8 @@ export class QuizOption extends LightComponent {
         break;
       case 'type':
         this.type =
-          (newValue as QuestionType.SINGLE_CHOICE | QuestionType.MULTIPLE_CHOICE) ||
-          QuestionType.SINGLE_CHOICE;
+          (newValue as typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE) ||
+          QuestionTypes.SINGLE_CHOICE;
         break;
       case 'readonly':
         this.readonly = newValue === 'true';
@@ -179,7 +179,7 @@ export class QuizOption extends LightComponent {
     const isReadonly = this.readonly;
     const isSelected = this.selected;
     const currentType = this.type;
-    const inputType = currentType === QuestionType.SINGLE_CHOICE ? 'radio' : 'checkbox';
+    const inputType = currentType === QuestionTypes.SINGLE_CHOICE ? 'radio' : 'checkbox';
     // 只在初始渲染时使用 text 状态，之后由 contentEditable 维护
     // 使用 optionid 作为 key 的一部分，确保组件在选项变化时正确更新
     const initialText = this.text;
@@ -193,7 +193,7 @@ export class QuizOption extends LightComponent {
         <input
           type={inputType}
           className={
-            currentType === QuestionType.SINGLE_CHOICE
+            currentType === QuestionTypes.SINGLE_CHOICE
               ? 'quiz-option-radio'
               : 'quiz-option-checkbox'
           }
