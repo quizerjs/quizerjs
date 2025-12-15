@@ -17,6 +17,7 @@ export enum ValidationErrorCode {
   QUIZ_ID_MUST_BE_STRING = 'E1101',
   QUIZ_TITLE_MUST_BE_STRING = 'E1102',
   QUIZ_QUESTIONS_MUST_BE_ARRAY = 'E1103',
+  QUIZ_SECTIONS_AND_QUESTIONS_MUTUALLY_EXCLUSIVE = 'E1104',
 
   // Question 级别错误 (1200-1299)
   QUESTION_MUST_BE_OBJECT = 'E1200',
@@ -71,6 +72,8 @@ export const ValidationMessages: Record<ValidationErrorCode, MessageTemplate> = 
   [ValidationErrorCode.QUIZ_ID_MUST_BE_STRING]: 'quiz.id 必须存在且为字符串',
   [ValidationErrorCode.QUIZ_TITLE_MUST_BE_STRING]: 'quiz.title 必须存在且为字符串',
   [ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY]: 'quiz.questions 必须存在且为数组',
+  [ValidationErrorCode.QUIZ_SECTIONS_AND_QUESTIONS_MUTUALLY_EXCLUSIVE]:
+    'quiz.sections 和 quiz.questions 不能同时存在，请只使用其中一个',
 
   // Question 级别错误
   [ValidationErrorCode.QUESTION_MUST_BE_OBJECT]: '问题必须是对象',

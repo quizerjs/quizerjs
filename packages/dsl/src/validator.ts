@@ -130,10 +130,24 @@ export function validateQuizDSL(dsl: unknown): ValidationResult {
 
   // 验证 quiz.questions 或 quiz.sections
   // 支持两种格式：questions（向后兼容）或 sections（新格式）
-  if (isArray(quiz.sections)) {
+  // 但不能同时存在两个属性
+  const hasSections = isArray<unknown>(quiz.sections);
+  const hasQuestions = isArray<unknown>(quiz.questions);
+
+  if (hasSections && hasQuestions) {
+    // 两个属性同时存在，明确拒绝
+    errors.push({
+      code: ValidationErrorCode.QUIZ_SECTIONS_AND_QUESTIONS_MUTUALLY_EXCLUSIVE,
+      path: 'quiz',
+      message: getErrorMessage(ValidationErrorCode.QUIZ_SECTIONS_AND_QUESTIONS_MUTUALLY_EXCLUSIVE),
+    });
+    // 继续验证 sections（优先使用），但标记为错误状态
+  }
+
+  if (hasSections) {
     // 验证 sections 格式
     const questionIds = new Set<string>();
-    quiz.sections.forEach((section, sectionIndex) => {
+    (quiz.sections as unknown[]).forEach((section: unknown, sectionIndex: number) => {
       const sectionPath = `quiz.sections[${sectionIndex}]`;
 
       // 验证 section.id

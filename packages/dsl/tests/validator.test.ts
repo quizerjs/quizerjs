@@ -90,6 +90,50 @@ describe('validateQuizDSL', () => {
         result.errors.some(e => e.code === ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY)
       ).toBe(true);
     });
+
+    it('应该拒绝 quiz.sections 和 quiz.questions 同时存在', () => {
+      const result = validateQuizDSL({
+        version: '1.0.0',
+        quiz: {
+          id: 'quiz-1',
+          title: 'Test',
+          sections: [
+            {
+              id: 'section-1',
+              title: 'Section 1',
+              questions: [
+                {
+                  id: 'q1',
+                  type: QuestionTypes.SINGLE_CHOICE,
+                  text: 'Question 1',
+                  options: [
+                    { id: 'o1', text: 'Option 1', isCorrect: true },
+                    { id: 'o2', text: 'Option 2', isCorrect: false },
+                  ],
+                },
+              ],
+            },
+          ],
+          questions: [
+            {
+              id: 'q2',
+              type: QuestionTypes.SINGLE_CHOICE,
+              text: 'Question 2',
+              options: [
+                { id: 'o3', text: 'Option 3', isCorrect: true },
+                { id: 'o4', text: 'Option 4', isCorrect: false },
+              ],
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(
+        result.errors.some(
+          e => e.code === ValidationErrorCode.QUIZ_SECTIONS_AND_QUESTIONS_MUTUALLY_EXCLUSIVE
+        )
+      ).toBe(true);
+    });
   });
 
   describe('Question 级别验证', () => {
