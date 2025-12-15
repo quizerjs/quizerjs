@@ -60,9 +60,9 @@
 
 **推荐方式**：
 
-1. **启动 demo-vue**：
+1. **启动 vue demo**：
    ```bash
-   pnpm demo-vue:dev
+   pnpm dev:vue
    ```
 
 2. **同时启动相关包的 watch 模式**（如果需要）：
@@ -76,7 +76,7 @@
 
 ### 4. 验证 HMR 是否工作
 
-1. 修改 `demos/demo-vue/src/App.vue` 中的内容
+1. 修改 `demos/vue/src/App.vue` 中的内容
 2. 保存文件
 3. 浏览器应该自动更新，无需刷新
 

@@ -19,10 +19,10 @@ quizerjs Editor.js Vue 测试 Demo（私有包）
 
 ```bash
 # 从根目录运行
-pnpm demo-vue:dev
+pnpm dev:vue
 
 # 或进入 demo 目录
-cd demos/demo-vue
+cd demos/vue
 pnpm dev
 ```
 

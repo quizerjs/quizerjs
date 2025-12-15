@@ -1,5 +1,5 @@
 <template>
-  <div class="json-viewer">
+  <div class="json-viewer" :class="{ 'theme-dark': isDark }">
     <VueJsonView
       v-if="parsedData !== null"
       :src="parsedData"
@@ -58,17 +58,70 @@ const parsedData = computed(() => {
   flex-direction: column;
 }
 
+/* 使用更具体的选择器来覆盖第三方库的样式 */
 .json-viewer :deep(.vue-json-view) {
   flex: 1;
   overflow: auto;
   padding: 12px;
   font-size: 13px;
   line-height: 1.6;
-  background: var(--bg-primary, #fff);
+  background-color: var(--bg-primary, #fff);
   color: var(--text-primary, #333);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+/* 当主题为 dark 时，强制覆盖所有内部元素的颜色，确保文本清晰可见 */
+.json-viewer.theme-dark :deep(.vue-json-view),
+.json-viewer :deep(.vue-json-view[class*='dark']),
+.json-viewer :deep(.vue-json-view[data-theme='dark']) {
+  background-color: var(--bg-primary, #1e1e1e);
+  color: var(--text-primary, #e0e0e0);
+}
+
+/* 覆盖 vue-json-view 内部所有文本元素，确保在暗色模式下使用浅色 */
+.json-viewer.theme-dark :deep(.vue-json-view *),
+.json-viewer :deep(.vue-json-view[class*='dark'] *),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] *) {
+  color: var(--text-primary, #e0e0e0);
+}
+
+/* 覆盖 JSON 语法高亮的颜色，确保在暗色模式下可见 */
+.json-viewer.theme-dark :deep(.vue-json-view .jv-key),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-key),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-key) {
+  color: #9cdcfe;
+}
+
+.json-viewer.theme-dark :deep(.vue-json-view .jv-string),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-string),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-string) {
+  color: #ce9178;
+}
+
+.json-viewer.theme-dark :deep(.vue-json-view .jv-number),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-number),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-number) {
+  color: #b5cea8;
+}
+
+.json-viewer.theme-dark :deep(.vue-json-view .jv-boolean),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-boolean),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-boolean) {
+  color: #569cd6;
+}
+
+.json-viewer.theme-dark :deep(.vue-json-view .jv-null),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-null),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-null) {
+  color: #808080;
+}
+
+.json-viewer.theme-dark :deep(.vue-json-view .jv-ellipsis),
+.json-viewer :deep(.vue-json-view[class*='dark'] .jv-ellipsis),
+.json-viewer :deep(.vue-json-view[data-theme='dark'] .jv-ellipsis) {
+  color: var(--text-primary, #e0e0e0);
 }
 
 .json-viewer-empty {
@@ -94,9 +147,10 @@ const parsedData = computed(() => {
 }
 
 .error-message {
-  color: #e74c3c;
+  color: var(--error-color, #e74c3c);
   font-weight: 500;
   margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
 
 .error-code {

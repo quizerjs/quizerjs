@@ -18,10 +18,10 @@ quizerjs Editor.js 测试 Demo - Vanilla JS（私有包）
 
 ```bash
 # 从根目录运行
-pnpm demo:dev
+pnpm dev:vanilla
 
 # 或进入 demo 目录
-cd demos/demo-vanilla
+cd demos/vanilla
 pnpm dev
 ```
 
@@ -40,7 +40,7 @@ pnpm dev
 
 这是一个**私有包**，不会发布到 npm。
 
-## 与 demo-vue 的区别
+## 与 vue demo 的区别
 
-- **demo**: Vanilla JS 版本，不依赖任何框架
-- **demo-vue**: Vue 3 版本，使用 `@quizerjs/vue` 包
+- **vanilla**: Vanilla JS 版本，不依赖任何框架
+- **vue**: Vue 3 版本，使用 `@quizerjs/vue` 包

@@ -174,6 +174,7 @@ const handleSave = async (dsl: QuizDSL) => {
   --text-tertiary: #999999;
   --accent-color: #4a90e2;
   --accent-hover: #357abd;
+  --error-color: #e74c3c;
   --shadow: rgba(0, 0, 0, 0.1);
 }
 
@@ -188,6 +189,7 @@ const handleSave = async (dsl: QuizDSL) => {
   --text-tertiary: #808080;
   --accent-color: #5a9de2;
   --accent-hover: #4a8dd2;
+  --error-color: #ff6b6b;
   --shadow: rgba(0, 0, 0, 0.3);
 }
 
