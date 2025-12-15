@@ -3,12 +3,7 @@
  */
 
 import { QuestionTypes, type Option } from '@quizerjs/dsl';
-import type {
-  SingleChoiceData,
-  MultipleChoiceData,
-  TextInputData,
-  TrueFalseData,
-} from '../types';
+import type { SingleChoiceData, MultipleChoiceData, TextInputData, TrueFalseData } from '../types';
 
 /**
  * 创建单选题测试数据
