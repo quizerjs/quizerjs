@@ -218,8 +218,11 @@ export class QuizOptionList extends LightComponent {
   }
 
   onConnected() {
+    // 先移除旧的监听器（如果存在），防止重复注册
+    this.removeEventListener('select', this.handleOptionSelect as EventListener);
+    this.removeEventListener('textchange', this.handleOptionTextChange as EventListener);
+    this.removeEventListener('delete', this.handleOptionDelete as EventListener);
     // 监听子组件事件
-    this.addEventListener('select', this.handleOptionSelect as EventListener);
     this.addEventListener('select', this.handleOptionSelect as EventListener);
     this.addEventListener('textchange', this.handleOptionTextChange as EventListener);
     this.addEventListener('delete', this.handleOptionDelete as EventListener);
@@ -230,6 +233,7 @@ export class QuizOptionList extends LightComponent {
     if (this.addButtonRef) {
       this.addButtonRef.removeEventListener('click', this.handleAddOption);
     }
+    // 移除所有事件监听器
     this.removeEventListener('select', this.handleOptionSelect as EventListener);
     this.removeEventListener('textchange', this.handleOptionTextChange as EventListener);
     this.removeEventListener('delete', this.handleOptionDelete as EventListener);

@@ -43,13 +43,11 @@ export class QuizQuestionDescription extends LightComponent {
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  onConnected() {
     this.setupEditableElement();
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
+  onDisconnected() {
     // 清理事件监听器
     if (this.editableElement) {
       this.editableElement.removeEventListener('input', this.handleInput);

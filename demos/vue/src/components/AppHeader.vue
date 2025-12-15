@@ -14,14 +14,15 @@
             {{ item.name }}
           </option>
         </select>
-        <ThemeToggle :is-dark="isDark" @toggle="handleThemeToggle" />
+        <ThemeToggle :is-dark="isDark.value" @toggle="handleThemeToggle" />
       </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, computed } from 'vue';
+import type { Ref } from 'vue';
 import ThemeToggle from './ThemeToggle.vue';
 import { testDataList } from '../test-data';
 
@@ -38,8 +39,8 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 // 从父组件注入主题状态和切换函数
-const isDarkRef = inject<{ value: boolean } | undefined>('isDark');
-const isDark = isDarkRef || { value: false };
+const isDarkRef = inject<Ref<boolean> | undefined>('isDark');
+const isDark = computed(() => isDarkRef?.value ?? false);
 const toggleTheme = inject<(() => void) | undefined>('toggleTheme');
 
 const handleChange = (event: Event) => {
@@ -124,4 +125,3 @@ const handleThemeToggle = () => {
   transition: color 0.3s ease;
 }
 </style>
-
