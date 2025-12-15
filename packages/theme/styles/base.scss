@@ -55,6 +55,10 @@
   --quiz-text-secondary: #666666;
   --quiz-text-tertiary: #999999;
   --quiz-text-placeholder: #999999;
+  --quiz-text-on-accent: #ffffff; // 在强调色背景上的文字颜色（通常为白色）
+
+  // 按钮文字色
+  --quiz-button-text-color: #ffffff; // 按钮文字颜色（通常为白色，确保在深色按钮背景上可读）
 
   // 边框色
   --quiz-border-color: #e0e0e0;

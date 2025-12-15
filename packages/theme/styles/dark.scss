@@ -21,6 +21,8 @@
   --quiz-text-secondary: #b0b0b0;
   --quiz-text-tertiary: #808080;
   --quiz-text-placeholder: #666666;
+  --quiz-text-on-accent: #ffffff; // 在强调色背景上的文字（白色，确保在深色背景上可读）
+  --quiz-button-text-color: #ffffff; // 按钮文字颜色（白色，确保在深色按钮背景上可读）
 
   // 边框色
   --quiz-border-color: #404040;
