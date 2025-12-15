@@ -1,4 +1,4 @@
-import { ref, watch, onMounted, type Ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 
