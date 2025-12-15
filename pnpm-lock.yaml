@@ -176,6 +176,9 @@ importers:
       '@quizerjs/quizerjs':
         specifier: workspace:*
         version: link:../../packages/quizerjs
+      '@quizerjs/theme':
+        specifier: workspace:*
+        version: link:../../packages/theme
       '@quizerjs/vue':
         specifier: workspace:*
         version: link:../../packages/vue

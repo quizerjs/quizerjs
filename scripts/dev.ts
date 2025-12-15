@@ -35,6 +35,12 @@ const DEMO_OPTIONS = [
     description: 'Vanilla JS 演示项目',
     package: '@quizerjs/demo-vanilla',
   },
+  {
+    name: 'Theme',
+    value: 'theme',
+    description: '主题系统预览页面',
+    package: '@quizerjs/theme',
+  },
 ] as const;
 
 /**
@@ -66,7 +72,8 @@ function showHelp(): void {
   console.log('  pnpm dev vue');
   console.log('  pnpm dev react');
   console.log('  pnpm dev svelte');
-  console.log('  pnpm dev vanilla\n');
+  console.log('  pnpm dev vanilla');
+  console.log('  pnpm dev theme\n');
 }
 
 /**
