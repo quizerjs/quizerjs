@@ -6,12 +6,14 @@ declare module '*.wsx' {
 
   interface ToolClass {
     // 使用 Partial 使所有属性可选，符合 Editor.js 的实际使用方式
-    new (options?: Partial<BlockToolConstructorOptions<any>>): BlockTool & {
-      [key: string]: any; // 允许访问私有属性用于测试
+    new (options?: Partial<BlockToolConstructorOptions<Record<string, unknown>>>): BlockTool & {
+      [key: string]: unknown; // 允许访问私有属性用于测试
+      save: () => Record<string, unknown>; // save 方法不需要参数（实际实现中不使用参数）
+      renderSettings?: () => HTMLElement; // renderSettings 是可选的
     };
     readonly toolbox: { title: string; icon: string };
     readonly isReadOnlySupported: boolean;
-    validate?(data: any): boolean;
+    validate?(data: Record<string, unknown>): boolean;
   }
 
   const Tool: ToolClass;

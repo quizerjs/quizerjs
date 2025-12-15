@@ -1,8 +1,12 @@
+/**
+ * QuizEditor - React 组件，包装 QuizEditor
+ */
+
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
-import { QuizEditor } from '@quizerjs/quizerjs';
-import type { QuizEditorOptions } from '@quizerjs/quizerjs';
+import { QuizEditor as QuizEditorClass, type QuizEditorOptions } from '@quizerjs/quizerjs';
 import type { QuizDSL } from '@quizerjs/dsl';
-import type { EditorJS } from '@editorjs/editorjs';
+import type EditorJS from '@editorjs/editorjs';
+import './QuizEditor.css';
 
 export interface QuizEditorProps {
   /** 初始 DSL 数据（可选） */
@@ -23,10 +27,10 @@ export interface QuizEditorRef {
   isDirty: () => boolean;
 }
 
-const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
+export const QuizEditor = forwardRef<QuizEditorRef, QuizEditorProps>(
   ({ initialDSL, readOnly = false, onChange, onSave }, ref) => {
     const editorContainerRef = useRef<HTMLDivElement>(null);
-    const editorRef = useRef<QuizEditor | null>(null);
+    const editorRef = useRef<QuizEditorClass | null>(null);
     // 使用 ref 存储回调，避免 useEffect 重复执行
     const onChangeRef = useRef(onChange);
     const onSaveRef = useRef(onSave);
@@ -52,19 +56,19 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
             container: editorContainerRef.current!,
             initialDSL,
             readOnly,
-            onChange: (dsl) => {
+            onChange: dsl => {
               if (onChangeRef.current) {
                 onChangeRef.current(dsl);
               }
             },
-            onSave: (dsl) => {
+            onSave: dsl => {
               if (onSaveRef.current) {
                 onSaveRef.current(dsl);
               }
             },
           };
 
-          const editor = new QuizEditor(options);
+          const editor = new QuizEditorClass(options);
           await editor.init();
           editorRef.current = editor;
         } catch (error) {
@@ -81,6 +85,23 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
         }
       };
     }, [initialDSL, readOnly]);
+
+    // 监听 initialDSL 变化
+    useEffect(() => {
+      if (editorRef.current && initialDSL) {
+        editorRef.current.load(initialDSL);
+      }
+    }, [initialDSL]);
+
+    // 监听 readOnly 变化
+    useEffect(() => {
+      if (editorRef.current) {
+        const editorInstance = editorRef.current.getEditorInstance();
+        if (editorInstance) {
+          editorInstance.readOnly.toggle(readOnly);
+        }
+      }
+    }, [readOnly]);
 
     useImperativeHandle(ref, () => ({
       getEditorInstance: () => {
@@ -113,7 +134,4 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
   }
 );
 
-QuizEditorComponent.displayName = 'QuizEditor';
-
-export default QuizEditorComponent;
-
+QuizEditor.displayName = 'QuizEditor';

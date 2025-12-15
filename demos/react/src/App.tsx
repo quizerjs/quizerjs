@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import QuizEditor, { type QuizEditorRef } from './components/QuizEditor';
+import { QuizEditor, type QuizEditorRef } from '@quizerjs/react';
 import JsonViewer from './components/JsonViewer';
 import type { QuizDSL } from '@quizerjs/dsl';
 import './App.css';
@@ -61,11 +61,7 @@ export default function App() {
             <span className="panel-title">Editor</span>
           </div>
           <div className="panel-content">
-            <QuizEditor
-              ref={editorRef}
-              onChange={handleChange}
-              onSave={handleSave}
-            />
+            <QuizEditor ref={editorRef} onChange={handleChange} onSave={handleSave} />
           </div>
         </div>
 
@@ -91,4 +87,3 @@ export default function App() {
     </div>
   );
 }
-

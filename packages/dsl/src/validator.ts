@@ -4,16 +4,7 @@
  * 提供 DSL 数据验证功能，确保数据符合规范
  */
 
-import {
-  QuizDSL,
-  Question,
-  QuestionType,
-  QuestionTypes,
-  SingleChoiceQuestion,
-  MultipleChoiceQuestion,
-  TextInputQuestion,
-  TrueFalseQuestion,
-} from './types';
+import { Question, QuestionType, QuestionTypes } from './types';
 import { ValidationErrorCode, getErrorMessage } from './messages';
 
 /**
@@ -42,13 +33,6 @@ function isArray<T>(value: unknown): value is T[] {
  */
 function isBoolean(value: unknown): value is boolean {
   return typeof value === 'boolean';
-}
-
-/**
- * 类型守卫：检查是否为数字
- */
-function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && !isNaN(value);
 }
 
 /**
@@ -151,7 +135,7 @@ export function validateQuizDSL(dsl: unknown): ValidationResult {
     const questionIds = new Set<string>();
     quiz.sections.forEach((section, sectionIndex) => {
       const sectionPath = `quiz.sections[${sectionIndex}]`;
-      
+
       // 验证 section.id
       if (!isPlainObject(section)) {
         errors.push({
@@ -161,9 +145,9 @@ export function validateQuizDSL(dsl: unknown): ValidationResult {
         });
         return;
       }
-      
+
       const sectionObj = section as Record<string, unknown>;
-      
+
       // 验证 section.title
       if (!isString(sectionObj.title)) {
         errors.push({
@@ -172,7 +156,7 @@ export function validateQuizDSL(dsl: unknown): ValidationResult {
           message: `${sectionPath}.title 必须是字符串`,
         });
       }
-      
+
       // 验证 section.questions
       if (!isArray(sectionObj.questions)) {
         errors.push({

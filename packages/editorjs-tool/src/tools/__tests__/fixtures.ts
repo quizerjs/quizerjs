@@ -3,42 +3,51 @@
  */
 
 import { QuestionTypes, type Option } from '@quizerjs/dsl';
-import type { EditorJSQuestionData } from '@quizerjs/core';
 import type {
   SingleChoiceData,
   MultipleChoiceData,
   TextInputData,
   TrueFalseData,
-} from '../src/tools/types';
+} from '../types';
 
 /**
  * 创建单选题测试数据
  */
-export function createSingleChoiceData(overrides?: Partial<SingleChoiceData>): SingleChoiceData {
+export function createSingleChoiceData(
+  overrides?: Partial<SingleChoiceData> & {
+    question?: Partial<SingleChoiceData['question']>;
+  }
+): SingleChoiceData {
   const defaultOptions: Option[] = [
     { id: 'opt1', text: '选项1', isCorrect: true },
     { id: 'opt2', text: '选项2', isCorrect: false },
     { id: 'opt3', text: '选项3', isCorrect: false },
   ];
 
+  const baseQuestion = {
+    id: 'q1',
+    type: QuestionTypes.SINGLE_CHOICE,
+    text: '测试单选题',
+    description: '这是测试描述',
+    options: defaultOptions,
+  };
+
   return {
     question: {
-      id: 'q1',
-      type: QuestionTypes.SINGLE_CHOICE,
-      text: '测试单选题',
-      description: '这是测试描述',
-      options: defaultOptions,
-      ...overrides?.question,
-    },
+      ...baseQuestion,
+      ...(overrides?.question || {}),
+    } as SingleChoiceData['question'],
     ...overrides,
-  };
+  } as SingleChoiceData;
 }
 
 /**
  * 创建多选题测试数据
  */
 export function createMultipleChoiceData(
-  overrides?: Partial<MultipleChoiceData>
+  overrides?: Partial<MultipleChoiceData> & {
+    question?: Partial<MultipleChoiceData['question']>;
+  }
 ): MultipleChoiceData {
   const defaultOptions: Option[] = [
     { id: 'opt1', text: '选项1', isCorrect: true },
@@ -46,49 +55,69 @@ export function createMultipleChoiceData(
     { id: 'opt3', text: '选项3', isCorrect: false },
   ];
 
+  const baseQuestion = {
+    id: 'q1',
+    type: QuestionTypes.MULTIPLE_CHOICE,
+    text: '测试多选题',
+    description: '这是测试描述',
+    options: defaultOptions,
+  };
+
   return {
     question: {
-      id: 'q1',
-      type: QuestionTypes.MULTIPLE_CHOICE,
-      text: '测试多选题',
-      description: '这是测试描述',
-      options: defaultOptions,
-      ...overrides?.question,
-    },
+      ...baseQuestion,
+      ...(overrides?.question || {}),
+    } as MultipleChoiceData['question'],
     ...overrides,
-  };
+  } as MultipleChoiceData;
 }
 
 /**
  * 创建文本输入题测试数据
  */
-export function createTextInputData(overrides?: Partial<TextInputData>): TextInputData {
+export function createTextInputData(
+  overrides?: Partial<TextInputData> & {
+    question?: Partial<TextInputData['question']>;
+  }
+): TextInputData {
+  const baseQuestion = {
+    id: 'q1',
+    type: QuestionTypes.TEXT_INPUT,
+    text: '测试文本输入题',
+    description: '这是测试描述',
+    correctAnswer: '正确答案',
+  };
+
   return {
     question: {
-      id: 'q1',
-      type: QuestionTypes.TEXT_INPUT,
-      text: '测试文本输入题',
-      description: '这是测试描述',
-      correctAnswer: '正确答案',
-      ...overrides?.question,
-    },
+      ...baseQuestion,
+      ...(overrides?.question || {}),
+    } as TextInputData['question'],
     ...overrides,
-  };
+  } as TextInputData;
 }
 
 /**
  * 创建判断题测试数据
  */
-export function createTrueFalseData(overrides?: Partial<TrueFalseData>): TrueFalseData {
+export function createTrueFalseData(
+  overrides?: Partial<TrueFalseData> & {
+    question?: Partial<TrueFalseData['question']>;
+  }
+): TrueFalseData {
+  const baseQuestion = {
+    id: 'q1',
+    type: QuestionTypes.TRUE_FALSE,
+    text: '测试判断题',
+    description: '这是测试描述',
+    correctAnswer: true,
+  };
+
   return {
     question: {
-      id: 'q1',
-      type: QuestionTypes.TRUE_FALSE,
-      text: '测试判断题',
-      description: '这是测试描述',
-      correctAnswer: true,
-      ...overrides?.question,
-    },
+      ...baseQuestion,
+      ...(overrides?.question || {}),
+    } as TrueFalseData['question'],
     ...overrides,
-  };
+  } as TrueFalseData;
 }

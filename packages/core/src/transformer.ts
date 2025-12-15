@@ -6,7 +6,6 @@
  */
 
 import { marked } from 'marked';
-import type { Marked } from 'marked';
 import TurndownService from 'turndown';
 import type {
   QuizDSL,
@@ -273,7 +272,7 @@ function isParagraphBlock(block: EditorJSBlock): block is EditorJSBlock<'paragra
  * 支持格式：问题文本&nbsp;章节标题 或 问题文本 章节标题
  * 返回 { questionText: 清理后的问题文本, sectionTitle: 提取的章节标题 } 或 null
  */
-function extractSectionTitleFromQuestionText(htmlText: string): {
+function _extractSectionTitleFromQuestionText(htmlText: string): {
   questionText: string;
   sectionTitle: string;
 } | null {
@@ -322,10 +321,6 @@ function extractSectionTitleFromQuestionText(htmlText: string): {
         if (sectionTitleStartInText > 0) {
           // 找到对应的 HTML 位置（近似）
           const textBeforeTitle = text.substring(0, sectionTitleStartInText);
-          // 尝试在 HTML 中找到对应的位置
-          const textBeforeTitleInHTML = turndownService.turndown(
-            htmlText.substring(0, htmlText.length)
-          );
           const questionTextHTML = htmlText.substring(
             0,
             htmlText.length - (text.length - textBeforeTitle.length)

@@ -7,6 +7,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { QuizEditor } from '@quizerjs/quizerjs';
 import type { QuizEditorOptions } from '@quizerjs/quizerjs';
 import type { QuizDSL } from '@quizerjs/dsl';
+import type EditorJS from '@editorjs/editorjs';
 
 export interface QuizEditorProps {
   /** 初始 DSL 数据（可选） */
@@ -40,10 +41,10 @@ onMounted(async () => {
       container: editorContainer.value,
       initialDSL: props.initialDSL,
       readOnly: props.readOnly,
-      onChange: (dsl) => {
+      onChange: dsl => {
         emit('change', dsl);
       },
-      onSave: (dsl) => {
+      onSave: dsl => {
         emit('save', dsl);
       },
     };
@@ -64,7 +65,7 @@ onBeforeUnmount(async () => {
 
 watch(
   () => props.initialDSL,
-  async (newDsl) => {
+  async newDsl => {
     if (editor && newDsl) {
       await editor.load(newDsl);
     }
@@ -74,7 +75,7 @@ watch(
 
 watch(
   () => props.readOnly,
-  (newReadOnly) => {
+  newReadOnly => {
     if (editor) {
       editor.getEditorInstance()?.readOnly.toggle(newReadOnly);
     }
@@ -94,7 +95,7 @@ const save = async (): Promise<QuizDSL | null> => {
 /**
  * 暴露方法供父组件调用
  */
-defineExpose({
+const exposedMethods = {
   save,
   load: async (dsl: QuizDSL) => {
     if (editor) {
@@ -108,7 +109,15 @@ defineExpose({
   },
   isDirty: () => editor?.isDirty || false,
   getEditorInstance: () => editor?.getEditorInstance() || null,
-});
+} as {
+  save: () => Promise<QuizDSL | null>;
+  load: (dsl: QuizDSL) => Promise<void>;
+  clear: () => Promise<void>;
+  isDirty: () => boolean;
+  getEditorInstance: () => EditorJS | null;
+};
+
+defineExpose(exposedMethods);
 </script>
 
 <style scoped>

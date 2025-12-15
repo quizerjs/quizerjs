@@ -1,9 +1,7 @@
 <script lang="ts">
-  import QuizEditor from './components/QuizEditor.svelte';
+  import { QuizEditor, type QuizEditorRef } from '@quizerjs/svelte';
   import JsonViewer from './components/JsonViewer.svelte';
   import type { QuizDSL } from '@quizerjs/dsl';
-  import type { EditorJS } from '@editorjs/editorjs';
-  import type { QuizEditorRef } from './components/QuizEditor.svelte';
   import './App.css';
 
   let dslPreview = '';

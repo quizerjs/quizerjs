@@ -2,10 +2,11 @@
  * @quizerjs/editorjs-tool - MultipleChoiceTool 单元测试
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import MultipleChoiceTool from '../MultipleChoiceTool.wsx';
 import { QuestionTypes } from '@quizerjs/dsl';
 import { createMultipleChoiceData } from './fixtures';
+import type { MultipleChoiceData } from '../types';
 
 describe('MultipleChoiceTool', () => {
   describe('静态属性', () => {
@@ -24,17 +25,19 @@ describe('MultipleChoiceTool', () => {
     it('应该使用默认数据创建实例', () => {
       const tool = new MultipleChoiceTool({});
       expect(tool).toBeInstanceOf(MultipleChoiceTool);
-      expect(tool['data'].question.type).toBe(QuestionTypes.MULTIPLE_CHOICE);
-      expect(tool['data'].question.text).toBe('');
-      expect(tool['data'].question.options).toEqual([]);
+      const toolData = tool['data'] as MultipleChoiceData;
+      expect(toolData.question.type).toBe(QuestionTypes.MULTIPLE_CHOICE);
+      expect(toolData.question.text).toBe('');
+      expect(toolData.question.options).toEqual([]);
       expect(tool['readOnly']).toBe(false);
     });
 
     it('应该使用提供的数据创建实例', () => {
       const data = createMultipleChoiceData();
       const tool = new MultipleChoiceTool({ data });
-      expect(tool['data'].question.text).toBe('测试多选题');
-      expect(tool['data'].question.options).toHaveLength(3);
+      const toolData = tool['data'] as MultipleChoiceData;
+      expect(toolData.question.text).toBe('测试多选题');
+      expect(toolData.question.options).toHaveLength(3);
     });
   });
 
@@ -47,7 +50,7 @@ describe('MultipleChoiceTool', () => {
 
     it('应该包含所有必需的组件', () => {
       const tool = new MultipleChoiceTool({});
-      const element = tool.render();
+      const element = tool.render() as HTMLElement;
       expect(element.querySelector('quiz-question-header')).toBeTruthy();
       expect(element.querySelector('quiz-question-description')).toBeTruthy();
       expect(element.querySelector('quiz-option-list')).toBeTruthy();
@@ -68,7 +71,7 @@ describe('MultipleChoiceTool', () => {
       tool['questionDescriptionComponent'] = descComponent;
       tool['optionListComponent'] = optionListComponent;
 
-      const saved = tool.save();
+      const saved = tool.save() as MultipleChoiceData;
       expect(saved.question.text).toBe('更新的标题');
       expect(saved.question.description).toBe('更新的描述');
     });
@@ -78,29 +81,39 @@ describe('MultipleChoiceTool', () => {
     it('应该验证有效数据', () => {
       const data = createMultipleChoiceData();
       const tool = new MultipleChoiceTool({ data });
-      const isValid = tool.validate(data);
+      const isValid = tool.validate?.(data) ?? false;
       expect(isValid).toBe(true);
     });
 
     it('应该拒绝空问题文本', () => {
-      const data = createMultipleChoiceData({ question: { text: '' } });
+      const data = createMultipleChoiceData({
+        question: { id: 'q1', type: QuestionTypes.MULTIPLE_CHOICE, text: '' },
+      });
       const tool = new MultipleChoiceTool({ data });
-      const isValid = tool.validate(data);
+      const isValid = tool.validate?.(data) ?? false;
       expect(isValid).toBe(false);
     });
 
     it('应该拒绝少于2个选项', () => {
       const data = createMultipleChoiceData({
-        question: { options: [{ id: 'opt1', text: '选项1', isCorrect: true }] },
+        question: {
+          id: 'q1',
+          type: QuestionTypes.MULTIPLE_CHOICE,
+          text: '测试',
+          options: [{ id: 'opt1', text: '选项1', isCorrect: true }],
+        },
       });
       const tool = new MultipleChoiceTool({ data });
-      const isValid = tool.validate(data);
+      const isValid = tool.validate?.(data) ?? false;
       expect(isValid).toBe(false);
     });
 
     it('应该拒绝没有正确答案的选项', () => {
       const data = createMultipleChoiceData({
         question: {
+          id: 'q1',
+          type: QuestionTypes.MULTIPLE_CHOICE,
+          text: '测试',
           options: [
             { id: 'opt1', text: '选项1', isCorrect: false },
             { id: 'opt2', text: '选项2', isCorrect: false },
@@ -108,13 +121,15 @@ describe('MultipleChoiceTool', () => {
         },
       });
       const tool = new MultipleChoiceTool({ data });
-      const isValid = tool.validate(data);
+      const isValid = tool.validate?.(data) ?? false;
       expect(isValid).toBe(false);
     });
 
     it('应该接受至少有一个正确答案的选项', () => {
       const data = createMultipleChoiceData({
         question: {
+          id: 'q1',
+          type: QuestionTypes.MULTIPLE_CHOICE,
           text: '测试问题',
           options: [
             { id: 'opt1', text: '选项1', isCorrect: true },
@@ -123,7 +138,7 @@ describe('MultipleChoiceTool', () => {
         },
       });
       const tool = new MultipleChoiceTool({ data });
-      const isValid = tool.validate(data);
+      const isValid = tool.validate?.(data) ?? false;
       expect(isValid).toBe(true);
     });
   });

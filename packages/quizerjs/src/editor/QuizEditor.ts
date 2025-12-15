@@ -1,4 +1,4 @@
-import EditorJS from '@editorjs/editorjs';
+import EditorJS, { type ToolConstructable } from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 import Header from '@editorjs/header';
 import {
@@ -92,7 +92,7 @@ export class QuizEditor {
         // 标准 Editor.js 工具
         paragraph: Paragraph,
         header: {
-          class: Header as any, // Editor.js Header 类型定义不完整，使用 any 绕过
+          class: Header as unknown as ToolConstructable, // Editor.js Header 类型定义不完整，使用类型断言绕过
           config: {
             levels: [1, 2, 3, 4], // 支持 H1-H4（H1 用于文档标题，H2-H4 用于章节）
             defaultLevel: 2,
