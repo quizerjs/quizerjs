@@ -37,9 +37,10 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-// 从父组件注入主题状态
+// 从父组件注入主题状态和切换函数
 const isDarkRef = inject<{ value: boolean } | undefined>('isDark');
 const isDark = isDarkRef || { value: false };
+const toggleTheme = inject<(() => void) | undefined>('toggleTheme');
 
 const handleChange = (event: Event) => {
   const target = event.target as HTMLSelectElement;
@@ -48,8 +49,8 @@ const handleChange = (event: Event) => {
 };
 
 const handleThemeToggle = () => {
-  if (isDarkRef) {
-    isDarkRef.value = !isDarkRef.value;
+  if (toggleTheme) {
+    toggleTheme();
   }
 };
 </script>

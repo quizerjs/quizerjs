@@ -34,6 +34,7 @@ import AppHeader from './components/AppHeader.vue';
 import EditorPanel from './components/EditorPanel.vue';
 import PreviewSplitpanes from './components/PreviewSplitpanes.vue';
 import { testDataList, defaultTestDataId, getTestDataById } from './test-data';
+import { useTheme } from './composables/useTheme';
 
 // 当前选中的测试数据 ID
 const selectedTestDataId = ref<string>(defaultTestDataId);
@@ -41,46 +42,19 @@ const selectedTestDataId = ref<string>(defaultTestDataId);
 // 控制 splitpanes 的渲染，确保 DOM 准备好
 const isSplitpanesReady = ref(false);
 
-// 主题管理
-const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
-const getInitialTheme = (): boolean => {
-  try {
-    const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved) {
-      return saved === 'dark';
-    }
-    // 检测系统偏好
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-  } catch {
-    // 如果 localStorage 或 matchMedia 不可用，默认浅色主题
-  }
-  return false;
-};
-const isDark = ref<boolean>(getInitialTheme());
+// 主题管理 - 使用 composable
+const { isDark, toggleTheme } = useTheme();
 
-// 提供主题状态给子组件
+// 提供主题状态和切换函数给子组件
 provide('isDark', isDark);
+provide('toggleTheme', toggleTheme);
 
-// 监听系统主题变化
+// 等待 DOM 完全渲染后再显示 splitpanes
 onMounted(async () => {
-  // 等待 DOM 完全渲染后再显示 splitpanes
-  // 使用 setTimeout 确保所有组件都已正确初始化
   await nextTick();
   setTimeout(() => {
     isSplitpanesReady.value = true;
   }, 0);
-
-  // 监听系统主题变化
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-    // 只有在用户没有手动设置主题时才跟随系统
-    if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-      isDark.value = e.matches;
-    }
-  };
-  mediaQuery.addEventListener('change', handleSystemThemeChange);
 });
 
 // 当前选中的测试数据 DSL
@@ -163,34 +137,94 @@ const handleSave = async (dsl: QuizDSL) => {
 </script>
 
 <style scoped>
-/* CSS 变量定义 - 浅色主题 */
+/* CSS 变量定义 - Solarized Light 主题 */
 .app {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
+  /* Solarized Light 基础色 */
+  --base03: #002b36;
+  --base02: #073642;
+  --base01: #586e75;
+  --base00: #657b83;
+  --base0: #839496;
+  --base1: #93a1a1;
+  --base2: #eee8d5;
+  --base3: #fdf6e3;
+  /* Solarized Light 强调色 */
+  --yellow: #b58900;
+  --orange: #cb4b16;
+  --red: #dc322f;
+  --magenta: #d33682;
+  --violet: #6c71c4;
+  --blue: #268bd2;
+  --cyan: #2aa198;
+  --green: #859900;
+  /* 应用颜色变量 - Solarized Light */
+  --bg-primary: var(--base3);
+  --bg-secondary: var(--base2);
   --bg-tertiary: #fafafa;
-  --border-color: #e0e0e0;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-tertiary: #999999;
-  --accent-color: #4a90e2;
-  --accent-hover: #357abd;
-  --error-color: #e74c3c;
+  --border-color: var(--base1);
+  --text-primary: var(--base00);
+  --text-secondary: var(--base01);
+  --text-tertiary: var(--base0);
+  --accent-color: var(--blue);
+  --accent-hover: var(--cyan);
+  --error-color: var(--red);
   --shadow: rgba(0, 0, 0, 0.1);
+  /* JSON 查看器颜色 - Solarized Light */
+  --json-bg: var(--base3);
+  --json-text: var(--base00);
+  --json-key: var(--blue);
+  --json-string: var(--green);
+  --json-number: var(--magenta);
+  --json-boolean: var(--yellow);
+  --json-null: var(--base01);
+  --json-punctuation: var(--base00);
+  --json-hint: var(--base0);
+  --json-line: var(--base2);
 }
 
-/* CSS 变量定义 - 深色主题 */
+/* CSS 变量定义 - Solarized Dark 主题 */
 .app.theme-dark {
-  --bg-primary: #1e1e1e;
-  --bg-secondary: #252525;
-  --bg-tertiary: #2d2d2d;
-  --border-color: #3a3a3a;
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
-  --text-tertiary: #808080;
-  --accent-color: #5a9de2;
-  --accent-hover: #4a8dd2;
-  --error-color: #ff6b6b;
+  /* Solarized Dark 基础色 */
+  --base03: #002b36;
+  --base02: #073642;
+  --base01: #586e75;
+  --base00: #657b83;
+  --base0: #839496;
+  --base1: #93a1a1;
+  --base2: #eee8d5;
+  --base3: #fdf6e3;
+  /* Solarized Dark 强调色 */
+  --yellow: #b58900;
+  --orange: #cb4b16;
+  --red: #dc322f;
+  --magenta: #d33682;
+  --violet: #6c71c4;
+  --blue: #268bd2;
+  --cyan: #2aa198;
+  --green: #859900;
+  /* 应用颜色变量 - Solarized Dark */
+  --bg-primary: var(--base03);
+  --bg-secondary: var(--base02);
+  --bg-tertiary: #0a4a5a;
+  --border-color: var(--base01);
+  --text-primary: var(--base0);
+  --text-secondary: var(--base1);
+  --text-tertiary: var(--base00);
+  --accent-color: var(--blue);
+  --accent-hover: var(--cyan);
+  --error-color: var(--red);
   --shadow: rgba(0, 0, 0, 0.3);
+  /* JSON 查看器颜色 - Solarized Dark */
+  --json-bg: var(--base03);
+  --json-text: var(--base0);
+  --json-key: var(--cyan);
+  --json-string: var(--green);
+  --json-number: var(--blue);
+  --json-boolean: var(--yellow);
+  --json-null: var(--base01);
+  --json-punctuation: var(--base0);
+  --json-hint: var(--base1);
+  --json-line: var(--base02);
 }
 
 .app {
