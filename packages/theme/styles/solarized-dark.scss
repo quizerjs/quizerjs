@@ -1,0 +1,53 @@
+// ============================================
+// Solarized Dark Theme
+// ============================================
+// 基于 Solarized 调色板的深色主题
+
+// 导入基础样式（base.scss 通过 Vite 配置自动导入）
+
+// 覆盖颜色变量为 Solarized Dark
+:root,
+.theme-dark,
+[data-theme="dark"] {
+  // 背景色 - 基于 Solarized base03/base02/base01 (Dark theme 使用深色背景)
+  --quiz-bg-primary: #002b36;      // base03 - 最深背景（深蓝绿色）
+  --quiz-bg-secondary: #073642;    // base02 - 次背景（稍浅的深蓝绿色）
+  --quiz-bg-tertiary: #002b36;     // base03 - 第三背景
+  --quiz-bg-hover: #073642;       // base02 - 悬停背景
+  --quiz-bg-selected: #073642;     // base02 - 选中背景
+
+  // 文本色 - 基于 Solarized base0/base1/base2 (Dark theme 使用浅色文本)
+  --quiz-text-primary: #839496;   // base0 - 主文本（浅蓝灰色，在深色背景上清晰可见）
+  --quiz-text-secondary: #93a1a1; // base1 - 次文本（稍浅的蓝灰色）
+  --quiz-text-tertiary: #657b83;  // base00 - 第三文本（中等蓝灰色）
+  --quiz-text-placeholder: #586e75; // base01 - 占位符（深蓝灰色）
+
+  // 边框色
+  --quiz-border-color: #586e75;   // base00 - 默认边框（深蓝灰色）
+  --quiz-border-hover: #268bd2;    // blue - 悬停边框
+  --quiz-border-focus: #268bd2;    // blue - 焦点边框
+  --quiz-border-selected: #268bd2; // blue - 选中边框
+
+  // 强调色 - 基于 Solarized blue
+  --quiz-accent-color: #268bd2;    // blue - 主强调色
+  --quiz-accent-hover: #2aa198;    // cyan - 悬停
+  --quiz-accent-active: #1e6fa8;   // blue darker - 激活
+
+  // 状态色 - 基于 Solarized 调色板
+  --quiz-error-color: #dc322f;     // red - 错误
+  --quiz-success-color: #859900;   // green - 成功
+  --quiz-warning-color: #b58900;   // yellow - 警告
+  --quiz-info-color: #268bd2;     // blue - 信息
+
+  // 滚动条颜色
+  --quiz-scrollbar-track-color: #073642; // base02
+  --quiz-scrollbar-thumb-color: #586e75; // base01
+  --quiz-scrollbar-thumb-hover-color: #657b83; // base00
+  --quiz-scrollbar-thumb-active-color: #839496; // base0
+
+  // 阴影（深色模式调整）
+  --quiz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --quiz-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --quiz-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+

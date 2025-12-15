@@ -1,0 +1,53 @@
+// ============================================
+// Solarized Light Theme
+// ============================================
+// 基于 Solarized 调色板的浅色主题
+
+// 导入基础样式（base.scss 通过 Vite 配置自动导入）
+// @import 'base'; // 不需要，Vite 会自动注入
+
+// 覆盖颜色变量为 Solarized Light
+:root {
+  // 背景色 - 基于 Solarized base3/base2/base1 (Light theme 使用浅色背景)
+  --quiz-bg-primary: #fdf6e3;      // base3 - 最浅背景（浅黄色）
+  --quiz-bg-secondary: #eee8d5;    // base2 - 次背景（浅黄色）
+  --quiz-bg-tertiary: #fdf6e3;     // base3 - 第三背景
+  --quiz-bg-hover: #eee8d5;        // base2 - 悬停背景
+  --quiz-bg-selected: #eee8d5;     // base2 - 选中背景
+
+  // 文本色 - 基于 Solarized base00/base01 (Light theme 使用深色文本)
+  // 参考 App.vue 中的正确设置
+  --quiz-text-primary: #657b83;    // base00 - 主文本（深蓝灰色，在浅色背景上清晰可见）
+  --quiz-text-secondary: #586e75;   // base01 - 次文本（稍深的蓝灰色）
+  --quiz-text-tertiary: #839496;   // base0 - 第三文本（中等蓝灰色）
+  --quiz-text-placeholder: #93a1a1; // base1 - 占位符（浅蓝灰色）
+
+  // 边框色
+  --quiz-border-color: #93a1a1;    // base1 - 默认边框（浅蓝灰色）
+  --quiz-border-hover: #268bd2;     // blue - 悬停边框
+  --quiz-border-focus: #268bd2;     // blue - 焦点边框
+  --quiz-border-selected: #268bd2;  // blue - 选中边框
+
+  // 强调色 - 基于 Solarized blue
+  --quiz-accent-color: #268bd2;     // blue - 主强调色
+  --quiz-accent-hover: #1e6fa8;     // blue darker - 悬停
+  --quiz-accent-active: #15537a;    // blue darkest - 激活
+
+  // 状态色 - 基于 Solarized 调色板
+  --quiz-error-color: #dc322f;      // red - 错误
+  --quiz-success-color: #859900;    // green - 成功
+  --quiz-warning-color: #b58900;    // yellow - 警告
+  --quiz-info-color: #268bd2;       // blue - 信息
+
+  // 滚动条颜色
+  --quiz-scrollbar-track-color: #eee8d5; // base2
+  --quiz-scrollbar-thumb-color: #93a1a1;  // base1
+  --quiz-scrollbar-thumb-hover-color: #839496; // base0
+  --quiz-scrollbar-thumb-active-color: #657b83; // base00
+
+  // 阴影
+  --quiz-shadow-sm: 0 1px 2px rgba(88, 110, 117, 0.1);
+  --quiz-shadow-md: 0 2px 4px rgba(88, 110, 117, 0.15);
+  --quiz-shadow-lg: 0 4px 8px rgba(88, 110, 117, 0.2);
+}
+

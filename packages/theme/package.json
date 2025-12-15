@@ -1,0 +1,47 @@
+{
+  "name": "@quizerjs/theme",
+  "version": "0.0.1",
+  "description": "QuizerJS Design System - Theme package with preset themes",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "quizerjs-theme": "./dist/index.js"
+  },
+  "exports": {
+    "./solarized-light.css": "./dist/solarized-light.css",
+    "./solarized-dark.css": "./dist/solarized-dark.css",
+    "./light.css": "./dist/light.css",
+    "./dark.css": "./dist/dark.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite dev --host",
+    "build:watch": "vite build --watch",
+    "preview": "vite preview --host",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "quizerjs",
+    "theme",
+    "design-system",
+    "css-variables"
+  ],
+  "author": "quizerjs team",
+  "license": "MIT",
+  "dependencies": {
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "sass": "^1.69.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vitest": "^1.6.1"
+  }
+}

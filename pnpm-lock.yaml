@@ -432,6 +432,31 @@ importers:
         specifier: ^3.6.0
         version: 3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
 
+  packages/theme:
+    dependencies:
+      ora:
+        specifier: ^8.2.0
+        version: 8.2.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.27
+      '@vitest/coverage-v8':
+        specifier: ^1.6.1
+        version: 1.6.1(vitest@1.6.1(@types/node@20.19.27)(happy-dom@20.0.11)(jsdom@23.2.0)(sass@1.77.6))
+      sass:
+        specifier: ^1.69.0
+        version: 1.77.6
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vite:
+        specifier: ^5.0.0
+        version: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
+      vitest:
+        specifier: ^1.6.1
+        version: 1.6.1(@types/node@20.19.27)(happy-dom@20.0.11)(jsdom@23.2.0)(sass@1.77.6)
+
   packages/vue:
     dependencies:
       '@quizerjs/core':
@@ -3367,11 +3392,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.5.4:
-    resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
@@ -5837,8 +5857,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immutable@4.3.7:
-    optional: true
+  immutable@4.3.7: {}
 
   import-fresh@3.3.1:
     dependencies:
@@ -6501,7 +6520,6 @@ snapshots:
       chokidar: 3.6.0
       immutable: 4.3.7
       source-map-js: 1.2.1
-    optional: true
 
   saxes@6.0.0:
     dependencies:
@@ -6644,8 +6662,8 @@ snapshots:
       picocolors: 1.1.1
       sade: 1.8.1
       svelte: 4.2.20
-      svelte-preprocess: 5.1.4(@babel/core@7.28.5)(postcss-load-config@3.1.4(postcss@8.5.6))(postcss@8.5.6)(sass@1.77.6)(svelte@4.2.20)(typescript@5.5.4)
-      typescript: 5.5.4
+      svelte-preprocess: 5.1.4(@babel/core@7.28.5)(postcss-load-config@3.1.4(postcss@8.5.6))(postcss@8.5.6)(sass@1.77.6)(svelte@4.2.20)(typescript@5.9.3)
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -6671,21 +6689,6 @@ snapshots:
   svelte-hmr@0.16.0(svelte@4.2.20):
     dependencies:
       svelte: 4.2.20
-
-  svelte-preprocess@5.1.4(@babel/core@7.28.5)(postcss-load-config@3.1.4(postcss@8.5.6))(postcss@8.5.6)(sass@1.77.6)(svelte@4.2.20)(typescript@5.5.4):
-    dependencies:
-      '@types/pug': 2.0.10
-      detect-indent: 6.1.0
-      magic-string: 0.30.21
-      sorcery: 0.11.1
-      strip-indent: 3.0.0
-      svelte: 4.2.20
-    optionalDependencies:
-      '@babel/core': 7.28.5
-      postcss: 8.5.6
-      postcss-load-config: 3.1.4(postcss@8.5.6)
-      sass: 1.77.6
-      typescript: 5.5.4
 
   svelte-preprocess@5.1.4(@babel/core@7.28.5)(postcss-load-config@3.1.4(postcss@8.5.6))(postcss@8.5.6)(sass@1.77.6)(svelte@4.2.20)(typescript@5.9.3):
     dependencies:
@@ -6824,8 +6827,6 @@ snapshots:
       - supports-color
 
   typescript@5.4.2: {}
-
-  typescript@5.5.4: {}
 
   typescript@5.9.3: {}
 
