@@ -10,16 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@matpool/vue-json-view": "^0.1.8",
     "@quizerjs/core": "workspace:*",
     "@quizerjs/dsl": "workspace:*",
     "@quizerjs/quizerjs": "workspace:*",
     "@quizerjs/vue": "workspace:*",
     "simple-syntax-highlighter": "^3.1.1",
+    "splitpanes": "^4.0.4",
     "vue": "^3.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
-    "@wsxjs/wsx-vite-plugin": "^0.0.14",
+    "@wsxjs/wsx-vite-plugin": "^0.0.17",
     "typescript": "^5.3.3",
     "vite": "^5.0.0"
   }

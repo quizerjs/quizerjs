@@ -73,8 +73,13 @@ export default class SingleChoiceTool implements BlockTool {
   render(): HTMLElement {
     const question = this.data.question;
 
+    // Editor.js 使用 this.block.id 来识别和管理 block
+    // 将 block.id 设置为 wrapper 的 id，确保 Editor.js 能正确识别这个元素
+    // 这样在移动 block 时，Editor.js 可以通过 id 找到对应的 DOM 元素
+    const blockId = this.block.id;
+
     this.wrapper = (
-      <div className="quiz-single-choice-tool">
+      <div className="quiz-single-choice-tool" id={blockId} data-question-id={question.id}>
         <quiz-question-header
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
@@ -128,7 +133,8 @@ export default class SingleChoiceTool implements BlockTool {
     if (this.optionListComponent?.getOptions) {
       this.data.question.options = this.optionListComponent.getOptions();
     }
-    logger.info('Saving single choice question data', this.data);
+    // 移除日志输出，避免频繁调用时的控制台污染
+    // logger.info('Saving single choice question data', this.data);
     return this.data;
   }
 

@@ -220,6 +220,9 @@ export class QuizOptionList extends LightComponent {
   onConnected() {
     // 监听子组件事件
     this.addEventListener('select', this.handleOptionSelect as EventListener);
+    this.addEventListener('select', this.handleOptionSelect as EventListener);
+    this.addEventListener('textchange', this.handleOptionTextChange as EventListener);
+    this.addEventListener('delete', this.handleOptionDelete as EventListener);
   }
 
   onDisconnected() {
@@ -227,6 +230,9 @@ export class QuizOptionList extends LightComponent {
     if (this.addButtonRef) {
       this.addButtonRef.removeEventListener('click', this.handleAddOption);
     }
+    this.removeEventListener('select', this.handleOptionSelect as EventListener);
+    this.removeEventListener('textchange', this.handleOptionTextChange as EventListener);
+    this.removeEventListener('delete', this.handleOptionDelete as EventListener);
   }
 
   render() {

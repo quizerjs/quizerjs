@@ -144,20 +144,65 @@ export function validateQuizDSL(dsl: unknown): ValidationResult {
     });
   }
 
-  // 验证 quiz.questions
-  if (!isArray(quiz.questions)) {
-    errors.push({
-      code: ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY,
-      path: 'quiz.questions',
-      message: getErrorMessage(ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY),
+  // 验证 quiz.questions 或 quiz.sections
+  // 支持两种格式：questions（向后兼容）或 sections（新格式）
+  if (isArray(quiz.sections)) {
+    // 验证 sections 格式
+    const questionIds = new Set<string>();
+    quiz.sections.forEach((section, sectionIndex) => {
+      const sectionPath = `quiz.sections[${sectionIndex}]`;
+      
+      // 验证 section.id
+      if (!isPlainObject(section)) {
+        errors.push({
+          code: ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY,
+          path: sectionPath,
+          message: `${sectionPath} 必须是对象`,
+        });
+        return;
+      }
+      
+      const sectionObj = section as Record<string, unknown>;
+      
+      // 验证 section.title
+      if (!isString(sectionObj.title)) {
+        errors.push({
+          code: ValidationErrorCode.QUIZ_TITLE_MUST_BE_STRING,
+          path: `${sectionPath}.title`,
+          message: `${sectionPath}.title 必须是字符串`,
+        });
+      }
+      
+      // 验证 section.questions
+      if (!isArray(sectionObj.questions)) {
+        errors.push({
+          code: ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY,
+          path: `${sectionPath}.questions`,
+          message: `${sectionPath}.questions 必须是数组`,
+        });
+      } else {
+        // 验证每个问题
+        sectionObj.questions.forEach((question, questionIndex) => {
+          const questionPath = `${sectionPath}.questions[${questionIndex}]`;
+          const questionErrors = validateQuestion(question as Question, questionPath, questionIds);
+          errors.push(...questionErrors);
+        });
+      }
     });
-  } else {
-    // 验证每个问题
+  } else if (isArray(quiz.questions)) {
+    // 验证 questions 格式（向后兼容）
     const questionIds = new Set<string>();
     quiz.questions.forEach((question, index) => {
       const questionPath = `quiz.questions[${index}]`;
       const questionErrors = validateQuestion(question as Question, questionPath, questionIds);
       errors.push(...questionErrors);
+    });
+  } else {
+    // 既没有 sections 也没有 questions
+    errors.push({
+      code: ValidationErrorCode.QUIZ_QUESTIONS_MUST_BE_ARRAY,
+      path: 'quiz',
+      message: 'quiz.sections 或 quiz.questions 必须存在且为数组',
     });
   }
 

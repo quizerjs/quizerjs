@@ -45,3 +45,10 @@ lerna-debug.log*
 # VitePress cache
 .vitepress/
 
+# Turbo cache
+.turbo/
+
+# Vite cache
+**/.vite/
+**/node_modules/.vite/
+

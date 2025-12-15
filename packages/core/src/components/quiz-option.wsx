@@ -51,8 +51,9 @@ export class QuizOption extends LightComponent {
         this.optionId = newValue || '';
         break;
       case 'text':
-        // 不更新 text 状态，避免重新渲染（RFC 0007）
-        // 只在元素没有焦点且内容不同时更新 DOM，避免打断用户输入
+        // 更新 text 状态（用于初始渲染），但不触发重新渲染
+        this.text = newValue || '';
+        // 如果 textElement 已存在且没有焦点，更新 DOM
         if (this.textElement && document.activeElement !== this.textElement) {
           if (this.textElement.innerHTML !== newValue) {
             this.textElement.innerHTML = newValue || '';
@@ -77,6 +78,10 @@ export class QuizOption extends LightComponent {
   connectedCallback() {
     super.connectedCallback();
     this.setupTextElement();
+    // 如果 text 属性存在但 textElement 还没有内容，设置初始文本
+    if (this.textElement && this.text && !this.textElement.innerHTML) {
+      this.textElement.innerHTML = this.text;
+    }
   }
 
   disconnectedCallback() {
@@ -213,10 +218,11 @@ export class QuizOption extends LightComponent {
               }
               // 保存引用
               this.textElement = el;
-              // 初始化内容（只在元素为空或内容不同时设置）
-              const currentContent = el.innerHTML;
-              if (!currentContent || currentContent !== initialText) {
-                el.innerHTML = initialText || '';
+              // 初始化内容：如果元素为空或内容与 initialText 不同，则设置
+              const currentContent = el.innerHTML.trim();
+              const textToSet = initialText || '';
+              if (!currentContent || currentContent !== textToSet) {
+                el.innerHTML = textToSet;
               }
               // 设置事件监听器
               this.setupTextElement();

@@ -1,16 +1,27 @@
 <template>
   <div class="json-viewer">
-    <ssh-pre v-if="formattedCode" language="json" class="json-viewer-highlight">
-      {{ formattedCode }}
-    </ssh-pre>
+    <VueJsonView
+      v-if="parsedData !== null"
+      :src="parsedData"
+      :theme="theme"
+      :deep="10"
+      :show-double-quotes="false"
+      :show-length="true"
+      :show-line-number="false"
+      :highlight-mouseover-node="true"
+      :collapsed-on-click-brackets="true"
+    />
+    <div v-else-if="code && code.trim() !== ''" class="json-viewer-error">
+      <div class="error-message">Invalid JSON</div>
+      <pre class="error-code">{{ code }}</pre>
+    </div>
     <div v-else class="json-viewer-empty">// 暂无数据</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import SshPre from 'simple-syntax-highlighter';
-import 'simple-syntax-highlighter/dist/sshpre.css';
+import { computed, inject } from 'vue';
+import VueJsonView from '@matpool/vue-json-view';
 
 interface Props {
   code: string;
@@ -18,18 +29,22 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const formattedCode = computed(() => {
+// 从父组件注入主题状态
+const isDarkRef = inject<{ value: boolean } | undefined>('isDark');
+const isDark = computed(() => isDarkRef?.value ?? false);
+const theme = computed(() => (isDark.value ? 'dark' : 'chrome'));
+
+const parsedData = computed(() => {
   if (!props.code || props.code.trim() === '') {
-    return '';
+    return null;
   }
 
   try {
-    // 尝试解析并格式化 JSON
-    const parsed = JSON.parse(props.code);
-    return JSON.stringify(parsed, null, 2);
+    // 尝试解析 JSON
+    return JSON.parse(props.code);
   } catch {
-    // 如果不是有效的 JSON，返回原始代码
-    return props.code;
+    // 如果不是有效的 JSON，返回 null
+    return null;
   }
 });
 </script>
@@ -43,20 +58,17 @@ const formattedCode = computed(() => {
   flex-direction: column;
 }
 
-.json-viewer-highlight {
+.json-viewer :deep(.vue-json-view) {
   flex: 1;
-  margin: 0;
-  min-height: 0;
   overflow: auto;
-  border-radius: 4px;
-}
-
-.json-viewer-highlight :deep(pre) {
-  margin: 0;
-  padding: 1rem;
-  height: 100%;
-  font-size: 0.875rem;
+  padding: 12px;
+  font-size: 13px;
   line-height: 1.6;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #333);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .json-viewer-empty {
@@ -64,31 +76,68 @@ const formattedCode = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--text-tertiary, #999);
   font-family:
     'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Droid Sans Mono',
     'Source Code Pro', 'Courier New', monospace;
   font-size: 0.875rem;
   padding: 1rem;
+  transition: color 0.3s ease;
+}
+
+.json-viewer-error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.error-code {
+  flex: 1;
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 4px;
+  font-family:
+    'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Droid Sans Mono',
+    'Source Code Pro', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-primary, #333);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* 自定义滚动条样式 */
-.json-viewer-highlight::-webkit-scrollbar {
+.json-viewer :deep(.vue-json-view)::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.json-viewer-highlight::-webkit-scrollbar-track {
-  background: #f5f5f5;
+.json-viewer :deep(.vue-json-view)::-webkit-scrollbar-track {
+  background: var(--bg-secondary, #f5f5f5);
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.json-viewer-highlight::-webkit-scrollbar-thumb {
-  background: #ccc;
+.json-viewer :deep(.vue-json-view)::-webkit-scrollbar-thumb {
+  background: var(--border-color, #ccc);
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.json-viewer-highlight::-webkit-scrollbar-thumb:hover {
-  background: #999;
+.json-viewer :deep(.vue-json-view)::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary, #999);
 }
 </style>
