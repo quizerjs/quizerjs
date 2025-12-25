@@ -162,7 +162,15 @@ async function checkGitStatus() {
     }
   }
 
+  // 检查未提交的更改
+  // 如果 git 命令失败（返回 null），应该报错而不是继续，以确保发布完整性
   const hasUncommitted = execSilent('git status --porcelain');
+  if (hasUncommitted === null) {
+    console.error(chalk.red('❌ 错误: 无法检查 Git 状态'));
+    console.error(chalk.red('Git 命令执行失败，无法确保工作区干净'));
+    console.error(chalk.red('请检查 Git 是否正常工作'));
+    process.exit(1);
+  }
   if (hasUncommitted) {
     console.error(chalk.red('❌ 错误: 存在未提交的更改'));
     console.error(chalk.red('请先提交或暂存所有更改'));
@@ -296,7 +304,15 @@ async function checkRemoteUpToDate() {
     const localCommit = execSilent('git rev-parse HEAD');
     const remoteCommit = execSilent('git rev-parse origin/master 2>/dev/null');
 
-    if (remoteCommit && localCommit !== remoteCommit) {
+    // 如果无法获取本地提交，跳过检查（这是可接受的，因为可能不在 git 仓库中）
+    if (localCommit === null) {
+      console.log(chalk.yellow('⚠️  无法获取本地提交信息，跳过远程分支检查'));
+      return;
+    }
+
+    // 只有在本地提交存在且远程提交存在且两者不同时才提示拉取
+    // 明确检查 null 以避免 null !== string 的错误比较
+    if (remoteCommit !== null && localCommit !== remoteCommit) {
       const { pull } = await inquirer.prompt([
         {
           type: 'confirm',
@@ -477,7 +493,8 @@ async function main() {
             const hasChanges = execSilent('git status --porcelain');
             if (hasChanges) {
               // 使用 --no-verify 跳过 hooks，避免交互式询问
-              exec(`git commit --no-verify -m "chore: release v${ctx.version}\n\n[skip ci]"`, {
+              // 使用多个 -m 参数来支持多行提交消息
+              exec(`git commit --no-verify -m "chore: release v${ctx.version}" -m "[skip ci]"`, {
                 silent: true,
               });
             }

@@ -1,6 +1,6 @@
 {
   "name": "quizerjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "一个使用 Editor.js 和 wsx 构建测验的开源库",
   "private": true,
   "workspaces": [
