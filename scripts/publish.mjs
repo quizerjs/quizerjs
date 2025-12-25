@@ -753,9 +753,52 @@ async function main() {
       // 手动发布每个包
       for (const pkg of publishablePackages) {
         console.log(chalk.cyan(`\n发布 ${pkg.name}@${pkg.version}...`));
-        exec(`pnpm --filter ${pkg.name} publish`, {
-          silent: false, // 显示输出，允许交互式输入 OTP
-        });
+        try {
+          exec(`pnpm --filter ${pkg.name} publish`, {
+            silent: false, // 显示输出，允许交互式输入 OTP
+          });
+          console.log(chalk.green(`✅ ${pkg.name}@${pkg.version} 发布成功`));
+        } catch (pkgError) {
+          const pkgErrorMessage = pkgError.message || String(pkgError);
+          console.error(chalk.red(`❌ ${pkg.name}@${pkg.version} 发布失败`));
+          console.error(chalk.red(`错误详情: ${pkgErrorMessage}`));
+
+          // 检查是否是已存在的包
+          if (
+            pkgErrorMessage.includes('already exists') ||
+            pkgErrorMessage.includes('You cannot publish over the previously published versions')
+          ) {
+            console.log(chalk.yellow(`⚠️  ${pkg.name}@${pkg.version} 已存在于 NPM，跳过`));
+            continue; // 继续发布下一个包
+          }
+
+          // 检查是否是 OTP 问题
+          if (
+            pkgErrorMessage.includes('OTP') ||
+            pkgErrorMessage.includes('one-time') ||
+            pkgErrorMessage.includes('Enter one-time password') ||
+            pkgErrorMessage.includes('one-time pass')
+          ) {
+            console.log(chalk.yellow('\n💡 提示: 发布需要 OTP 验证'));
+            console.log(chalk.gray('   请重新运行: pnpm release'));
+            console.log(chalk.gray('   或者在发布时准备好 OTP 并输入'));
+            throw pkgError; // OTP 错误需要用户重新运行
+          }
+
+          // 其他错误，询问是否继续
+          const { continue: shouldContinue } = await inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'continue',
+              message: `是否继续发布其他包? (${pkg.name} 已失败)`,
+              default: false,
+            },
+          ]);
+
+          if (!shouldContinue) {
+            throw pkgError;
+          }
+        }
       }
     }
 
@@ -776,6 +819,11 @@ async function main() {
       console.log(chalk.gray('   或者在发布时准备好 OTP 并输入'));
     } else {
       console.error(chalk.red(`错误: ${errorMessage}`));
+      console.log(chalk.yellow('\n💡 提示: 请检查'));
+      console.log(chalk.gray('   1. NPM 登录状态: npm whoami'));
+      console.log(chalk.gray('   2. 包版本是否已存在: npm view <package-name>@<version>'));
+      console.log(chalk.gray('   3. 包配置是否正确: 检查 package.json 中的 publishConfig'));
+      console.log(chalk.gray('   4. 网络连接是否正常'));
     }
     throw error;
   }
