@@ -9,7 +9,7 @@ export const i18n = initI18n({
   backend: {
     loadPath: '/locales/{{lng}}/{{ns}}.json',
   },
-  ns: ['home', 'common', 'footer', 'demos'],
+  ns: ['home', 'common', 'footer', 'demos', 'features'],
   defaultNS: 'common',
 });
 

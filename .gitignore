@@ -42,8 +42,6 @@ lerna-debug.log*
 *.temp
 .cache/
 
-# VitePress cache
-.vitepress/
 
 # Turbo cache
 .turbo/
@@ -51,4 +49,7 @@ lerna-debug.log*
 # Vite cache
 **/.vite/
 **/node_modules/.vite/
+
+# WSX-Press output
+**/.wsx-press/
 

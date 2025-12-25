@@ -586,7 +586,7 @@ quizerjs/
 │   └── vanilla/
 ├── site/           # 开源网站项目（独立）
 │   └── ...
-├── docs/              # 文档（VitePress）
+├── docs/              # 文档
 └── ...
 ```
 
@@ -1366,7 +1366,7 @@ export default class App extends LightComponent {
           {/* 文档路由 - 嵌套结构 */}
           <wsx-view route="/docs" component="docs-layout">
             {/* 快速开始 */}
-            <wsx-view route="/docs/getting-started" component="getting-started-doc"></wsx-view>
+            <wsx-view route="/docs/guide/getting-started" component="getting-started-doc"></wsx-view>
             <wsx-view route="/docs/installation" component="installation-doc"></wsx-view>
             
             {/* API 文档 */}
@@ -2220,7 +2220,7 @@ const routes = [
   '/',
   '/features',
   '/docs',
-  '/docs/getting-started',
+  '/docs/guide/getting-started',
   '/docs/installation',
   '/docs/api',
   '/docs/api/parser',

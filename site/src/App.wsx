@@ -11,6 +11,8 @@ import './components/layout/AppFooter.wsx';
 // 导入页面组件（触发自动注册）
 import './components/pages/HomePage.wsx';
 import './components/pages/DemosPage.wsx';
+import './components/pages/FeaturesPage.wsx';
+import './components/pages/DocsPage.wsx';
 
 @autoRegister({ tagName: 'quizerjs-app' })
 export default class App extends LightComponent {
@@ -31,10 +33,13 @@ export default class App extends LightComponent {
         <wsx-router mode="hash">
           {/* 首页 */}
           <wsx-view route="/" component="home-page"></wsx-view>
+          {/* Features 页面 */}
+          <wsx-view route="/features" component="features-page"></wsx-view>
           {/* Demos 页面 */}
           <wsx-view route="/demos" component="demos-page"></wsx-view>
+          {/* Docs 页面 */}
+          <wsx-view route="/docs/:category/:page" component="docs-page"></wsx-view>
         </wsx-router>
-
         {/* 页脚 */}
         <app-footer />
       </div>

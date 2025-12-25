@@ -1,17 +1,29 @@
 {
-  "title": "Demos",
-  "subtitle": "Explore interactive demos showcasing QuizerJS integration with different frameworks",
-  "viewDemo": "View Demo",
+  "title": "Framework Integration",
+  "subtitle": "Learn how to use QuizerJS with your favorite framework.",
+  "viewDemo": "View Example",
   "react": {
-    "description": "React 18 integration example with hooks and components"
+    "title": "React Integration",
+    "description": "Integrate QuizerJS with React 18 using hooks and components.",
+    "framework": "React 18",
+    "package": "@quizerjs/react"
   },
   "vue": {
-    "description": "Vue 3 composition API integration example"
+    "title": "Vue Integration",
+    "description": "Integrate QuizerJS with Vue 3 using Composition API.",
+    "framework": "Vue 3",
+    "package": "@quizerjs/vue"
   },
   "svelte": {
-    "description": "Svelte 4 integration example with stores"
+    "title": "Svelte Integration",
+    "description": "Integrate QuizerJS with Svelte 4 using stores and reactive statements.",
+    "framework": "Svelte 4",
+    "package": "@quizerjs/svelte"
   },
   "vanilla": {
-    "description": "Vanilla JavaScript integration without any framework"
+    "title": "Vanilla JS Integration",
+    "description": "Use QuizerJS core components directly with vanilla JavaScript.",
+    "framework": "Vanilla JS",
+    "package": "@quizerjs/core"
   }
 }

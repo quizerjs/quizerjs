@@ -1,17 +1,29 @@
 {
-  "title": "演示",
-  "subtitle": "探索展示 QuizerJS 与不同框架集成的交互式演示",
-  "viewDemo": "查看演示",
+  "title": "框架集成",
+  "subtitle": "学习如何在您喜欢的框架中使用 QuizerJS。每个示例都包含完整的工作代码和源代码。",
+  "viewDemo": "查看示例",
   "react": {
-    "description": "React 18 集成示例，使用 hooks 和组件"
+    "title": "React 集成",
+    "description": "学习如何在 React 18 中使用 hooks 和组件集成 QuizerJS。了解如何在 React 应用中使用 QuizPlayer 和 QuizEditor。",
+    "framework": "React 18",
+    "package": "@quizerjs/react"
   },
   "vue": {
-    "description": "Vue 3 Composition API 集成示例"
+    "title": "Vue 集成",
+    "description": "学习如何在 Vue 3 中使用 Composition API 集成 QuizerJS。了解如何在 Vue 应用中使用 QuizPlayer 和 QuizEditor。",
+    "framework": "Vue 3",
+    "package": "@quizerjs/vue"
   },
   "svelte": {
-    "description": "Svelte 4 集成示例，使用 stores"
+    "title": "Svelte 集成",
+    "description": "学习如何在 Svelte 4 中使用 stores 和响应式语句集成 QuizerJS。了解如何在 Svelte 应用中使用 QuizPlayer 和 QuizEditor。",
+    "framework": "Svelte 4",
+    "package": "@quizerjs/svelte"
   },
   "vanilla": {
-    "description": "纯 JavaScript 集成，无需任何框架"
+    "title": "Vanilla JS 集成",
+    "description": "学习如何在不使用任何框架的情况下使用 QuizerJS。了解如何直接使用核心组件和纯 JavaScript。",
+    "framework": "Vanilla JS",
+    "package": "@quizerjs/core"
   }
 }

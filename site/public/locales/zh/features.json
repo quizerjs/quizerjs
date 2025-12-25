@@ -1,0 +1,131 @@
+{
+  "title": "功能特性",
+  "subtitle": "探索 QuizerJS 的强大功能",
+  "hero": {
+    "title": "构建交互式测验所需的一切",
+    "description": "QuizerJS 提供了完整的解决方案，用于创建、管理和展示交互式测验，支持 Editor.js 集成和现代 Web Components。"
+  },
+  "sections": {
+    "editorjsIntegration": {
+      "title": "Editor.js 集成",
+      "description": "将 QuizerJS 作为 Editor.js 工具插件无缝集成到您现有的编辑器工作流中。",
+      "details": [
+        "作为原生 Editor.js 块工具工作",
+        "与 Editor.js 生态系统完全兼容",
+        "易于配置和自定义",
+        "支持所有 Editor.js 功能（撤销/重做、复制/粘贴等）"
+      ],
+      "codeExample": "import EditorJS from '@editorjs/editorjs';\nimport QuizTool from '@quizerjs/editorjs-tool';\n\nconst editor = new EditorJS({\n  holder: 'editorjs',\n  tools: {\n    quiz: QuizTool\n  }\n});"
+    },
+    "multipleTypes": {
+      "title": "多种题型支持",
+      "description": "支持各种题型，满足不同的测验需求。",
+      "details": ["单选题", "多选题", "文本输入题", "判断题", "可扩展的类型系统"],
+      "codeExample": "const question = {\n  id: 'q1',\n  type: 'single_choice',\n  text: '2 + 2 等于多少？',\n  options: [\n    { id: 'o1', text: '3', isCorrect: false },\n    { id: 'o2', text: '4', isCorrect: true },\n    { id: 'o3', text: '5', isCorrect: false }\n  ]\n};"
+    },
+    "dsl": {
+      "title": "DSL 规范",
+      "description": "统一的 DSL 格式，便于测验数据的存储、传输和验证。",
+      "details": [
+        "基于 JSON 的 DSL 格式",
+        "版本控制支持",
+        "完整的验证系统",
+        "易于序列化和反序列化",
+        "类型安全的 TypeScript 定义"
+      ],
+      "codeExample": "const dsl = {\n  version: '1.0.0',\n  quiz: {\n    id: 'quiz-1',\n    title: '我的测验',\n    questions: [/* ... */]\n  }\n};\n\nconst result = validateQuizDSL(dsl);"
+    },
+    "themeSystem": {
+      "title": "主题系统",
+      "description": "灵活的主题系统，提供多个内置主题和自定义主题支持。",
+      "details": [
+        "多个内置主题（浅色、深色、solarized 等）",
+        "轻松切换主题",
+        "自定义主题支持",
+        "基于 CSS 变量",
+        "响应式设计"
+      ],
+      "codeExample": "import '@quizerjs/theme/light.css';\n// 或\nimport '@quizerjs/theme/dark.css';\n// 或创建您自己的主题"
+    },
+    "frameworkIntegration": {
+      "title": "框架集成",
+      "description": "与流行的前端框架无缝协作。",
+      "details": [
+        "React 集成包",
+        "Vue 集成包",
+        "Svelte 集成包",
+        "Vanilla JS 支持",
+        "框架无关的核心"
+      ],
+      "codeExample": "// React\nimport { QuizPlayer } from '@quizerjs/react';\n\n// Vue\nimport { QuizPlayer } from '@quizerjs/vue';\n\n// Svelte\nimport { QuizPlayer } from '@quizerjs/svelte';"
+    },
+    "typeSafety": {
+      "title": "类型安全",
+      "description": "完整的 TypeScript 支持，提供全面的类型定义。",
+      "details": [
+        "完整的 TypeScript 定义",
+        "类型安全的 API",
+        "IntelliSense 支持",
+        "编译时错误检查",
+        "更好的开发体验"
+      ],
+      "codeExample": "import { QuizData, QuestionType } from '@quizerjs/core';\n\nconst quiz: QuizData = {\n  id: 'quiz-1',\n  title: '我的测验',\n  questions: [/* ... */]\n};"
+    },
+    "modular": {
+      "title": "模块化设计",
+      "description": "核心组件可独立使用，配置灵活。",
+      "details": ["独立的核心组件", "灵活的配置选项", "支持 Tree-shaking", "小体积", "易于扩展"],
+      "codeExample": "import { QuizPlayer } from '@quizerjs/core';\n// 独立使用，无需 Editor.js"
+    },
+    "responsive": {
+      "title": "响应式设计",
+      "description": "在所有设备和屏幕尺寸上提供完美体验。",
+      "details": ["移动优先设计", "平板优化", "桌面增强", "触摸友好的交互", "自适应布局"]
+    }
+  },
+  "comparison": {
+    "title": "为什么选择 QuizerJS？",
+    "subtitle": "将 QuizerJS 与其他解决方案进行比较",
+    "features": "功能",
+    "quizerjs": "QuizerJS",
+    "otherSolutions": "其他解决方案",
+    "rows": {
+      "editorjsIntegration": {
+        "feature": "Editor.js 集成",
+        "quizerjs": "✓ 原生集成",
+        "other": "✗ 有限或无"
+      },
+      "dsl": {
+        "feature": "DSL 规范",
+        "quizerjs": "✓ 统一格式",
+        "other": "✗ 专有格式"
+      },
+      "typeSafety": {
+        "feature": "TypeScript 支持",
+        "quizerjs": "✓ 完整支持",
+        "other": "✗ 部分或无"
+      },
+      "frameworkSupport": {
+        "feature": "框架支持",
+        "quizerjs": "✓ React, Vue, Svelte",
+        "other": "✗ 通常只支持一个框架"
+      },
+      "themeSystem": {
+        "feature": "主题系统",
+        "quizerjs": "✓ 多个主题",
+        "other": "✗ 有限的自定义"
+      },
+      "modular": {
+        "feature": "模块化设计",
+        "quizerjs": "✓ 支持 Tree-shaking",
+        "other": "✗ 单体式"
+      }
+    }
+  },
+  "cta": {
+    "title": "准备开始了吗？",
+    "description": "立即开始使用 QuizerJS 构建交互式测验。",
+    "getStarted": "快速开始",
+    "viewDemos": "查看演示"
+  }
+}

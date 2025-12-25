@@ -1,5 +1,6 @@
 import { defineConfig, Plugin } from 'vite';
 import { wsx } from '@wsxjs/wsx-vite-plugin';
+import { wsxPress } from '@wsxjs/wsx-press/node';
 import UnoCSS from 'unocss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -77,6 +78,13 @@ export default defineConfig({
   plugins: [
     // pino 浏览器版本修复插件 - 必须在最前面
     pinoBrowserPlugin(),
+    // wsx-press 插件 - 构建文档页面（必须在其他插件之前）
+    // 注意：当前版本 (0.0.19) 存在 glob 导入问题，需要等待上游修复
+    // 如果遇到 "Named export 'glob' not found" 错误，请暂时注释掉此插件
+    wsxPress({
+      docsRoot: path.resolve(__dirname, './public/docs'),
+      outputDir: path.resolve(__dirname, './.wsx-press'),
+    }),
     // 主题 CSS 插件 - 必须在其他插件之前处理 CSS 导入
     themeCssPlugin(),
     // UnoCSS 原子化 CSS 引擎

@@ -1,0 +1,167 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { i18n } from '@wsxjs/wsx-i18next';
+import '@wsxjs/wsx-base-components';
+import styles from './FeaturesPage.css?inline';
+
+@autoRegister({ tagName: 'features-page' })
+@i18n('features')
+export class FeaturesPage extends LightComponent {
+  constructor() {
+    super({
+      styles,
+      styleName: 'features-page',
+    });
+  }
+
+  render() {
+    // 功能特性列表（按顺序展示）
+    const features = [
+      {
+        key: 'editorjsIntegration',
+        icon: '🔌',
+      },
+      {
+        key: 'multipleTypes',
+        icon: '🎯',
+      },
+      {
+        key: 'dsl',
+        icon: '📋',
+      },
+      {
+        key: 'themeSystem',
+        icon: '🎨',
+      },
+      {
+        key: 'frameworkIntegration',
+        icon: '⚛️',
+      },
+      {
+        key: 'typeSafety',
+        icon: '🔒',
+      },
+      {
+        key: 'modular',
+        icon: '📦',
+      },
+      {
+        key: 'responsive',
+        icon: '📱',
+      },
+    ];
+
+    return (
+      <div class="features-page">
+        {/* Hero 区域 */}
+        <section class="features-hero">
+          <div class="features-hero-container">
+            <h1 class="features-hero-title">{this.t('hero.title')}</h1>
+            <p class="features-hero-description">{this.t('hero.description')}</p>
+          </div>
+        </section>
+
+        {/* 功能特性详细列表 */}
+        <section class="features-sections">
+          <div class="features-sections-container">
+            {features.map(feature => {
+              const baseKey = `sections.${feature.key}`;
+              const title = this.t(`${baseKey}.title`);
+              const description = this.t(`${baseKey}.description`);
+              const details = this.t(`${baseKey}.details`, { returnObjects: true }) as string[];
+              const codeExample = this.t(`${baseKey}.codeExample`);
+
+              return (
+                <div class="feature-section" key={feature.key}>
+                  <div class="feature-section-header">
+                    <div class="feature-section-icon">{feature.icon}</div>
+                    <h2 class="feature-section-title">{title}</h2>
+                  </div>
+                  <p class="feature-section-description">{description}</p>
+
+                  {/* 功能详情列表 */}
+                  <ul class="feature-details">
+                    {Array.isArray(details) &&
+                      details.map((detail: string, index: number) => (
+                        <li key={index} class="feature-detail-item">
+                          <span class="feature-detail-icon">✓</span>
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                  </ul>
+
+                  {/* 代码示例 */}
+                  {codeExample && codeExample !== `${baseKey}.codeExample` && (
+                    <div class="feature-code-example">
+                      <pre>
+                        <code>{codeExample}</code>
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 对比表格 */}
+        <section class="features-comparison">
+          <div class="features-comparison-container">
+            <h2 class="comparison-title">{this.t('comparison.title')}</h2>
+            <p class="comparison-subtitle">{this.t('comparison.subtitle')}</p>
+            <div class="comparison-table-wrapper">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th class="comparison-feature-col">{this.t('comparison.features')}</th>
+                    <th class="comparison-quizerjs-col">{this.t('comparison.quizerjs')}</th>
+                    <th class="comparison-other-col">{this.t('comparison.otherSolutions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    'editorjsIntegration',
+                    'dsl',
+                    'typeSafety',
+                    'frameworkSupport',
+                    'themeSystem',
+                    'modular',
+                  ].map(key => {
+                    const baseKey = `comparison.rows.${key}`;
+                    const feature = this.t(`${baseKey}.feature`);
+                    const quizerjs = this.t(`${baseKey}.quizerjs`);
+                    const other = this.t(`${baseKey}.other`);
+                    return (
+                      <tr key={key}>
+                        <td class="comparison-feature-col">{feature}</td>
+                        <td class="comparison-quizerjs-col">{quizerjs}</td>
+                        <td class="comparison-other-col">{other}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA 区域 */}
+        <section class="features-cta">
+          <div class="features-cta-container">
+            <h2 class="cta-title">{this.t('cta.title')}</h2>
+            <p class="cta-description">{this.t('cta.description')}</p>
+            <div class="cta-actions">
+              <wsx-link to="/docs/guide/getting-started" class="btn btn-primary">
+                {this.t('cta.getStarted')}
+              </wsx-link>
+              <wsx-link to="/demos" class="btn btn-secondary">
+                {this.t('cta.viewDemos')}
+              </wsx-link>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+}

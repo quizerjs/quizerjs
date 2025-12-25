@@ -1,0 +1,325 @@
+.features-page {
+  min-height: 100vh;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #333333);
+}
+
+/* Hero 区域 */
+.features-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.features-hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features-hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.features-hero-description {
+  font-size: 1.25rem;
+  margin: 0;
+  opacity: 0.95;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 功能特性详细列表 */
+.features-sections {
+  padding: 4rem 1rem;
+}
+
+.features-sections-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-section {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: var(--card-bg, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.feature-section:last-child {
+  margin-bottom: 0;
+}
+
+.feature-section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.feature-section-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.feature-section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--heading-color, #1f2937);
+}
+
+.feature-section-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+/* 功能详情列表 */
+.feature-details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.75rem;
+}
+
+.feature-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: var(--text-color, #333333);
+}
+
+.feature-detail-icon {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* 代码示例 */
+.feature-code-example {
+  margin-top: 1.5rem;
+  background: var(--code-bg, #1e293b);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, #334155);
+}
+
+.feature-code-example pre {
+  margin: 0;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.feature-code-example code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  white-space: pre;
+}
+
+/* 对比表格 */
+.features-comparison {
+  padding: 4rem 1rem;
+  background: var(--section-bg, #f9fafb);
+}
+
+.features-comparison-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.comparison-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: var(--heading-color, #1f2937);
+}
+
+.comparison-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0 0 2rem 0;
+}
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin-top: 2rem;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg, #ffffff);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table thead {
+  background: var(--table-header-bg, #f3f4f6);
+}
+
+.comparison-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--heading-color, #1f2937);
+  border-bottom: 2px solid var(--border-color, #e5e7eb);
+}
+
+.comparison-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  color: var(--text-color, #333333);
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-feature-col {
+  font-weight: 500;
+  width: 30%;
+}
+
+.comparison-quizerjs-col {
+  width: 35%;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.comparison-other-col {
+  width: 35%;
+  color: var(--text-secondary, #6b7280);
+}
+
+/* CTA 区域 */
+.features-cta {
+  padding: 4rem 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.features-cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.cta-description {
+  font-size: 1.25rem;
+  margin: 0 0 2rem 0;
+  opacity: 0.95;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: white;
+  color: #667eea;
+}
+
+.btn-primary:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .features-hero-title {
+    font-size: 2rem;
+  }
+
+  .features-hero-description {
+    font-size: 1rem;
+  }
+
+  .feature-section {
+    padding: 1.5rem;
+  }
+
+  .feature-section-title {
+    font-size: 1.5rem;
+  }
+
+  .feature-details {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-table {
+    font-size: 0.875rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .cta-title {
+    font-size: 2rem;
+  }
+
+  .cta-description {
+    font-size: 1rem;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

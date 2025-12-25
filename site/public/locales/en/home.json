@@ -1,6 +1,6 @@
 {
   "title": "QuizerJS",
-  "subtitle": "A powerful quiz library built with {{editorjs}} and {{wsx}} for creating interactive quizzes and tests.",
+  "subtitle": "A powerful quiz library built with {{editorjs}} and {{wsx}}.",
   "stats": {
     "license": "MIT License",
     "typescript": "TypeScript",
@@ -18,7 +18,7 @@
     },
     "editorjsIntegration": {
       "title": "Editor.js Integration",
-      "description": "Seamlessly integrate as an Editor.js tool plugin into your existing editor."
+      "description": "Integrate as an Editor.js tool plugin."
     },
     "modular": {
       "title": "Modular Design",
@@ -45,7 +45,7 @@
   },
   "quickStart": {
     "title": "Quick Start",
-    "description": "Get up and running in minutes with our simple installation and setup process."
+    "description": "Get up and running in minutes."
   },
   "poweredBy": {
     "title": "Built by Us, Designed by You",

@@ -4,15 +4,8 @@
   "resources": {
     "title": "Resources",
     "docs": "Docs",
-    "examples": "Examples",
     "demos": "Demos",
     "github": "GitHub"
-  },
-  "community": {
-    "title": "Community",
-    "contributing": "Contributing",
-    "codeOfConduct": "Code of Conduct",
-    "changelog": "Changelog"
   },
   "copyright": "© 2025 QuizerJS. Licensed under MIT."
 }

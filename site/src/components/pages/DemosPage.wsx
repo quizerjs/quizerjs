@@ -41,29 +41,37 @@ export class DemosPage extends LightComponent {
     const demos = [
       {
         id: 'react',
-        name: 'React',
+        name: this.t('react.title'),
         icon: '⚛️',
+        framework: this.t('react.framework'),
+        package: this.t('react.package'),
         description: this.t('react.description'),
         link: getDemoLink('react'),
       },
       {
         id: 'vue',
-        name: 'Vue',
+        name: this.t('vue.title'),
         icon: '💚',
+        framework: this.t('vue.framework'),
+        package: this.t('vue.package'),
         description: this.t('vue.description'),
         link: getDemoLink('vue'),
       },
       {
         id: 'svelte',
-        name: 'Svelte',
+        name: this.t('svelte.title'),
         icon: '🧡',
+        framework: this.t('svelte.framework'),
+        package: this.t('svelte.package'),
         description: this.t('svelte.description'),
         link: getDemoLink('svelte'),
       },
       {
         id: 'vanilla',
-        name: 'Vanilla JS',
+        name: this.t('vanilla.title'),
         icon: '⚡',
+        framework: this.t('vanilla.framework'),
+        package: this.t('vanilla.package'),
         description: this.t('vanilla.description'),
         link: getDemoLink('vanilla'),
       },
@@ -90,6 +98,10 @@ export class DemosPage extends LightComponent {
                 >
                   <div class="demo-icon">{demo.icon}</div>
                   <h3 class="demo-name">{demo.name}</h3>
+                  <div class="demo-meta">
+                    <span class="demo-framework">{demo.framework}</span>
+                    <span class="demo-package">{demo.package}</span>
+                  </div>
                   <p class="demo-description">{demo.description}</p>
                   <div class="demo-link">{this.t('viewDemo')} →</div>
                 </a>

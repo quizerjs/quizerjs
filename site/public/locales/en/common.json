@@ -4,12 +4,9 @@
   "home": "Home",
   "features": "Features",
   "docs": "Docs",
-  "demos": "Demos",
-  "examples": "Examples",
-  "community": "Community",
-  "about": "About",
+  "demos": "Framework Integration",
   "getStarted": "Get Started",
-  "viewDemos": "View Demos",
+  "viewDemos": "View Examples",
   "viewDocs": "View Docs",
   "selectLanguage": "Select language"
 }

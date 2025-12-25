@@ -30,7 +30,7 @@ export class HomePage extends LightComponent {
               })}
             </p>
             <div class="hero-actions">
-              <wsx-link to="/docs/getting-started" class="btn btn-primary">
+              <wsx-link to="/docs/guide/getting-started" class="btn btn-primary">
                 {this.t('getStarted', { ns: 'common' })}
               </wsx-link>
               <wsx-link to="/demos" class="btn btn-secondary">
@@ -148,7 +148,7 @@ const editor = new EditorJS({
               </pre>
             </div>
             <div class="quick-start-actions">
-              <wsx-link to="/docs/getting-started" class="btn btn-primary">
+              <wsx-link to="/docs/guide/getting-started" class="btn btn-primary">
                 {this.t('viewDocs', { ns: 'common' })}
               </wsx-link>
             </div>
@@ -161,7 +161,7 @@ const editor = new EditorJS({
             <h2 class="section-title">{this.t('poweredBy.title')}</h2>
             <p class="section-description">{this.t('poweredBy.description')}</p>
             <div class="powered-actions">
-              <wsx-link to="/docs/customization" class="btn btn-primary">
+              <wsx-link to="/docs/guide/customization" class="btn btn-primary">
                 {this.t('poweredBy.customization')}
               </wsx-link>
             </div>

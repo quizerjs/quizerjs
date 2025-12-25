@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm generate:sitemap && vite build",
+    "build:docs": "vite build",
     "preview": "vite preview",
     "preview:pages": "vite preview --base /",
     "typecheck": "tsc --noEmit",
@@ -37,6 +38,7 @@
     "@wsxjs/wsx-vite-plugin": "^0.0.19",
     "cross-env": "^7.0.3",
     "gh-pages": "^6.1.1",
+    "glob": "^13.0.0",
     "globals": "^16.5.0",
     "jsdom": "^24.0.0",
     "tsx": "^4.7.1",

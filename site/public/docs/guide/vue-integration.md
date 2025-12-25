@@ -232,6 +232,7 @@ function handleSubmit(answers: Record<string, any>) {
 
 ## 下一步
 
-- [API 参考](/api/) - 查看完整 API
-- [DSL 规范](/dsl/) - 了解 DSL 格式
+- [DSL 指南](./dsl-guide.md) - 了解 DSL 数据格式
+- [快速开始](./getting-started.md) - 查看基础使用
+- [安装指南](./installation.md) - 查看详细安装说明
 

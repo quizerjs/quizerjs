@@ -1,20 +1,21 @@
-# quizerjs
+# QuizerJS
 
-一个使用 Editor.js 和 wsx 构建测验的开源库。
+一个使用 [Editor.js](https://editorjs.io/) 和 [wsx](https://www.wsxjs.dev) 构建交互式测验的开源库。
 
 ## 简介
 
-quizerjs 是一个功能强大的测验构建库，它结合了 [Editor.js](https://editorjs.io/) 的块编辑器能力和 [wsxjs](https://github.com/wsxjs/wsxjs) 的 Web Components 框架，让您可以轻松创建交互式测验。
+QuizerJS 是一个功能强大的测验构建库，它结合了 Editor.js 的块编辑器能力和 wsx 的 Web Components 框架，让您可以轻松创建、管理和展示交互式测验。支持 React、Vue、Svelte 和 Vanilla JS 等多种框架。
 
 ## 特性
 
-- 🎯 **多种题型支持**：单选题、多选题、文本输入题、判断题
-- 🎨 **现代化 UI**：基于 wsx 组件的美观界面
-- 🔌 **Editor.js 集成**：作为 Editor.js 工具插件使用
-- 📦 **模块化设计**：核心组件可独立使用
-- 🎛️ **灵活配置**：丰富的配置选项和回调函数
-- 📱 **响应式设计**：适配各种屏幕尺寸
-- 🔒 **类型安全**：完整的 TypeScript 类型定义
+- 🎯 **多种题型支持** - 单选题、多选题、文本输入题、判断题
+- 🎨 **现代化 UI** - 基于 wsx 组件的美观界面，完全响应式设计
+- 🔌 **Editor.js 集成** - 作为 Editor.js 工具插件无缝集成
+- 📦 **模块化设计** - 核心组件可独立使用，配置灵活
+- 🔒 **类型安全** - 完整的 TypeScript 类型定义和验证
+- 📋 **DSL 规范** - 统一的 JSON 格式，便于存储和传输
+- 🎨 **主题系统** - 多个内置主题，支持自定义
+- ⚛️ **框架支持** - React、Vue、Svelte 和 Vanilla JS
 
 ## 安装
 
@@ -25,216 +26,316 @@ npm install @quizerjs/core
 # 安装 Editor.js 工具插件
 npm install @quizerjs/editorjs-tool
 
-# 安装依赖
-npm install @editorjs/editorjs @wsxjs/wsx-core
+# 安装 DSL 库（用于验证和序列化）
+npm install @quizerjs/dsl
+
+# 安装框架集成包（可选）
+npm install @quizerjs/react    # React
+npm install @quizerjs/vue      # Vue
+npm install @quizerjs/svelte   # Svelte
 ```
 
 ## 快速开始
 
-### 作为 Editor.js 工具使用
+### 使用编辑器（QuizEditor）
 
 ```typescript
-import EditorJS from '@editorjs/editorjs';
-import QuizTool from '@quizerjs/editorjs-tool';
+import { QuizEditor } from '@quizerjs/quizerjs';
+import type { QuizDSL } from '@quizerjs/dsl';
 
-const editor = new EditorJS({
-  holder: 'editorjs',
-  tools: {
+const container = document.getElementById('editor-container');
+
+const editor = new QuizEditor({
+  container: container!,
+  initialDSL: {
+    version: '1.0.0',
     quiz: {
-      class: QuizTool,
-      config: {
-        onSubmit: (data) => {
-          console.log('测验提交:', data);
-        },
-        onAnswerChange: (questionId, answer) => {
-          console.log('答案变化:', questionId, answer);
-        },
-      },
-    },
+      id: 'quiz-1',
+      title: '我的测验',
+      questions: []
+    }
   },
+  onChange: (dsl: QuizDSL) => {
+    console.log('DSL 变化:', dsl);
+  },
+  onSave: (dsl: QuizDSL) => {
+    console.log('保存 DSL:', dsl);
+  }
 });
+
+await editor.init();
 ```
 
-### 独立使用核心组件
+### 使用播放器（QuizPlayer）
 
 ```typescript
-import { QuizBlock } from '@quizerjs/core';
-import { QuizData, QuestionType } from '@quizerjs/core';
+import { validateQuizDSL } from '@quizerjs/dsl';
 
-const quizData: QuizData = {
-  id: 'quiz-1',
-  title: '示例测验',
-  description: '这是一个示例测验',
-  questions: [
-    {
-      id: 'q1',
-      type: QuestionType.SINGLE_CHOICE,
-      text: '以下哪个是 JavaScript 的框架？',
-      options: [
-        { id: 'o1', text: 'React' },
-        { id: 'o2', text: 'Python' },
-        { id: 'o3', text: 'Java' },
-      ],
-      correctAnswer: 'o1',
-      points: 10,
-    },
-  ],
+const dsl = {
+  version: '1.0.0',
+  quiz: {
+    id: 'quiz-1',
+    title: '示例测验',
+    questions: [
+      {
+        id: 'q1',
+        type: 'single_choice',
+        text: '2 + 2 等于多少？',
+        options: [
+          { id: 'o1', text: '3', isCorrect: false },
+          { id: 'o2', text: '4', isCorrect: true },
+          { id: 'o3', text: '5', isCorrect: false }
+        ]
+      }
+    ]
+  }
 };
 
-// 使用 wsx 组件
-const quizBlock = new QuizBlock();
-quizBlock.setAttribute('data-quiz-data', JSON.stringify(quizData));
-document.body.appendChild(quizBlock);
+// 验证 DSL
+const result = validateQuizDSL(dsl);
+if (result.valid) {
+  // 使用 Web Component
+  const player = document.createElement('quiz-player');
+  player.setAttribute('dsl', JSON.stringify(dsl));
+  player.addEventListener('answer-change', (e: any) => {
+    console.log('答案变化:', e.detail);
+  });
+  document.body.appendChild(player);
+}
+```
+
+### React 集成
+
+```tsx
+import { QuizEditor, QuizPlayer } from '@quizerjs/react';
+
+function App() {
+  const dsl = { /* ... */ };
+  
+  return (
+    <>
+      <QuizEditor 
+        initialDSL={dsl}
+        onChange={(dsl) => console.log('变化:', dsl)}
+      />
+      <QuizPlayer dsl={dsl} />
+    </>
+  );
+}
+```
+
+### Vue 集成
+
+```vue
+<template>
+  <QuizEditor 
+    :initial-dsl="dsl"
+    @change="handleChange"
+  />
+  <QuizPlayer :dsl="dsl" />
+</template>
+
+<script setup>
+import { QuizEditor, QuizPlayer } from '@quizerjs/vue';
+import { ref } from 'vue';
+
+const dsl = ref({ /* ... */ });
+
+const handleChange = (newDsl) => {
+  console.log('变化:', newDsl);
+  dsl.value = newDsl;
+};
+</script>
+```
+
+### Svelte 集成
+
+```svelte
+<script>
+  import { QuizEditor, QuizPlayer } from '@quizerjs/svelte';
+  import { writable } from 'svelte/store';
+  
+  let dsl = writable({ /* ... */ });
+  
+  function handleChange(newDsl) {
+    console.log('变化:', newDsl);
+    dsl.set(newDsl);
+  }
+</script>
+
+<QuizEditor 
+  initialDSL={$dsl}
+  onChange={handleChange}
+/>
+<QuizPlayer dsl={$dsl} />
+```
+
+### Vanilla JS 集成
+
+```typescript
+import { QuizEditor } from '@quizerjs/quizerjs';
+import { validateQuizDSL } from '@quizerjs/dsl';
+
+// 编辑器
+const editorContainer = document.getElementById('editor');
+const editor = new QuizEditor({
+  container: editorContainer!,
+  onChange: (dsl) => console.log('变化:', dsl)
+});
+await editor.init();
+
+// 播放器（使用 Web Component）
+const dsl = { /* ... */ };
+const player = document.createElement('quiz-player');
+player.setAttribute('dsl', JSON.stringify(dsl));
+document.body.appendChild(player);
 ```
 
 ## 项目结构
 
 ```
 quizerjs/
-├── packages/
-│   ├── core/              # 核心 wsx 组件库
-│   │   ├── src/
-│   │   │   ├── components/    # wsx 组件
-│   │   │   ├── types.ts       # 类型定义
-│   │   │   └── index.ts       # 导出入口
-│   │   └── package.json
-│   ├── editorjs-tool/     # Editor.js 工具插件
-│   │   ├── src/
-│   │   │   ├── QuizTool.ts   # Tool 实现
-│   │   │   ├── config.ts      # 配置选项
-│   │   │   └── index.ts
-│   │   └── package.json
-│   ├── dsl/              # DSL 解析器和验证器
+├── packages/              # 核心包
+│   ├── core/             # 核心 wsx 组件（QuizPlayer）
+│   ├── dsl/              # DSL 定义、验证和序列化
+│   ├── editorjs-tool/    # Editor.js 工具插件
+│   ├── quizerjs/         # 主包（编辑器和播放器）
+│   ├── react/            # React 集成包
+│   ├── vue/              # Vue 集成包
+│   ├── svelte/           # Svelte 集成包
 │   ├── theme/            # 主题系统
-│   └── ...               # 其他包
-├── demos/                # 演示项目
-│   ├── vue/              # Vue 3 演示
+│   └── sample-data/      # 示例数据
+├── demos/                # 框架集成演示
 │   ├── react/            # React 演示
+│   ├── vue/              # Vue 演示
 │   ├── svelte/           # Svelte 演示
 │   └── vanilla/          # Vanilla JS 演示
-├── site/                  # QuizerJS 开源网站
-│   ├── src/
-│   │   ├── components/   # wsx 组件
-│   │   ├── router/       # 路由配置
-│   │   └── App.wsx       # 根组件
-│   └── package.json
-├── docs/                 # 文档
-└── README.md
+├── site/                 # 官方网站（quizerjs.io）
+│   └── src/              # wsx 组件和页面
+└── docs/                 # 文档
+    ├── dsl/              # DSL 规范
+    ├── api/              # API 参考
+    ├── examples/        # 使用示例
+    └── rfc/              # 技术规范和架构设计
 ```
 
-## API 文档
+## 核心包
 
-### 核心组件
+### @quizerjs/quizerjs
 
-#### QuizBlock
+主包，提供框架无关的测验编辑器和播放器。
 
-主要的测验容器组件。
+- `QuizEditor` - 测验编辑器类（基于 Editor.js）
+- `QuizPlayer` - 测验播放器（Web Component）
 
-**Props:**
-- `quizData: QuizData` - 测验数据
-- `mode?: 'edit' | 'view' | 'result'` - 显示模式
-- `userAnswers?: UserAnswer[]` - 用户答案列表
-- `result?: QuizResult` - 测验结果
-- `onSubmit?: (answers: UserAnswer[]) => void` - 提交回调
-- `onAnswerChange?: (questionId: string, answer: string | string[]) => void` - 答案变化回调
+### @quizerjs/core
 
-#### QuizQuestion
+核心展示组件库，基于 wsx Web Components。
 
-单个问题组件。
+- `QuizPlayer` - 测验播放器 Web Component
+- `QuizQuestion` - 问题组件
+- `QuizOption` - 选项组件
 
-**Props:**
-- `question: Question` - 问题数据
-- `userAnswer?: UserAnswer` - 用户答案
-- `mode?: 'edit' | 'view' | 'result'` - 显示模式
-- `disabled?: boolean` - 是否禁用
-- `onAnswerChange?: (questionId: string, answer: string | string[]) => void` - 答案变化回调
+### @quizerjs/dsl
 
-### Editor.js 工具配置
+Quiz DSL 定义、验证和序列化工具。
 
-```typescript
-interface QuizToolConfig {
-  defaultData?: Partial<QuizData>;
-  defaultSettings?: QuizSettings;
-  onSubmit?: (data: QuizData) => void;
-  onAnswerChange?: (questionId: string, answer: string | string[]) => void;
-  readOnly?: boolean;
-  customStyles?: string;
-}
-```
+- `validateQuizDSL()` - DSL 验证
+- `parseQuizDSL()` - DSL 解析
+- `serializeQuizDSL()` - DSL 序列化
+
+### @quizerjs/react
+
+React 集成包，提供 React 组件包装器。
+
+- `QuizEditor` - 编辑器组件
+- `QuizPlayer` - 播放器组件
+
+### @quizerjs/vue
+
+Vue 集成包，提供 Vue 组件包装器。
+
+- `QuizEditor` - 编辑器组件
+- `QuizPlayer` - 播放器组件
+
+### @quizerjs/svelte
+
+Svelte 集成包，提供 Svelte 组件包装器。
+
+- `QuizEditor` - 编辑器组件
+- `QuizPlayer` - 播放器组件
+
+### Vanilla JS
+
+无需安装额外包，直接使用 `@quizerjs/quizerjs` 和 `@quizerjs/core`。
+
+- `QuizEditor` - 编辑器类（来自 `@quizerjs/quizerjs`）
+- `QuizPlayer` - 播放器 Web Component（来自 `@quizerjs/core`）
 
 ## 文档
 
-- [DSL 规范文档](./docs/DSL.md) - Quiz DSL 完整规范
-- [DSL API 参考](./docs/DSL-API.md) - API 详细文档
-- [RFC 文档](./docs/rfc/) - 技术规范和架构设计
-- [网站设计文档](./docs/rfc/0009-quizerjs-com-website.md) - QuizerJS 开源网站设计规范
-
-### 在线资源
-
-- **官方网站**: [quizerjs.io](https://quizerjs.io) (建设中)
-- **GitHub 仓库**: [github.com/quizerjs/quizerjs](https://github.com/quizerjs/quizerjs)
+- **官方网站**: [quizerjs.io](https://quizerjs.io)
+- **DSL 规范**: [docs/dsl/](./docs/dsl/)
+- **API 参考**: [docs/api/](./docs/api/)
+- **使用示例**: [docs/examples/](./docs/examples/)
+- **RFC 文档**: [docs/rfc/](./docs/rfc/) - 技术规范和架构设计
 
 ## 开发
 
-```bash
-# 克隆仓库
-git clone https://github.com/your-org/quizerjs.git
-cd quizerjs
+### 环境要求
 
-# 安装依赖
+- Node.js >= 16.0.0
+- pnpm >= 8.0.0
+
+### 安装依赖
+
+```bash
 pnpm install
+```
+
+### 开发命令
+
+```bash
+# 开发模式（交互式菜单）
+pnpm dev
+
+# 开发特定项目
+pnpm dev:site        # 开发网站
+pnpm dev:react      # React 演示
+pnpm dev:vue        # Vue 演示
+pnpm dev:svelte      # Svelte 演示
+pnpm dev:vanilla     # Vanilla JS 演示
 
 # 构建所有包
 pnpm build
-
-# 开发模式（交互式菜单）
-pnpm dev
 
 # 运行测试
 pnpm test
 
 # 代码检查
 pnpm lint
+pnpm lint:fix        # 自动修复
 ```
 
-### 开发特定项目
+### 网站部署
 
 ```bash
-# 开发演示项目
-pnpm dev:vue        # Vue 3 演示
-pnpm dev:react      # React 演示
-pnpm dev:svelte     # Svelte 演示
-pnpm dev:vanilla    # Vanilla JS 演示
-pnpm dev:theme      # 主题系统预览
-
-# 开发网站
-pnpm site
-# 或
-pnpm dev:site
-
-# 构建网站
-pnpm build:site
+# 构建网站和演示
+pnpm build:pages
 
 # 预览构建结果
-pnpm preview:site
+pnpm preview:pages
 
-# 网站相关命令
-pnpm site:typecheck    # 类型检查
-pnpm site:lint        # 代码检查
-pnpm site:lint:fix     # 自动修复
-pnpm site:test        # 运行测试
+# 部署到 GitHub Pages
+pnpm deploy:pages
 ```
-
-## 贡献
-
-欢迎贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详细信息。
 
 ## 许可证
 
-### 开源许可证
 本项目采用 **MIT License**，允许自由使用、修改和分发，包括商业用途。
 
 ### 企业许可证
+
 对于企业客户，我们提供商业许可证选项，包括：
 - ✅ 商业法律保护（无 MIT 免责声明）
 - ✅ 优先技术支持
@@ -244,15 +345,15 @@ pnpm site:test        # 运行测试
 
 **了解更多**: 查看 [企业许可证文档](./docs/ENTERPRISE-LICENSE.md) 或联系 [enterprise@quizerjs.io](mailto:enterprise@quizerjs.io)
 
-### 许可证兼容性
-✅ **所有依赖库均使用 MIT 或 Apache 2.0 许可证，完全兼容企业使用，无许可证冲突。**
-
 ## 相关项目
 
 - [Editor.js](https://editorjs.io/) - 块样式编辑器
-- [wsxjs](https://github.com/wsxjs/wsxjs) - Web Components 框架
+- [wsxjs](https://www.wsxjs.dev) - Web Components 框架
+
+## 贡献
+
+欢迎贡献！请查看 [GitHub Issues](https://github.com/quizerjs/quizerjs/issues) 了解待办事项。
 
 ## 作者
 
-quizerjs 团队
-
+QuizerJS 团队

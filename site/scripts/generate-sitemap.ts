@@ -13,20 +13,10 @@ const routes = [
   '/',
   '/features',
   '/docs',
-  '/docs/getting-started',
+  '/docs/guide/getting-started',
   '/docs/installation',
   '/docs/vue-integration',
   '/demos',
-  '/examples',
-  '/examples/basic-validation',
-  '/examples/full-quiz',
-  '/examples/interactive-demo',
-  '/examples/real-world',
-  '/community',
-  '/community/contributing',
-  '/community/code-of-conduct',
-  '/community/changelog',
-  '/about',
 ];
 
 /**

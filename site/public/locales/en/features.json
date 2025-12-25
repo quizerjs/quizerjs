@@ -1,0 +1,149 @@
+{
+  "title": "Features",
+  "subtitle": "Discover the powerful capabilities of QuizerJS",
+  "hero": {
+    "title": "Everything You Need to Build Interactive Quizzes",
+    "description": "QuizerJS provides a comprehensive solution for creating, managing, and displaying interactive quizzes with Editor.js integration and modern Web Components."
+  },
+  "sections": {
+    "editorjsIntegration": {
+      "title": "Editor.js Integration",
+      "description": "Integrate QuizerJS as an Editor.js tool plugin.",
+      "details": [
+        "Works as a native Editor.js block tool",
+        "Full compatibility with Editor.js ecosystem",
+        "Easy configuration and customization",
+        "Supports all Editor.js features (undo/redo, copy/paste, etc.)"
+      ],
+      "codeExample": "import EditorJS from '@editorjs/editorjs';\nimport QuizTool from '@quizerjs/editorjs-tool';\n\nconst editor = new EditorJS({\n  holder: 'editorjs',\n  tools: {\n    quiz: QuizTool\n  }\n});"
+    },
+    "multipleTypes": {
+      "title": "Multiple Question Types",
+      "description": "Support for various question types to meet different quiz requirements.",
+      "details": [
+        "Single choice questions",
+        "Multiple choice questions",
+        "Text input questions",
+        "True/False questions",
+        "Extensible type system"
+      ],
+      "codeExample": "const question = {\n  id: 'q1',\n  type: 'single_choice',\n  text: 'What is 2 + 2?',\n  options: [\n    { id: 'o1', text: '3', isCorrect: false },\n    { id: 'o2', text: '4', isCorrect: true },\n    { id: 'o3', text: '5', isCorrect: false }\n  ]\n};"
+    },
+    "dsl": {
+      "title": "DSL Specification",
+      "description": "Unified DSL format for storage, transmission, and validation.",
+      "details": [
+        "JSON-based DSL format",
+        "Version control support",
+        "Complete validation system",
+        "Easy serialization and deserialization",
+        "Type-safe TypeScript definitions"
+      ],
+      "codeExample": "const dsl = {\n  version: '1.0.0',\n  quiz: {\n    id: 'quiz-1',\n    title: 'My Quiz',\n    questions: [/* ... */]\n  }\n};\n\nconst result = validateQuizDSL(dsl);"
+    },
+    "themeSystem": {
+      "title": "Theme System",
+      "description": "Flexible theme system with multiple built-in themes and custom theme support.",
+      "details": [
+        "Multiple built-in themes (light, dark, solarized, etc.)",
+        "Easy theme switching",
+        "Custom theme support",
+        "CSS variable based",
+        "Responsive design"
+      ],
+      "codeExample": "import '@quizerjs/theme/light.css';\n// or\nimport '@quizerjs/theme/dark.css';\n// or create your own theme"
+    },
+    "frameworkIntegration": {
+      "title": "Framework Integration",
+      "description": "Works with React, Vue, Svelte, and vanilla JS.",
+      "details": [
+        "React integration package",
+        "Vue integration package",
+        "Svelte integration package",
+        "Vanilla JS support",
+        "Framework-agnostic core"
+      ],
+      "codeExample": "// React\nimport { QuizPlayer } from '@quizerjs/react';\n\n// Vue\nimport { QuizPlayer } from '@quizerjs/vue';\n\n// Svelte\nimport { QuizPlayer } from '@quizerjs/svelte';"
+    },
+    "typeSafety": {
+      "title": "Type Safety",
+      "description": "Complete TypeScript support with comprehensive type definitions.",
+      "details": [
+        "Full TypeScript definitions",
+        "Type-safe API",
+        "IntelliSense support",
+        "Compile-time error checking",
+        "Better developer experience"
+      ],
+      "codeExample": "import { QuizData, QuestionType } from '@quizerjs/core';\n\nconst quiz: QuizData = {\n  id: 'quiz-1',\n  title: 'My Quiz',\n  questions: [/* ... */]\n};"
+    },
+    "modular": {
+      "title": "Modular Design",
+      "description": "Use core components independently with flexible configuration.",
+      "details": [
+        "Independent core components",
+        "Flexible configuration options",
+        "Tree-shakeable",
+        "Small bundle size",
+        "Easy to extend"
+      ],
+      "codeExample": "import { QuizPlayer } from '@quizerjs/core';\n// Use independently without Editor.js"
+    },
+    "responsive": {
+      "title": "Responsive Design",
+      "description": "Works on all devices and screen sizes.",
+      "details": [
+        "Mobile-first design",
+        "Tablet optimized",
+        "Desktop enhanced",
+        "Touch-friendly interactions",
+        "Adaptive layouts"
+      ]
+    }
+  },
+  "comparison": {
+    "title": "Why Choose QuizerJS?",
+    "subtitle": "Compare QuizerJS with other solutions",
+    "features": "Features",
+    "quizerjs": "QuizerJS",
+    "otherSolutions": "Other Solutions",
+    "rows": {
+      "editorjsIntegration": {
+        "feature": "Editor.js Integration",
+        "quizerjs": "✓ Native Integration",
+        "other": "✗ Limited or None"
+      },
+      "dsl": {
+        "feature": "DSL Specification",
+        "quizerjs": "✓ Unified Format",
+        "other": "✗ Proprietary Formats"
+      },
+      "typeSafety": {
+        "feature": "TypeScript Support",
+        "quizerjs": "✓ Full Support",
+        "other": "✗ Partial or None"
+      },
+      "frameworkSupport": {
+        "feature": "Framework Support",
+        "quizerjs": "✓ React, Vue, Svelte",
+        "other": "✗ Usually One Framework"
+      },
+      "themeSystem": {
+        "feature": "Theme System",
+        "quizerjs": "✓ Multiple Themes",
+        "other": "✗ Limited Customization"
+      },
+      "modular": {
+        "feature": "Modular Design",
+        "quizerjs": "✓ Tree-shakeable",
+        "other": "✗ Monolithic"
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "description": "Start building interactive quizzes today.",
+    "getStarted": "Get Started",
+    "viewDemos": "View Demos"
+  }
+}
