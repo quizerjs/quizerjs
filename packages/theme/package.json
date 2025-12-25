@@ -36,6 +36,9 @@
   ],
   "author": "quizerjs team",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "ora": "^8.2.0"
   },
