@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://quizerjs.com/sitemap.xml
+Sitemap: https://quizerjs.io/sitemap.xml
 

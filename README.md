@@ -171,7 +171,7 @@ interface QuizToolConfig {
 
 ### 在线资源
 
-- **官方网站**: [quizerjs.com](https://quizerjs.com) (建设中)
+- **官方网站**: [quizerjs.io](https://quizerjs.io) (建设中)
 - **GitHub 仓库**: [github.com/quizerjs/quizerjs](https://github.com/quizerjs/quizerjs)
 
 ## 开发
@@ -242,7 +242,7 @@ pnpm site:test        # 运行测试
 - ✅ 定制开发服务
 - ✅ 白标/品牌定制
 
-**了解更多**: 查看 [企业许可证文档](./docs/ENTERPRISE-LICENSE.md) 或联系 [enterprise@quizerjs.com](mailto:enterprise@quizerjs.com)
+**了解更多**: 查看 [企业许可证文档](./docs/ENTERPRISE-LICENSE.md) 或联系 [enterprise@quizerjs.io](mailto:enterprise@quizerjs.io)
 
 ### 许可证兼容性
 ✅ **所有依赖库均使用 MIT 或 Apache 2.0 许可证，完全兼容企业使用，无许可证冲突。**

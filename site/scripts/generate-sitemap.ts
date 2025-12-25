@@ -6,7 +6,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const BASE_URL = process.env.VITE_SITE_URL || 'https://quizerjs.com';
+const BASE_URL = process.env.VITE_SITE_URL || 'https://quizerjs.io';
 
 // 定义网站的所有路由
 const routes = [

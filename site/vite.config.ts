@@ -70,7 +70,7 @@ export default defineConfig({
   base:
     process.env.NODE_ENV === 'production' && process.env.GITHUB_PAGES === 'true'
       ? process.env.CUSTOM_DOMAIN === 'true'
-        ? '/' // 自定义域名 (quizerjs.com)
+        ? '/' // 自定义域名 (quizerjs.io)
         : '/quizerjs/' // GitHub Pages 子路径 (username.github.io/quizerjs)
       : '/', // 开发模式
 

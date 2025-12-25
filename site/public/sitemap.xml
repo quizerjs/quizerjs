@@ -1,87 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://quizerjs.com/</loc>
+    <loc>https://quizerjs.io/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/features</loc>
+    <loc>https://quizerjs.io/features</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/docs</loc>
+    <loc>https://quizerjs.io/docs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/docs/getting-started</loc>
+    <loc>https://quizerjs.io/docs/getting-started</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/docs/installation</loc>
+    <loc>https://quizerjs.io/docs/installation</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/docs/vue-integration</loc>
+    <loc>https://quizerjs.io/docs/vue-integration</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/demos</loc>
+    <loc>https://quizerjs.io/demos</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/examples</loc>
+    <loc>https://quizerjs.io/examples</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/examples/basic-validation</loc>
+    <loc>https://quizerjs.io/examples/basic-validation</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/examples/full-quiz</loc>
+    <loc>https://quizerjs.io/examples/full-quiz</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/examples/interactive-demo</loc>
+    <loc>https://quizerjs.io/examples/interactive-demo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/examples/real-world</loc>
+    <loc>https://quizerjs.io/examples/real-world</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/community</loc>
+    <loc>https://quizerjs.io/community</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/community/contributing</loc>
+    <loc>https://quizerjs.io/community/contributing</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/community/code-of-conduct</loc>
+    <loc>https://quizerjs.io/community/code-of-conduct</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/community/changelog</loc>
+    <loc>https://quizerjs.io/community/changelog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizerjs.com/about</loc>
+    <loc>https://quizerjs.io/about</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

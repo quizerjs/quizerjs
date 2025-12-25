@@ -172,7 +172,7 @@
    - 添加联系信息
 
 3. **设置商业支持渠道**
-   - 企业邮箱（如：enterprise@quizerjs.com）
+   - 企业邮箱（如：enterprise@quizerjs.io）
    - 商业许可证申请流程
    - 支持工单系统
 
