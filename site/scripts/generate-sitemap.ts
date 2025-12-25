@@ -35,7 +35,7 @@ const routes = [
 function generateSitemap(): string {
   const urls = routes
     .map(
-      (route) => `  <url>
+      route => `  <url>
     <loc>${BASE_URL}${route}</loc>
     <changefreq>weekly</changefreq>
     <priority>${route === '/' ? '1.0' : '0.8'}</priority>
@@ -60,4 +60,3 @@ function main() {
 }
 
 main();
-
