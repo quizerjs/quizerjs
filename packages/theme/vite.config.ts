@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
-const themes = ['solarized-light', 'solarized-dark', 'light', 'dark'];
+const themes = ['solarized-light', 'solarized-dark', 'light', 'dark', 'marble', 'terra-cotta'];
 
 export default defineConfig({
   // 预览服务器配置

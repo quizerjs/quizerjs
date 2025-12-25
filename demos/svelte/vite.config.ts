@@ -54,9 +54,9 @@ export default defineConfig({
       usePolling: false,
     },
   },
+  base: process.env.GITHUB_PAGES === 'true' ? '/demos/svelte/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: process.env.NODE_ENV !== 'production',
   },
 });
-

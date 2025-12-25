@@ -4,7 +4,14 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebSearch",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(pnpm test:coverage:*)",
+      "Bash(npx eslint src/ --ext .ts)",
+      "Bash(npx eslint:*)",
+      "Bash(pnpm -F @quizerjs/theme build:*)",
+      "WebFetch(domain:editorjs.io)",
+      "WebFetch(domain:quilljs.com)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

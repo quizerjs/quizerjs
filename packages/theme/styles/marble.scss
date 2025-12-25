@@ -1,0 +1,53 @@
+// ============================================
+// Marble Theme
+// ============================================
+// 简洁的大理石风格主题
+
+// 导入基础样式（base.scss 通过 Vite 配置自动导入）
+
+// 覆盖颜色变量为简洁的大理石风格
+:root {
+  // 背景色 - 纯白色
+  --quiz-bg-primary: #ffffff;
+  --quiz-bg-secondary: #fafafa;
+  --quiz-bg-tertiary: #f5f5f5;
+  --quiz-bg-hover: #f5f5f5;
+  --quiz-bg-selected: #f0f0f0;
+
+  // 文本色
+  --quiz-text-primary: #333333;
+  --quiz-text-secondary: #666666;
+  --quiz-text-tertiary: #999999;
+  --quiz-text-placeholder: #999999;
+  --quiz-text-on-accent: #ffffff;
+  --quiz-button-text-color: #ffffff;
+
+  // 边框色
+  --quiz-border-color: #e0e0e0;
+  --quiz-border-hover: #b8a898;
+  --quiz-border-focus: #b8a898;
+  --quiz-border-selected: #b8a898;
+
+  // 强调色 - 简洁的石灰色
+  --quiz-accent-color: #b8a898;
+  --quiz-accent-hover: #a89888;
+  --quiz-accent-active: #988878;
+
+  // 状态色
+  --quiz-error-color: #ff4d4f;
+  --quiz-success-color: #52c41a;
+  --quiz-warning-color: #faad14;
+  --quiz-info-color: #1890ff;
+
+  // 滚动条颜色
+  --quiz-scrollbar-track-color: #f5f5f5;
+  --quiz-scrollbar-thumb-color: #cccccc;
+  --quiz-scrollbar-thumb-hover-color: #999999;
+  --quiz-scrollbar-thumb-active-color: #666666;
+
+  // 阴影
+  --quiz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --quiz-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.15);
+  --quiz-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+

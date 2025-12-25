@@ -98,13 +98,27 @@ quizerjs/
 │   │   │   ├── types.ts       # 类型定义
 │   │   │   └── index.ts       # 导出入口
 │   │   └── package.json
-│   └── editorjs-tool/     # Editor.js 工具插件
-│       ├── src/
-│       │   ├── QuizTool.ts   # Tool 实现
-│       │   ├── config.ts      # 配置选项
-│       │   └── index.ts
-│       └── package.json
-├── examples/              # 示例项目
+│   ├── editorjs-tool/     # Editor.js 工具插件
+│   │   ├── src/
+│   │   │   ├── QuizTool.ts   # Tool 实现
+│   │   │   ├── config.ts      # 配置选项
+│   │   │   └── index.ts
+│   │   └── package.json
+│   ├── dsl/              # DSL 解析器和验证器
+│   ├── theme/            # 主题系统
+│   └── ...               # 其他包
+├── demos/                # 演示项目
+│   ├── vue/              # Vue 3 演示
+│   ├── react/            # React 演示
+│   ├── svelte/           # Svelte 演示
+│   └── vanilla/          # Vanilla JS 演示
+├── site/                  # QuizerJS 开源网站
+│   ├── src/
+│   │   ├── components/   # wsx 组件
+│   │   ├── router/       # 路由配置
+│   │   └── App.wsx       # 根组件
+│   └── package.json
+├── docs/                 # 文档
 └── README.md
 ```
 
@@ -153,6 +167,12 @@ interface QuizToolConfig {
 - [DSL 规范文档](./docs/DSL.md) - Quiz DSL 完整规范
 - [DSL API 参考](./docs/DSL-API.md) - API 详细文档
 - [RFC 文档](./docs/rfc/) - 技术规范和架构设计
+- [网站设计文档](./docs/rfc/0009-quizerjs-com-website.md) - QuizerJS 开源网站设计规范
+
+### 在线资源
+
+- **官方网站**: [quizerjs.com](https://quizerjs.com) (建设中)
+- **GitHub 仓库**: [github.com/quizerjs/quizerjs](https://github.com/quizerjs/quizerjs)
 
 ## 开发
 
@@ -164,10 +184,10 @@ cd quizerjs
 # 安装依赖
 pnpm install
 
-# 构建
+# 构建所有包
 pnpm build
 
-# 开发模式
+# 开发模式（交互式菜单）
 pnpm dev
 
 # 运行测试
@@ -175,6 +195,34 @@ pnpm test
 
 # 代码检查
 pnpm lint
+```
+
+### 开发特定项目
+
+```bash
+# 开发演示项目
+pnpm dev:vue        # Vue 3 演示
+pnpm dev:react      # React 演示
+pnpm dev:svelte     # Svelte 演示
+pnpm dev:vanilla    # Vanilla JS 演示
+pnpm dev:theme      # 主题系统预览
+
+# 开发网站
+pnpm site
+# 或
+pnpm dev:site
+
+# 构建网站
+pnpm build:site
+
+# 预览构建结果
+pnpm preview:site
+
+# 网站相关命令
+pnpm site:typecheck    # 类型检查
+pnpm site:lint        # 代码检查
+pnpm site:lint:fix     # 自动修复
+pnpm site:test        # 运行测试
 ```
 
 ## 贡献

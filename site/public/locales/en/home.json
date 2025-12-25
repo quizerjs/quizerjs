@@ -1,0 +1,55 @@
+{
+  "title": "QuizerJS",
+  "subtitle": "A powerful quiz library built with {{editorjs}} and {{wsx}} for creating interactive quizzes and tests.",
+  "stats": {
+    "license": "MIT License",
+    "typescript": "TypeScript",
+    "runtimeDeps": "Runtime Dependencies"
+  },
+  "features": {
+    "title": "Features",
+    "multipleTypes": {
+      "title": "Multiple Question Types",
+      "description": "Support for single choice, multiple choice, text input, true/false, and more question types."
+    },
+    "modernUI": {
+      "title": "Modern UI",
+      "description": "Beautiful interface built with wsx components, fully responsive design."
+    },
+    "editorjsIntegration": {
+      "title": "Editor.js Integration",
+      "description": "Seamlessly integrate as an Editor.js tool plugin into your existing editor."
+    },
+    "modular": {
+      "title": "Modular Design",
+      "description": "Core components can be used independently with flexible configuration."
+    },
+    "typeSafe": {
+      "title": "Type Safe",
+      "description": "Complete TypeScript type definitions and validation for better development experience."
+    },
+    "responsive": {
+      "title": "Responsive",
+      "description": "Works perfectly on desktop, tablet, and mobile devices."
+    }
+  },
+  "readyOutOfBox": {
+    "title": "Ready Out of the Box",
+    "description": "Get started immediately with built-in features:",
+    "features": {
+      "drag": "Drag & Drop",
+      "zoom": "Zoom In/Out",
+      "multiSelect": "Multi-select",
+      "addRemove": "Add/Remove Questions"
+    }
+  },
+  "quickStart": {
+    "title": "Quick Start",
+    "description": "Get up and running in minutes with our simple installation and setup process."
+  },
+  "poweredBy": {
+    "title": "Built by Us, Designed by You",
+    "description": "Fully customizable to match your brand and design requirements.",
+    "customization": "Learn Customization"
+  }
+}

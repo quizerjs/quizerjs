@@ -33,11 +33,11 @@ import 'splitpanes/dist/splitpanes.css';
 import AppHeader from './components/AppHeader.vue';
 import EditorPanel from './components/EditorPanel.vue';
 import PreviewSplitpanes from './components/PreviewSplitpanes.vue';
-import { testDataList, defaultTestDataId, getTestDataById } from './test-data';
+import { sampleDataList, defaultSampleDataId, getSampleDataById } from '@quizerjs/sample-data';
 import { useTheme } from './composables/useTheme';
 
 // 当前选中的测试数据 ID
-const selectedTestDataId = ref<string>(defaultTestDataId);
+const selectedTestDataId = ref<string>(defaultSampleDataId);
 
 // 控制 splitpanes 的渲染，确保 DOM 准备好
 const isSplitpanesReady = ref(false);
@@ -59,7 +59,7 @@ onMounted(async () => {
 
 // 当前选中的测试数据 DSL
 const currentTestDSL = computed(() => {
-  return getTestDataById(selectedTestDataId.value) || testDataList[0].dsl;
+  return getSampleDataById(selectedTestDataId.value) || sampleDataList[0].dsl;
 });
 
 // 初始化预览数据：

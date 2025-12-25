@@ -1,0 +1,196 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * LanguageSwitcher Component
+ * 语言切换器组件，用于切换 i18next 的语言
+ * 不使用国旗图标，使用语言名称显示
+ *
+ * 这是一个示例组件，展示如何在 WSXJS 中使用 i18next
+ * 参考 RFC-0029: i18next 国际化支持
+ */
+import { WebComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import { i18nInstance } from '@wsxjs/wsx-i18next';
+import styles from './LanguageSwitcher.css?inline';
+
+/**
+ * 语言选项接口
+ */
+export interface LanguageOption {
+  /** 语言代码（如 'en', 'zh'） */
+  code: string;
+  /** 语言显示名称（如 'English', '中文'） */
+  name: string;
+}
+
+@autoRegister({ tagName: 'language-switcher' })
+export default class LanguageSwitcher extends WebComponent {
+  /** 支持的语言列表 */
+  private languages: LanguageOption[] = [
+    { code: 'en', name: 'English' },
+    { code: 'zh', name: '中文' },
+  ];
+
+  /** 当前选中的语言代码 */
+  @state private currentLanguage: string = 'en';
+
+  /** 下拉菜单是否打开 */
+  @state private isOpen: boolean = false;
+
+  /** 下拉菜单元素引用 */
+  private dropdownElement?: HTMLElement;
+  private buttonElement?: HTMLElement;
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'language-switcher',
+    });
+  }
+
+  render(): HTMLElement {
+    const currentLang = this.languages.find(lang => lang.code === this.currentLanguage);
+    const displayName = currentLang?.name || this.currentLanguage.toUpperCase();
+
+    return (
+      <div class="language-switcher-container">
+        <button
+          ref={el => (this.buttonElement = el)}
+          class="language-switcher-btn"
+          onClick={this.toggleDropdown}
+          aria-label={`Current language: ${displayName}`}
+          aria-expanded={this.isOpen}
+          aria-haspopup="listbox"
+        >
+          <span class="language-switcher-icon">🌐</span>
+          <span class="language-switcher-text">{displayName}</span>
+          <span class="language-switcher-arrow">{this.isOpen ? '▲' : '▼'}</span>
+        </button>
+
+        {this.isOpen && (
+          <div
+            ref={el => (this.dropdownElement = el)}
+            class="language-switcher-dropdown"
+            role="listbox"
+          >
+            {this.languages.map(lang => (
+              <button
+                key={lang.code}
+                class={`language-switcher-option ${
+                  lang.code === this.currentLanguage ? 'active' : ''
+                }`}
+                onClick={() => this.selectLanguage(lang.code)}
+                role="option"
+                aria-selected={lang.code === this.currentLanguage}
+              >
+                <span class="language-name">{lang.name}</span>
+                <span class="language-code">{lang.code.toUpperCase()}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /**
+   * 切换下拉菜单
+   */
+  private toggleDropdown = (): void => {
+    this.isOpen = !this.isOpen;
+    this.rerender();
+
+    if (this.isOpen) {
+      // 点击外部关闭下拉菜单
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
+      }, 0);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick, true);
+    }
+  };
+
+  /**
+   * 处理点击外部区域
+   */
+  private handleOutsideClick = (event: Event): void => {
+    const target = event.target as Node;
+    if (
+      this.dropdownElement &&
+      this.buttonElement &&
+      !this.dropdownElement.contains(target) &&
+      !this.buttonElement.contains(target)
+    ) {
+      this.isOpen = false;
+      document.removeEventListener('click', this.handleOutsideClick, true);
+    }
+  };
+
+  /**
+   * 选择语言
+   */
+  private selectLanguage = (languageCode: string): void => {
+    if (languageCode === this.currentLanguage) {
+      this.isOpen = false;
+      this.rerender();
+      return;
+    }
+
+    // 更改 i18next 语言
+    i18nInstance.changeLanguage(languageCode).then(() => {
+      this.currentLanguage = languageCode;
+      this.isOpen = false;
+      this.rerender();
+
+      // 保存到 localStorage
+      localStorage.setItem('wsx-language', languageCode);
+    });
+  };
+
+  /**
+   * 组件连接时初始化
+   */
+  protected onConnected(): void {
+    // 从 localStorage 或 i18next 获取当前语言
+    const savedLanguage = localStorage.getItem('wsx-language');
+    const fallbackLng = i18nInstance.options.fallbackLng;
+    const fallbackLngStr =
+      typeof fallbackLng === 'string'
+        ? fallbackLng
+        : Array.isArray(fallbackLng)
+          ? fallbackLng[0]
+          : 'en';
+    const i18nLanguage = i18nInstance.language || fallbackLngStr;
+
+    // 获取基础语言代码（处理 'en-US' -> 'en' 的情况）
+    const baseLanguage = (savedLanguage || i18nLanguage).split('-')[0];
+
+    if (baseLanguage !== this.currentLanguage) {
+      this.currentLanguage = baseLanguage;
+      // 如果 localStorage 中的语言与 i18next 不一致，更新 i18next
+      if (savedLanguage && savedLanguage !== i18nLanguage) {
+        i18nInstance.changeLanguage(savedLanguage);
+      }
+    }
+
+    // 监听 i18next 语言变化事件
+    i18nInstance.on('languageChanged', this.handleLanguageChanged);
+  }
+
+  /**
+   * 组件断开连接时清理
+   */
+  protected onDisconnected(): void {
+    i18nInstance.off('languageChanged', this.handleLanguageChanged);
+    document.removeEventListener('click', this.handleOutsideClick, true);
+  }
+
+  /**
+   * 处理 i18next 语言变化事件
+   */
+  private handleLanguageChanged = (lng: string): void => {
+    const baseLanguage = lng.split('-')[0];
+    if (baseLanguage !== this.currentLanguage) {
+      this.currentLanguage = baseLanguage;
+      this.rerender();
+    }
+  };
+}

@@ -52,6 +52,7 @@ export default defineConfig({
       usePolling: false,
     },
   },
+  base: process.env.GITHUB_PAGES === 'true' ? '/demos/vue/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: process.env.NODE_ENV !== 'production',

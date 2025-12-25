@@ -1,0 +1,17 @@
+{
+  "title": "Demos",
+  "subtitle": "Explore interactive demos showcasing QuizerJS integration with different frameworks",
+  "viewDemo": "View Demo",
+  "react": {
+    "description": "React 18 integration example with hooks and components"
+  },
+  "vue": {
+    "description": "Vue 3 composition API integration example"
+  },
+  "svelte": {
+    "description": "Svelte 4 integration example with stores"
+  },
+  "vanilla": {
+    "description": "Vanilla JavaScript integration without any framework"
+  }
+}

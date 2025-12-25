@@ -12,7 +12,9 @@
   "dependencies": {
     "@quizerjs/dsl": "workspace:*",
     "@quizerjs/core": "workspace:*",
-    "@quizerjs/quizerjs": "workspace:*"
+    "@quizerjs/quizerjs": "workspace:*",
+    "@quizerjs/sample-data": "workspace:*",
+    "@quizerjs/theme": "workspace:*"
   },
   "devDependencies": {
     "vite": "^5.0.0",

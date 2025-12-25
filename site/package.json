@@ -1,0 +1,47 @@
+{
+  "name": "@quizerjs/site",
+  "version": "0.0.1",
+  "description": "QuizerJS 开源网站",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm generate:sitemap && vite build",
+    "preview": "vite preview",
+    "preview:pages": "vite preview --base /",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
+    "copy:demos": "tsx scripts/copy-demos.ts",
+    "lint": "eslint src --ext .ts,.wsx",
+    "lint:fix": "eslint src --ext .ts,.wsx --fix",
+    "build:pages": "cross-env NODE_ENV=production GITHUB_PAGES=true CUSTOM_DOMAIN=true vite build && pnpm copy:demos",
+    "deploy:pages": "pnpm build:pages && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@quizerjs/core": "workspace:*",
+    "@quizerjs/dsl": "workspace:*",
+    "@quizerjs/theme": "workspace:*",
+    "@wsxjs/wsx-base-components": "^0.0.19",
+    "@wsxjs/wsx-core": "^0.0.19",
+    "@wsxjs/wsx-i18next": "^0.0.19",
+    "@wsxjs/wsx-router": "^0.0.19",
+    "i18next": "^23.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@vitest/ui": "^1.6.1",
+    "@wsxjs/wsx-vite-plugin": "^0.0.19",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^6.1.1",
+    "globals": "^16.5.0",
+    "jsdom": "^24.0.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "unocss": "^0.58.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.6.1"
+  }
+}

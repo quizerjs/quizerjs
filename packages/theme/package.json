@@ -8,10 +8,13 @@
     "quizerjs-theme": "./dist/index.js"
   },
   "exports": {
+    ".": "./dist/index.js",
     "./solarized-light.css": "./dist/solarized-light.css",
     "./solarized-dark.css": "./dist/solarized-dark.css",
     "./light.css": "./dist/light.css",
-    "./dark.css": "./dist/dark.css"
+    "./dark.css": "./dist/dark.css",
+    "./marble.css": "./dist/marble.css",
+    "./terra-cotta.css": "./dist/terra-cotta.css"
   },
   "files": [
     "dist"

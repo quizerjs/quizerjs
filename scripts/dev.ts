@@ -41,6 +41,12 @@ const DEMO_OPTIONS = [
     description: '主题系统预览页面',
     package: '@quizerjs/theme',
   },
+  {
+    name: 'Site',
+    value: 'site',
+    description: 'QuizerJS 开源网站',
+    package: '@quizerjs/site',
+  },
 ] as const;
 
 /**
@@ -73,7 +79,8 @@ function showHelp(): void {
   console.log('  pnpm dev react');
   console.log('  pnpm dev svelte');
   console.log('  pnpm dev vanilla');
-  console.log('  pnpm dev theme\n');
+  console.log('  pnpm dev theme');
+  console.log('  pnpm dev site\n');
 }
 
 /**

@@ -1,0 +1,18 @@
+{
+  "brandName": "QuizerJS",
+  "description": "使用 {editorjs} 和 {wsx} 构建交互式测验的开源库",
+  "resources": {
+    "title": "资源",
+    "docs": "文档",
+    "examples": "示例",
+    "demos": "演示",
+    "github": "GitHub"
+  },
+  "community": {
+    "title": "社区",
+    "contributing": "贡献指南",
+    "codeOfConduct": "行为准则",
+    "changelog": "更新日志"
+  },
+  "copyright": "© 2025 QuizerJS. Licensed under MIT."
+}

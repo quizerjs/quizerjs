@@ -1,0 +1,43 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import styles from './App.css?inline';
+// 导入基础组件和路由
+import '@wsxjs/wsx-base-components';
+import '@wsxjs/wsx-router';
+// 导入布局组件（触发自动注册）
+import './components/layout/AppHeader.wsx';
+import './components/layout/AppFooter.wsx';
+// 导入页面组件（触发自动注册）
+import './components/pages/HomePage.wsx';
+import './components/pages/DemosPage.wsx';
+
+@autoRegister({ tagName: 'quizerjs-app' })
+export default class App extends LightComponent {
+  constructor() {
+    super({
+      styles,
+      styleName: 'quizerjs-app',
+    });
+  }
+
+  render() {
+    return (
+      <div class="app-container">
+        {/* 导航栏 */}
+        <app-header />
+
+        {/* 路由容器 */}
+        <wsx-router mode="hash">
+          {/* 首页 */}
+          <wsx-view route="/" component="home-page"></wsx-view>
+          {/* Demos 页面 */}
+          <wsx-view route="/demos" component="demos-page"></wsx-view>
+        </wsx-router>
+
+        {/* 页脚 */}
+        <app-footer />
+      </div>
+    );
+  }
+}

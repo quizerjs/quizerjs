@@ -1,0 +1,173 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { i18n } from '@wsxjs/wsx-i18next';
+import '@wsxjs/wsx-base-components';
+import styles from './HomePage.css?inline';
+
+@autoRegister({ tagName: 'home-page' })
+@i18n('home')
+export class HomePage extends LightComponent {
+  constructor() {
+    super({
+      styles,
+      styleName: 'home-page',
+    });
+  }
+
+  render() {
+    return (
+      <div class="home-page">
+        {/* Hero 区域 */}
+        <section class="hero">
+          <div class="hero-container">
+            <h1 class="hero-title">{this.t('title')}</h1>
+            <p class="hero-subtitle">
+              {this.t('subtitle', {
+                editorjs:
+                  '<a href="https://editorjs.io" target="_blank" rel="noopener noreferrer" class="hero-link">Editor.js</a>',
+                wsx: '<a href="https://www.wsxjs.dev" target="_blank" rel="noopener noreferrer" class="hero-link">wsx</a>',
+              })}
+            </p>
+            <div class="hero-actions">
+              <wsx-link to="/docs/getting-started" class="btn btn-primary">
+                {this.t('getStarted', { ns: 'common' })}
+              </wsx-link>
+              <wsx-link to="/demos" class="btn btn-secondary">
+                {this.t('viewDemos', { ns: 'common' })}
+              </wsx-link>
+            </div>
+            {/* 统计数据 */}
+            <div class="hero-stats">
+              <div class="stat-item">
+                <div class="stat-value">MIT</div>
+                <div class="stat-label">{this.t('stats.license')}</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">{this.t('stats.typescript')}</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">0</div>
+                <div class="stat-label">{this.t('stats.runtimeDeps')}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 核心特性 */}
+        <section class="features">
+          <div class="features-container">
+            <h2 class="section-title">{this.t('features.title')}</h2>
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">{this.t('features.multipleTypes.title')}</h3>
+                <p class="feature-description">{this.t('features.multipleTypes.description')}</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">{this.t('features.modernUI.title')}</h3>
+                <p class="feature-description">{this.t('features.modernUI.description')}</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🔌</div>
+                <h3 class="feature-title">{this.t('features.editorjsIntegration.title')}</h3>
+                <p class="feature-description">
+                  {this.t('features.editorjsIntegration.description')}
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3 class="feature-title">{this.t('features.modular.title')}</h3>
+                <p class="feature-description">{this.t('features.modular.description')}</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">{this.t('features.typeSafe.title')}</h3>
+                <p class="feature-description">{this.t('features.typeSafe.description')}</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">{this.t('features.responsive.title')}</h3>
+                <p class="feature-description">{this.t('features.responsive.description')}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 开箱即用 */}
+        <section class="ready-out-of-box">
+          <div class="ready-container">
+            <h2 class="section-title">{this.t('readyOutOfBox.title')}</h2>
+            <p class="section-description">{this.t('readyOutOfBox.description')}</p>
+            <div class="ready-features">
+              <div class="ready-feature">
+                <div class="ready-feature-icon">✓</div>
+                <span>{this.t('readyOutOfBox.features.drag')}</span>
+              </div>
+              <div class="ready-feature">
+                <div class="ready-feature-icon">✓</div>
+                <span>{this.t('readyOutOfBox.features.zoom')}</span>
+              </div>
+              <div class="ready-feature">
+                <div class="ready-feature-icon">✓</div>
+                <span>{this.t('readyOutOfBox.features.multiSelect')}</span>
+              </div>
+              <div class="ready-feature">
+                <div class="ready-feature-icon">✓</div>
+                <span>{this.t('readyOutOfBox.features.addRemove')}</span>
+              </div>
+            </div>
+            <div class="ready-actions">
+              <wsx-link to="/demos" class="btn btn-primary">
+                {this.t('viewDemos', { ns: 'common' })}
+              </wsx-link>
+            </div>
+          </div>
+        </section>
+
+        {/* 快速开始 */}
+        <section class="quick-start">
+          <div class="quick-start-container">
+            <h2 class="section-title">{this.t('quickStart.title')}</h2>
+            <p class="section-description">{this.t('quickStart.description')}</p>
+            <div class="code-example">
+              <pre>
+                <code>{`npm install @quizerjs/core @quizerjs/editorjs-tool
+
+import EditorJS from '@editorjs/editorjs';
+import QuizTool from '@quizerjs/editorjs-tool';
+
+const editor = new EditorJS({
+  holder: 'editorjs',
+  tools: {
+    quiz: QuizTool
+  }
+});`}</code>
+              </pre>
+            </div>
+            <div class="quick-start-actions">
+              <wsx-link to="/docs/getting-started" class="btn btn-primary">
+                {this.t('viewDocs', { ns: 'common' })}
+              </wsx-link>
+            </div>
+          </div>
+        </section>
+
+        {/* 由我们构建，由您设计 */}
+        <section class="powered-by">
+          <div class="powered-container">
+            <h2 class="section-title">{this.t('poweredBy.title')}</h2>
+            <p class="section-description">{this.t('poweredBy.description')}</p>
+            <div class="powered-actions">
+              <wsx-link to="/docs/customization" class="btn btn-primary">
+                {this.t('poweredBy.customization')}
+              </wsx-link>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+}

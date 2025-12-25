@@ -1,0 +1,103 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
+import { i18n } from '@wsxjs/wsx-i18next';
+import '@wsxjs/wsx-base-components';
+import styles from './DemosPage.css?inline';
+
+@autoRegister({ tagName: 'demos-page' })
+@i18n('demos')
+export class DemosPage extends LightComponent {
+  protected onConnected(): void {
+    super.onConnected?.();
+    // 确保 i18n 已加载
+    if (!this.t) {
+      console.warn('DemosPage: i18n not initialized, t function not available');
+    }
+  }
+  constructor() {
+    super({
+      styles,
+      styleName: 'demos-page',
+    });
+  }
+
+  // 处理 demo 链接点击，在新标签页打开
+  private handleDemoClick = (e: Event, link: string) => {
+    e.preventDefault();
+    e.stopPropagation(); // 阻止事件冒泡到路由系统
+    window.open(link, '_blank', 'noopener,noreferrer');
+  };
+
+  render() {
+    // 获取当前 base path（用于 GitHub Pages 部署）
+    const basePath = import.meta.env.BASE_URL || '/';
+    const getDemoLink = (demoId: string) => {
+      // 如果 basePath 是 '/'，直接使用相对路径
+      // 否则需要包含 basePath
+      return basePath === '/' ? `/demos/${demoId}/` : `${basePath}demos/${demoId}/`;
+    };
+
+    const demos = [
+      {
+        id: 'react',
+        name: 'React',
+        icon: '⚛️',
+        description: this.t('react.description'),
+        link: getDemoLink('react'),
+      },
+      {
+        id: 'vue',
+        name: 'Vue',
+        icon: '💚',
+        description: this.t('vue.description'),
+        link: getDemoLink('vue'),
+      },
+      {
+        id: 'svelte',
+        name: 'Svelte',
+        icon: '🧡',
+        description: this.t('svelte.description'),
+        link: getDemoLink('svelte'),
+      },
+      {
+        id: 'vanilla',
+        name: 'Vanilla JS',
+        icon: '⚡',
+        description: this.t('vanilla.description'),
+        link: getDemoLink('vanilla'),
+      },
+    ];
+
+    return (
+      <div class="demos-page">
+        <section class="demos-hero">
+          <div class="demos-hero-container">
+            <h1 class="demos-title">{this.t('title')}</h1>
+            <p class="demos-subtitle">{this.t('subtitle')}</p>
+          </div>
+        </section>
+
+        <section class="demos-grid-section">
+          <div class="demos-grid-container">
+            <div class="demos-grid">
+              {demos.map(demo => (
+                <a
+                  href={demo.link}
+                  onClick={(e: Event) => this.handleDemoClick(e, demo.link)}
+                  class="demo-card"
+                  aria-label={`${this.t('viewDemo')}: ${demo.name}`}
+                >
+                  <div class="demo-icon">{demo.icon}</div>
+                  <h3 class="demo-name">{demo.name}</h3>
+                  <p class="demo-description">{demo.description}</p>
+                  <div class="demo-link">{this.t('viewDemo')} →</div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "演示",
+  "subtitle": "探索展示 QuizerJS 与不同框架集成的交互式演示",
+  "viewDemo": "查看演示",
+  "react": {
+    "description": "React 18 集成示例，使用 hooks 和组件"
+  },
+  "vue": {
+    "description": "Vue 3 Composition API 集成示例"
+  },
+  "svelte": {
+    "description": "Svelte 4 集成示例，使用 stores"
+  },
+  "vanilla": {
+    "description": "纯 JavaScript 集成，无需任何框架"
+  }
+}

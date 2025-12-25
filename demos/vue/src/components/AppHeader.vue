@@ -10,7 +10,7 @@
           @change="handleChange"
           class="test-data-select"
         >
-          <option v-for="item in testDataList" :key="item.id" :value="item.id">
+          <option v-for="item in sampleDataList" :key="item.id" :value="item.id">
             {{ item.name }}
           </option>
         </select>
@@ -24,7 +24,7 @@
 import { inject, computed } from 'vue';
 import type { Ref } from 'vue';
 import ThemeToggle from './ThemeToggle.vue';
-import { testDataList } from '../test-data';
+import { sampleDataList } from '@quizerjs/sample-data';
 
 interface Props {
   selectedTestDataId: string;
