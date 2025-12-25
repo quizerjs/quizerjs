@@ -49,14 +49,7 @@ import { useQuiz } from '@quizerjs/react';
 import type { QuizDSL } from '@quizerjs/dsl';
 
 function CustomQuiz({ dsl }: { dsl: QuizDSL }) {
-  const {
-    answers,
-    submitted,
-    score,
-    setAnswer,
-    submit,
-    reset,
-  } = useQuiz({
+  const { answers, submitted, score, setAnswer, submit, reset } = useQuiz({
     dsl,
     onSubmit: (answers, score) => {
       console.log('提交答案:', answers);
@@ -132,4 +125,3 @@ interface UseQuizReturn {
 ## License
 
 MIT
-

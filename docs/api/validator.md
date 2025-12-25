@@ -73,23 +73,22 @@ interface ValidationError {
 ## 错误处理示例
 
 ```typescript
-import {
-  validateQuizDSL,
-  ValidationErrorCode,
-  getErrorMessage,
-} from '@quizerjs/dsl';
+import { validateQuizDSL, ValidationErrorCode, getErrorMessage } from '@quizerjs/dsl';
 
 const result = validateQuizDSL(dslData);
 
 if (!result.valid) {
   // 按错误代码分组
-  const errorsByCode = result.errors.reduce((acc, error) => {
-    if (!acc[error.code]) {
-      acc[error.code] = [];
-    }
-    acc[error.code].push(error);
-    return acc;
-  }, {} as Record<string, ValidationError[]>);
+  const errorsByCode = result.errors.reduce(
+    (acc, error) => {
+      if (!acc[error.code]) {
+        acc[error.code] = [];
+      }
+      acc[error.code].push(error);
+      return acc;
+    },
+    {} as Record<string, ValidationError[]>
+  );
 
   // 处理特定错误
   if (errorsByCode[ValidationErrorCode.QUESTION_ID_DUPLICATE]) {
@@ -98,9 +97,7 @@ if (!result.valid) {
 
   // 显示所有错误
   result.errors.forEach(error => {
-    console.error(
-      `[${error.code}] ${error.path}: ${getErrorMessage(error.code)}`
-    );
+    console.error(`[${error.code}] ${error.path}: ${getErrorMessage(error.code)}`);
   });
 }
 ```
@@ -109,4 +106,3 @@ if (!result.valid) {
 
 - [错误代码](/dsl/error-codes.md) - 所有错误代码列表
 - [验证规则](/dsl/validation.md) - 验证规则说明
-

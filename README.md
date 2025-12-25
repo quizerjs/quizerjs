@@ -52,15 +52,15 @@ const editor = new QuizEditor({
     quiz: {
       id: 'quiz-1',
       title: '我的测验',
-      questions: []
-    }
+      questions: [],
+    },
   },
   onChange: (dsl: QuizDSL) => {
     console.log('DSL 变化:', dsl);
   },
   onSave: (dsl: QuizDSL) => {
     console.log('保存 DSL:', dsl);
-  }
+  },
 });
 
 await editor.init();
@@ -84,11 +84,11 @@ const dsl = {
         options: [
           { id: 'o1', text: '3', isCorrect: false },
           { id: 'o2', text: '4', isCorrect: true },
-          { id: 'o3', text: '5', isCorrect: false }
-        ]
-      }
-    ]
-  }
+          { id: 'o3', text: '5', isCorrect: false },
+        ],
+      },
+    ],
+  },
 };
 
 // 验证 DSL
@@ -110,14 +110,13 @@ if (result.valid) {
 import { QuizEditor, QuizPlayer } from '@quizerjs/react';
 
 function App() {
-  const dsl = { /* ... */ };
-  
+  const dsl = {
+    /* ... */
+  };
+
   return (
     <>
-      <QuizEditor 
-        initialDSL={dsl}
-        onChange={(dsl) => console.log('变化:', dsl)}
-      />
+      <QuizEditor initialDSL={dsl} onChange={dsl => console.log('变化:', dsl)} />
       <QuizPlayer dsl={dsl} />
     </>
   );
@@ -128,10 +127,7 @@ function App() {
 
 ```vue
 <template>
-  <QuizEditor 
-    :initial-dsl="dsl"
-    @change="handleChange"
-  />
+  <QuizEditor :initial-dsl="dsl" @change="handleChange" />
   <QuizPlayer :dsl="dsl" />
 </template>
 
@@ -139,9 +135,11 @@ function App() {
 import { QuizEditor, QuizPlayer } from '@quizerjs/vue';
 import { ref } from 'vue';
 
-const dsl = ref({ /* ... */ });
+const dsl = ref({
+  /* ... */
+});
 
-const handleChange = (newDsl) => {
+const handleChange = newDsl => {
   console.log('变化:', newDsl);
   dsl.value = newDsl;
 };
@@ -154,16 +152,16 @@ const handleChange = (newDsl) => {
 <script>
   import { QuizEditor, QuizPlayer } from '@quizerjs/svelte';
   import { writable } from 'svelte/store';
-  
+
   let dsl = writable({ /* ... */ });
-  
+
   function handleChange(newDsl) {
     console.log('变化:', newDsl);
     dsl.set(newDsl);
   }
 </script>
 
-<QuizEditor 
+<QuizEditor
   initialDSL={$dsl}
   onChange={handleChange}
 />
@@ -180,12 +178,14 @@ import { validateQuizDSL } from '@quizerjs/dsl';
 const editorContainer = document.getElementById('editor');
 const editor = new QuizEditor({
   container: editorContainer!,
-  onChange: (dsl) => console.log('变化:', dsl)
+  onChange: dsl => console.log('变化:', dsl),
 });
 await editor.init();
 
 // 播放器（使用 Web Component）
-const dsl = { /* ... */ };
+const dsl = {
+  /* ... */
+};
 const player = document.createElement('quiz-player');
 player.setAttribute('dsl', JSON.stringify(dsl));
 document.body.appendChild(player);
@@ -337,6 +337,7 @@ pnpm deploy:pages
 ### 企业许可证
 
 对于企业客户，我们提供商业许可证选项，包括：
+
 - ✅ 商业法律保护（无 MIT 免责声明）
 - ✅ 优先技术支持
 - ✅ SLA（服务级别协议）

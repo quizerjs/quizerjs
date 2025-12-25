@@ -132,4 +132,3 @@ interface UseQuizReturn {
 ## License
 
 MIT
-

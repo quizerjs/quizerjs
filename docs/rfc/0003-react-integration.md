@@ -39,8 +39,8 @@ function App() {
   return (
     <QuizEditor
       initialData={quizData}
-      onChange={(dsl) => setQuizData(dsl)}
-      onSave={(dsl) => console.log('Saved:', dsl)}
+      onChange={dsl => setQuizData(dsl)}
+      onSave={dsl => console.log('Saved:', dsl)}
       config={{
         allowRetry: true,
         showResults: true,
@@ -51,6 +51,7 @@ function App() {
 ```
 
 **Props**:
+
 - `initialData?: QuizDSL` - 初始测验数据
 - `onChange?: (dsl: QuizDSL) => void` - 数据变化回调
 - `onSave?: (dsl: QuizDSL) => void` - 保存回调
@@ -66,13 +67,15 @@ function App() {
 import { QuizViewer } from '@quizerjs/react';
 
 function App() {
-  const quizData: QuizDSL = { /* ... */ };
+  const quizData: QuizDSL = {
+    /* ... */
+  };
   const [result, setResult] = useState<QuizResult | null>(null);
 
   return (
     <QuizViewer
       data={quizData}
-      onSubmit={(result) => setResult(result)}
+      onSubmit={result => setResult(result)}
       mode="view" // 'view' | 'result'
       result={result}
     />
@@ -81,6 +84,7 @@ function App() {
 ```
 
 **Props**:
+
 - `data: QuizDSL` - 测验数据（必需）
 - `onSubmit?: (result: QuizResult) => void` - 提交回调
 - `onAnswerChange?: (questionId: string, answer: string | string[]) => void` - 答案变化回调
@@ -114,9 +118,7 @@ function MyEditor() {
 
   return (
     <div>
-      <button onClick={() => addQuestion({ type: 'single_choice' })}>
-        添加问题
-      </button>
+      <button onClick={() => addQuestion({ type: 'single_choice' })}>添加问题</button>
       <button onClick={save} disabled={!isValid}>
         保存
       </button>
@@ -127,6 +129,7 @@ function MyEditor() {
 ```
 
 **返回值**:
+
 - `quizData: QuizDSL | null` - 当前测验数据
 - `setQuizData: (dsl: QuizDSL) => void` - 设置测验数据
 - `addQuestion: (question: Partial<Question>) => void` - 添加问题
@@ -144,15 +147,7 @@ function MyEditor() {
 import { useQuizViewer } from '@quizerjs/react';
 
 function MyViewer() {
-  const {
-    quizData,
-    answers,
-    setAnswer,
-    submit,
-    result,
-    canSubmit,
-    reset,
-  } = useQuizViewer({
+  const { quizData, answers, setAnswer, submit, result, canSubmit, reset } = useQuizViewer({
     data: quizData,
   });
 
@@ -168,6 +163,7 @@ function MyViewer() {
 ```
 
 **返回值**:
+
 - `quizData: QuizDSL` - 测验数据
 - `answers: Map<string, UserAnswer>` - 用户答案
 - `setAnswer: (questionId: string, answer: string | string[]) => void` - 设置答案
@@ -231,12 +227,7 @@ export function QuizEditor({ initialData, onChange, ...props }) {
 function ControlledEditor() {
   const [quizData, setQuizData] = useState<QuizDSL | null>(null);
 
-  return (
-    <QuizEditor
-      initialData={quizData}
-      onChange={setQuizData}
-    />
-  );
+  return <QuizEditor initialData={quizData} onChange={setQuizData} />;
 }
 ```
 
@@ -251,12 +242,7 @@ function UncontrolledEditor() {
     console.log('Saved:', data);
   };
 
-  return (
-    <QuizEditor
-      ref={editorRef}
-      onSave={handleSave}
-    />
-  );
+  return <QuizEditor ref={editorRef} onSave={handleSave} />;
 }
 ```
 
@@ -269,12 +255,7 @@ function ReduxEditor() {
   const quizData = useSelector(state => state.quiz.data);
   const dispatch = useDispatch();
 
-  return (
-    <QuizEditor
-      initialData={quizData}
-      onChange={(dsl) => dispatch(updateQuiz(dsl))}
-    />
-  );
+  return <QuizEditor initialData={quizData} onChange={dsl => dispatch(updateQuiz(dsl))} />;
 }
 ```
 
@@ -327,4 +308,3 @@ export interface QuizEditorRef {
 - 支持 Suspense
 - 提供更多自定义选项
 - 支持主题定制
-

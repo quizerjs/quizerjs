@@ -46,11 +46,7 @@ const quizDSL: QuizDSL = {
 
 ```vue
 <template>
-  <QuizComponent
-    :dsl="quizDSL"
-    @submit="handleSubmit"
-    @answer-change="handleAnswerChange"
-  />
+  <QuizComponent :dsl="quizDSL" @submit="handleSubmit" @answer-change="handleAnswerChange" />
 </template>
 
 <script setup lang="ts">
@@ -80,16 +76,13 @@ function handleAnswerChange(questionId: string, answer: any) {
     <div v-if="!dsl">加载中...</div>
     <div v-else>
       <h2>{{ dsl.quiz.title }}</h2>
-      
+
       <div v-for="(question, index) in dsl.quiz.questions" :key="question.id">
         <h3>{{ index + 1 }}. {{ question.text }}</h3>
-        
+
         <!-- 单选题 -->
         <div v-if="question.type === 'single_choice'">
-          <label
-            v-for="option in question.options"
-            :key="option.id"
-          >
+          <label v-for="option in question.options" :key="option.id">
             <input
               type="radio"
               :name="question.id"
@@ -101,14 +94,12 @@ function handleAnswerChange(questionId: string, answer: any) {
             {{ option.text }}
           </label>
         </div>
-        
+
         <!-- 其他题型... -->
       </div>
-      
-      <button @click="submit" :disabled="submitted">
-        提交答案
-      </button>
-      
+
+      <button @click="submit" :disabled="submitted">提交答案</button>
+
       <div v-if="submitted">
         <p>得分: {{ score }}%</p>
       </div>
@@ -120,14 +111,7 @@ function handleAnswerChange(questionId: string, answer: any) {
 import { useQuiz } from '@quizerjs/vue';
 import type { QuizDSL } from '@quizerjs/dsl';
 
-const {
-  dsl,
-  answers,
-  submitted,
-  score,
-  setAnswer,
-  submit,
-} = useQuiz({
+const { dsl, answers, submitted, score, setAnswer, submit } = useQuiz({
   dsl: quizDSL,
   onSubmit: (answers, score) => {
     console.log('提交:', answers, score);
@@ -178,12 +162,7 @@ async function loadQuiz() {
 ```vue
 <template>
   <div class="quiz-app">
-    <QuizComponent
-      v-if="quiz"
-      :dsl="quiz"
-      :disabled="loading"
-      @submit="handleSubmit"
-    />
+    <QuizComponent v-if="quiz" :dsl="quiz" :disabled="loading" @submit="handleSubmit" />
     <div v-else-if="loading">加载中...</div>
     <div v-else>加载失败</div>
   </div>
@@ -203,7 +182,7 @@ onMounted(async () => {
     const response = await fetch('/api/quiz.json');
     const jsonString = await response.text();
     const parseResult = parseQuizDSL(jsonString);
-    
+
     if (parseResult.success && parseResult.dsl) {
       const validationResult = validateQuizDSL(parseResult.dsl);
       if (validationResult.valid) {
@@ -235,4 +214,3 @@ function handleSubmit(answers: Record<string, any>) {
 - [DSL 指南](./dsl-guide.md) - 了解 DSL 数据格式
 - [快速开始](./getting-started.md) - 查看基础使用
 - [安装指南](./installation.md) - 查看详细安装说明
-

@@ -95,6 +95,7 @@ quizerjs.com/
 #### 首页 (/)
 
 **功能**:
+
 - Hero 区域：项目标题、简介和 CTA 按钮
 - 核心特性展示：卡片式布局展示主要功能
 - 快速开始：代码示例和安装指南
@@ -103,6 +104,7 @@ quizerjs.com/
 - 导航链接：快速访问其他页面
 
 **内容**:
+
 - 项目介绍和定位
 - 核心价值主张
 - 快速开始代码示例
@@ -112,12 +114,14 @@ quizerjs.com/
 #### 功能特性 (/features)
 
 **功能**:
+
 - 详细的功能列表
 - 每个功能的说明和示例
 - 技术优势展示
 - 对比表格（与其他方案对比）
 
 **内容**:
+
 - Editor.js 集成
 - 多种题型支持
 - DSL 规范
@@ -129,12 +133,14 @@ quizerjs.com/
 #### 文档 (/docs)
 
 **功能**:
+
 - 完整的文档导航
 - 搜索功能
 - 代码示例高亮
 - 交互式示例
 
 **内容**:
+
 - 快速开始指南
 - API 参考文档
 - DSL 规范文档
@@ -145,23 +151,27 @@ quizerjs.com/
 #### 演示集合 (/demos)
 
 **功能**:
+
 - 编辑器演示页面
 - 播放器演示页面
 - Playground 页面（集成所有 demo）
 
 **编辑器演示**:
+
 - 完整的编辑器界面
 - 实时 DSL 预览
 - 示例数据加载
 - 导出功能
 
 **播放器演示**:
+
 - 完整的播放器界面
 - 多种题型展示
 - 答题交互
 - 结果展示
 
 **Playground**:
+
 - Demo 选择器（React、Vue、Svelte、Vanilla）
 - 通过 iframe 或新窗口打开预构建 demo
 - 主题切换（同步到 demo）
@@ -170,12 +180,14 @@ quizerjs.com/
 #### 代码示例 (/examples)
 
 **功能**:
+
 - 分类的代码示例
 - 可运行的代码片段
 - 复制代码功能
 - 在线预览
 
 **示例类型**:
+
 - 基础用法
 - React 集成
 - Vue 集成
@@ -184,6 +196,7 @@ quizerjs.com/
 - 高级功能
 
 **代码示例组件实现** (`components/pages/ExamplesPage.wsx`):
+
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
@@ -318,12 +331,14 @@ const dsl = {
 #### 社区 (/community)
 
 **功能**:
+
 - 贡献指南
 - 行为准则
 - 更新日志
 - 社区链接
 
 **内容**:
+
 - 如何贡献代码
 - 如何报告问题
 - 如何提出功能请求
@@ -333,6 +348,7 @@ const dsl = {
 #### 关于 (/about)
 
 **功能**:
+
 - 项目历史
 - 团队介绍
 - 许可证信息
@@ -350,7 +366,6 @@ const dsl = {
   - 使用 wsx 语法编写 Web Components，构建所有页面
   - 展示 wsx 在实际项目中的应用
   - 与核心组件库技术栈一致（基于 @wsxjs/wsx-core）
-  
 - **@wsxjs/wsx-base-components**: 基础组件库
   - 提供 `wsx-link` 导航链接组件
   - 提供其他常用基础组件
@@ -376,6 +391,7 @@ const dsl = {
   - 在 `main.ts` 中导入 `uno.css`
 
 **UnoCSS 配置示例** (`uno.config.ts`):
+
 ```typescript
 import { defineConfig, presetUno, presetAttributify } from 'unocss';
 
@@ -385,7 +401,7 @@ export default defineConfig({
     presetAttributify(), // 属性化模式支持
   ],
   shortcuts: {
-    'btn': 'px-4 py-2 rounded font-semibold',
+    btn: 'px-4 py-2 rounded font-semibold',
     'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600',
     'btn-secondary': 'btn bg-gray-500 text-white hover:bg-gray-600',
   },
@@ -402,6 +418,7 @@ export default defineConfig({
 ```
 
 **在组件中使用 UnoCSS**:
+
 ```typescript
 render() {
   return (
@@ -460,6 +477,7 @@ render() {
   - 路由状态
 
 **全局状态管理实现** (`src/store/theme.ts`):
+
 ```typescript
 /**
  * 全局主题状态管理
@@ -498,7 +516,7 @@ class ThemeStore {
     if (this.currentTheme === theme) return;
 
     this.currentTheme = theme;
-    
+
     // 保存到 localStorage
     if (save) {
       localStorage.setItem('quizerjs-theme', theme);
@@ -534,6 +552,7 @@ export const themeStore = new ThemeStore();
 ```
 
 **在组件中使用全局状态**:
+
 ```typescript
 @autoRegister({ tagName: 'theme-toggle' })
 export class ThemeToggle extends LightComponent {
@@ -591,6 +610,7 @@ quizerjs/
 ```
 
 **为什么独立目录？**
+
 1. **项目性质不同**: 网站是完整的应用，不是简单的 demo
 2. **构建和部署独立**: 有自己的构建流程和部署配置
 3. **依赖关系清晰**: 网站依赖 packages 和 demos，但它们是独立的项目
@@ -653,6 +673,7 @@ site/
 ```
 
 **site/package.json 示例**:
+
 ```json
 {
   "name": "@quizerjs/site",
@@ -700,7 +721,7 @@ site/
 packages:
   - 'packages/*'
   - 'demos/*'
-  - 'app/site'  # 网站项目
+  - 'app/site' # 网站项目
 ```
 
 ### Playground 集成设计
@@ -710,11 +731,13 @@ packages:
 所有 demo 应用需要在网站构建时一起构建，并将构建产物复制到网站目录：
 
 **构建流程**:
+
 1. 构建所有 demo 项目（React、Vue、Svelte、Vanilla）
 2. 将 demo 构建产物复制到 `site/dist/demos/` 目录
 3. 网站通过相对路径访问 demo：`/demos/react/`、`/demos/vue/` 等
 
 **目录结构**:
+
 ```
 site/dist/              # 网站构建产物
 ├── index.html
@@ -727,6 +750,7 @@ site/dist/              # 网站构建产物
 ```
 
 **访问 URL**:
+
 - `https://quizerjs.com/demos/react/` - React Demo
 - `https://quizerjs.com/demos/vue/` - Vue Demo
 - `https://quizerjs.com/demos/svelte/` - Svelte Demo
@@ -735,6 +759,7 @@ site/dist/              # 网站构建产物
 #### Playground 页面设计
 
 **功能**:
+
 1. **Demo 选择器**
    - 显示所有可用的 demo（React、Vue、Svelte、Vanilla）
    - 每个 demo 显示框架图标和描述
@@ -767,15 +792,19 @@ site/dist/              # 网站构建产物
 #### Demo 通信协议
 
 **主题同步**:
+
 ```typescript
 // Playground 发送主题变更
-window.postMessage({
-  type: 'THEME_CHANGE',
-  theme: 'dark' | 'light'
-}, '*');
+window.postMessage(
+  {
+    type: 'THEME_CHANGE',
+    theme: 'dark' | 'light',
+  },
+  '*'
+);
 
 // Demo 监听主题变更
-window.addEventListener('message', (event) => {
+window.addEventListener('message', event => {
   if (event.data.type === 'THEME_CHANGE') {
     // 应用主题
     themeManager.setTheme(event.data.theme === 'dark');
@@ -784,6 +813,7 @@ window.addEventListener('message', (event) => {
 ```
 
 **数据加载**:
+
 ```typescript
 // URL 参数解析
 const params = new URLSearchParams(window.location.search);
@@ -908,11 +938,13 @@ if (dataId) {
 ### wsx 组件开发规范
 
 **wsx 语法说明**:
+
 - wsx 是模仿 JSX/TSX 的语法，但用于编写 Web Components
 - 使用类似 JSX 的语法编写组件，但最终编译为 Web Components
 - 文件扩展名为 `.wsx`（类似 `.jsx`/`.tsx`）
 
 **组件结构**:
+
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
@@ -929,10 +961,10 @@ export class MyComponent extends LightComponent<ComponentProps> {
   @state private count = 0;
 
   constructor() {
-    super({ 
+    super({
       styles,
       styleName: 'my-component',
-      ...this.props 
+      ...this.props
     });
   }
 
@@ -950,6 +982,7 @@ export class MyComponent extends LightComponent<ComponentProps> {
 ```
 
 **关键点**:
+
 - 使用 `LightComponent`（不使用 Shadow DOM）或 `WebComponent`（使用 Shadow DOM）
 - 使用 `?inline` 导入 CSS 作为内联样式
 - 通过 `styleName` 提供作用域化的样式类名
@@ -972,7 +1005,7 @@ export class MyComponent extends LightComponent {
   private buttonRef: HTMLButtonElement | null = null;
 
   constructor() {
-    super({ 
+    super({
       styles,
       styleName: 'my-component'
     });
@@ -1081,7 +1114,7 @@ this.dispatchEvent(
 render() {
   return (
     <div>
-      <input 
+      <input
         ref={(el) => { this.inputRef = el; }}
         type="text"
       />
@@ -1100,6 +1133,7 @@ render() {
    - 只在必要时更新 `@state` 属性
 
 2. **条件渲染**:
+
    ```typescript
    render() {
      return (
@@ -1122,9 +1156,10 @@ render() {
 **组件通信模式**:
 
 1. **父子组件通信**:
+
    ```typescript
    // 父组件
-   <child-component 
+   <child-component
      title="Hello"
      oncustom-event={(e: CustomEvent) => {
        console.log('Received:', e.detail);
@@ -1141,6 +1176,7 @@ render() {
    ```
 
 2. **兄弟组件通信**:
+
    ```typescript
    // 通过父组件或全局事件总线
    // 方案 A: 通过父组件
@@ -1155,6 +1191,7 @@ render() {
    ```
 
 3. **属性传递**:
+
    ```typescript
    // 属性值始终是字符串，需要手动转换
    static get observedAttributes() {
@@ -1284,6 +1321,7 @@ export class MyComponent extends LightComponent {
 ```
 
 **路由模式选项**:
+
 - `mode="hash"`: 使用哈希路由（`#/path`），**GitHub Pages 推荐**
   - 无需服务器配置
   - 无需 404.html 重定向
@@ -1317,6 +1355,7 @@ protected onConnected(): void {
 ```
 
 **在 App 组件中使用 wsx-router 和 wsx-view**:
+
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
@@ -1354,21 +1393,21 @@ export default class App extends LightComponent {
       <div class="app-container">
         {/* 导航栏 */}
         <app-header />
-        
+
         {/* 路由容器 */}
         <wsx-router>
           {/* 首页 */}
           <wsx-view route="/" component="home-page"></wsx-view>
-          
+
           {/* 功能特性 */}
           <wsx-view route="/features" component="features-page"></wsx-view>
-          
+
           {/* 文档路由 - 嵌套结构 */}
           <wsx-view route="/docs/guide/getting-started" component="docs-layout">
             {/* 快速开始 */}
             <wsx-view route="/docs/guide/getting-started" component="getting-started-doc"></wsx-view>
             <wsx-view route="/docs/installation" component="installation-doc"></wsx-view>
-            
+
             {/* API 文档 */}
             <wsx-view route="/docs/api" component="api-layout">
               <wsx-view route="/docs/api/parser" component="api-parser-doc"></wsx-view>
@@ -1376,7 +1415,7 @@ export default class App extends LightComponent {
               <wsx-view route="/docs/api/validator" component="api-validator-doc"></wsx-view>
               <wsx-view route="/docs/api/types" component="api-types-doc"></wsx-view>
             </wsx-view>
-            
+
             {/* DSL 文档 */}
             <wsx-view route="/docs/dsl" component="dsl-layout">
               <wsx-view route="/docs/dsl/structure" component="dsl-structure-doc"></wsx-view>
@@ -1384,7 +1423,7 @@ export default class App extends LightComponent {
               <wsx-view route="/docs/dsl/validation" component="dsl-validation-doc"></wsx-view>
               <wsx-view route="/docs/dsl/examples" component="dsl-examples-doc"></wsx-view>
             </wsx-view>
-            
+
             {/* 示例 */}
             <wsx-view route="/docs/examples" component="examples-layout">
               <wsx-view route="/docs/examples/basic" component="example-basic-doc"></wsx-view>
@@ -1392,12 +1431,12 @@ export default class App extends LightComponent {
               <wsx-view route="/docs/examples/interactive" component="example-interactive-doc"></wsx-view>
             </wsx-view>
           </wsx-view>
-          
+
           {/* 演示路由 */}
           <wsx-view route="/demos" component="demos-layout">
             <wsx-view route="/demos/editor" component="editor-demo-page"></wsx-view>
             <wsx-view route="/demos/player" component="player-demo-page"></wsx-view>
-            
+
             {/* Playground */}
             <wsx-view route="/demos/playground" component="playground-layout">
               <wsx-view route="/demos/playground/react" component="playground-react"></wsx-view>
@@ -1406,17 +1445,17 @@ export default class App extends LightComponent {
               <wsx-view route="/demos/playground/vanilla" component="playground-vanilla"></wsx-view>
             </wsx-view>
           </wsx-view>
-          
+
           {/* 代码示例 */}
           <wsx-view route="/examples" component="examples-page"></wsx-view>
-          
+
           {/* 社区 */}
           <wsx-view route="/community" component="community-layout">
             <wsx-view route="/community/contributing" component="contributing-doc"></wsx-view>
             <wsx-view route="/community/code-of-conduct" component="code-of-conduct-doc"></wsx-view>
             <wsx-view route="/community/changelog" component="changelog-doc"></wsx-view>
           </wsx-view>
-          
+
           {/* 关于 */}
           <wsx-view route="/about" component="about-page"></wsx-view>
         </wsx-router>
@@ -1430,6 +1469,7 @@ export default class App extends LightComponent {
 ```
 
 **导航链接组件（使用 wsx-link）**:
+
 ```typescript
 /** @jsxImportSource @wsxjs/wsx-core */
 import { LightComponent, autoRegister } from '@wsxjs/wsx-core';
@@ -1449,7 +1489,7 @@ export class Navigation extends LightComponent {
           <div class="nav-brand">
             <span class="nav-title">QuizerJS</span>
           </div>
-          
+
           <div class="nav-menu">
             <wsx-link to="/" class="nav-link" active-class="nav-link-active" exact>
               Home
@@ -1481,6 +1521,7 @@ export class Navigation extends LightComponent {
 ```
 
 **关键点说明**:
+
 1. **使用 `LightComponent`**: 继承自 `LightComponent` 而非 `WebComponent`（不使用 Shadow DOM）
 2. **导入路由库**: 需要导入 `@wsxjs/wsx-base-components` 和 `@wsxjs/wsx-router`
 3. **组件自动注册**: 通过 `@autoRegister` 注册组件，然后在路由中使用标签名（如 `home-page`）
@@ -1496,9 +1537,9 @@ export class Navigation extends LightComponent {
 import '@wsxjs/wsx-base-components'; // 导入基础组件
 
 // 在 render 中使用
-<wsx-link 
-  to="/features" 
-  class="nav-link" 
+<wsx-link
+  to="/features"
+  class="nav-link"
   active-class="nav-link-active"
   exact={false}
 >
@@ -1507,6 +1548,7 @@ import '@wsxjs/wsx-base-components'; // 导入基础组件
 ```
 
 **wsx-link 属性**:
+
 - `to`: 目标路由路径
 - `class`: CSS 类名
 - `active-class`: 激活状态时的 CSS 类名（当路由匹配时自动添加）
@@ -1515,6 +1557,7 @@ import '@wsxjs/wsx-base-components'; // 导入基础组件
 ### 入口文件实现
 
 **main.ts - 应用入口**:
+
 ```typescript
 /**
  * QuizerJS Website - Main Entry Point
@@ -1563,6 +1606,7 @@ if (document.readyState === 'loading') {
 ```
 
 **index.html - HTML 模板**:
+
 ```html
 <!doctype html>
 <html lang="en">
@@ -1580,8 +1624,8 @@ if (document.readyState === 'loading') {
         margin: 0;
         padding: 0;
         font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
       }
 
       #app {
@@ -1591,16 +1635,18 @@ if (document.readyState === 'loading') {
     <!-- GitHub Pages SPA 路由处理（如果使用 history 模式） -->
     <!-- 如果使用哈希模式，可以移除此脚本 -->
     <script>
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
         }
-      }(window.location))
+      })(window.location);
     </script>
   </head>
   <body>
@@ -1611,6 +1657,7 @@ if (document.readyState === 'loading') {
 ```
 
 **index.html 关键点说明**:
+
 1. **DOCTYPE**: 使用 `<!doctype html>`（小写，HTML5 标准）
 2. **Favicon**: 使用 SVG 格式的 favicon（`/favicon.svg`）
 3. **内联样式**: 在 `<head>` 中使用 `<style>` 标签定义基础样式
@@ -1619,6 +1666,7 @@ if (document.readyState === 'loading') {
 6. **最小高度**: `#app` 容器设置 `min-height: 100vh` 确保全屏布局
 
 **main.ts 关键点说明**:
+
 1. **导入顺序**: 先导入样式和基础组件，再导入应用组件
 2. **组件注册**: 通过导入 `.wsx` 文件触发 `@autoRegister` 自动注册
 3. **DOM 挂载**: 使用自定义元素标签名直接挂载到 DOM
@@ -1628,11 +1676,12 @@ if (document.readyState === 'loading') {
 **开发调试技巧**:
 
 1. **启用 wsx 调试模式**:
+
    ```typescript
    // vite.config.ts
    wsx({
      debug: process.env.NODE_ENV === 'development', // 开发模式启用调试
-   })
+   });
    ```
 
 2. **使用浏览器 DevTools**:
@@ -1641,10 +1690,11 @@ if (document.readyState === 'loading') {
    - 使用 `$0.__wsxComponent` 访问组件实例（如果可用）
 
 3. **日志记录**:
+
    ```typescript
    import { createLogger } from '@wsxjs/wsx-core';
    const logger = createLogger('MyComponent');
-   
+
    logger.info('Component initialized');
    logger.warn('Warning message');
    logger.error('Error message');
@@ -1657,6 +1707,7 @@ if (document.readyState === 'loading') {
 ### Playground 集成实现
 
 **Playground 组件**:
+
 ```typescript
 // components/demo/Playground.wsx
 /** @jsxImportSource @wsxjs/wsx-core */
@@ -1741,7 +1792,7 @@ export class PlaygroundPage extends LightComponent {
         <div class="playground-controls">
           <div class="control-group">
             <label>选择 Demo:</label>
-            <select 
+            <select
               value={this.selectedDemo}
               onChange={(e) => this.handleDemoChange((e.target as HTMLSelectElement).value as any)}
             >
@@ -1751,19 +1802,19 @@ export class PlaygroundPage extends LightComponent {
               <option value="vanilla">Vanilla</option>
             </select>
           </div>
-          
+
           <div class="control-group">
             <label>主题:</label>
-            <button 
+            <button
               onClick={() => this.handleThemeChange(this.theme === 'light' ? 'dark' : 'light')}
             >
               {this.theme === 'light' ? '🌙' : '☀️'} {this.theme}
             </button>
           </div>
-          
+
           <div class="control-group">
             <label>示例数据:</label>
-            <select 
+            <select
               value={this.sampleDataId}
               onChange={(e) => this.sampleDataId = e.target.value}
             >
@@ -1772,7 +1823,7 @@ export class PlaygroundPage extends LightComponent {
             </select>
           </div>
         </div>
-        
+
         <iframe
           ref={(el) => { this.iframeRef = el; }}
           src={this.getDemoUrl()}
@@ -1787,6 +1838,7 @@ export class PlaygroundPage extends LightComponent {
 ```
 
 **关键实现细节**:
+
 1. **使用 LightComponent**: 不使用 Shadow DOM，便于样式继承和调试
 2. **iframe 引用**: 使用 ref 获取 iframe 元素，用于 postMessage 通信
 3. **消息监听**: 在 `onConnected` 中添加全局消息监听，在 `onDisconnected` 中清理
@@ -1800,6 +1852,7 @@ export class PlaygroundPage extends LightComponent {
 **重要说明**: 网站将托管在 GitHub Pages 上，需要特殊配置以支持 SPA 路由。
 
 **构建配置**:
+
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite';
@@ -1838,12 +1891,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['@wsxjs/wsx-core', '@wsxjs/wsx-base-components', '@wsxjs/wsx-router'],
-          'theme': ['@quizerjs/theme'],
-          'quizerjs': ['@quizerjs/core', '@quizerjs/dsl'],
-        }
-      }
-    }
+          vendor: ['@wsxjs/wsx-core', '@wsxjs/wsx-base-components', '@wsxjs/wsx-router'],
+          theme: ['@quizerjs/theme'],
+          quizerjs: ['@quizerjs/core', '@quizerjs/dsl'],
+        },
+      },
+    },
   },
 
   // 开发模式下的路径别名
@@ -1891,6 +1944,7 @@ export default defineConfig({
    - 生产环境不生成 sourcemap（减小体积）
 
 5. **HMR 配置**:
+
    ```typescript
    server: {
      hmr: {
@@ -1926,6 +1980,7 @@ export default defineConfig({
 **环境变量设置**:
 
 `.env.production`:
+
 ```bash
 # GitHub Pages 部署配置
 GITHUB_PAGES=true
@@ -1937,6 +1992,7 @@ VITE_API_BASE_URL=https://api.quizerjs.com  # 如果有 API
 ```
 
 `.env.development` (可选):
+
 ```bash
 # 开发环境配置
 GITHUB_PAGES=false
@@ -1945,6 +2001,7 @@ VITE_SITE_URL=http://localhost:5173
 ```
 
 **在代码中使用环境变量**:
+
 ```typescript
 // 在组件或工具函数中
 const siteUrl = import.meta.env.VITE_SITE_URL || 'https://quizerjs.com';
@@ -1954,6 +2011,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 ```
 
 **类型定义** (`src/env.d.ts`):
+
 ```typescript
 /// <reference types="vite/client" />
 
@@ -1982,6 +2040,7 @@ interface ImportMeta {
 ```
 
 优点：
+
 - 无需服务器配置
 - 无需 404.html 重定向
 - GitHub Pages 开箱即用
@@ -1993,7 +2052,7 @@ interface ImportMeta {
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>QuizerJS</title>
     <script>
       // GitHub Pages SPA 路由重定向
@@ -2001,22 +2060,34 @@ interface ImportMeta {
       var pathSegmentsToKeep = 0;
       var l = window.location;
       l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
       );
     </script>
   </head>
-  <body>
-  </body>
+  <body></body>
 </html>
 ```
 
 然后在 `index.html` 中添加路由处理脚本（已在上面示例中包含）。
 
 **GitHub Actions 工作流**:
+
 ```yaml
 name: Deploy Website to GitHub Pages
 
@@ -2024,9 +2095,9 @@ on:
   push:
     branches: [master]
     paths:
-      - 'site/**'        # 网站项目变更
-      - 'demos/**'          # Demo 项目变更（需要重新构建并复制到 website）
-      - 'packages/**'       # 核心包变更（可能影响网站）
+      - 'site/**' # 网站项目变更
+      - 'demos/**' # Demo 项目变更（需要重新构建并复制到 website）
+      - 'packages/**' # 核心包变更（可能影响网站）
       - '.github/workflows/website.yml'
 
 jobs:
@@ -2041,21 +2112,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build demos
         run: |
           cd demos/react && pnpm build
@@ -2063,23 +2134,23 @@ jobs:
           cd ../svelte && pnpm build
           cd ../vanilla && pnpm build
           cd ../..
-      
+
       - name: Build core packages
         run: |
           # 先构建依赖的包
           pnpm --filter @quizerjs/core build
           pnpm --filter @quizerjs/dsl build
           pnpm --filter @quizerjs/theme build
-      
+
       - name: Build website
         env:
           NODE_ENV: production
           GITHUB_PAGES: true
-          CUSTOM_DOMAIN: true  # 如果使用自定义域名，否则设为 false
+          CUSTOM_DOMAIN: true # 如果使用自定义域名，否则设为 false
         run: |
           cd app/site
           pnpm build
-      
+
       - name: Copy demo builds to website
         run: |
           # 创建 demos 目录
@@ -2090,13 +2161,13 @@ jobs:
           mkdir -p site/dist/demos/vue
           mkdir -p site/dist/demos/svelte
           mkdir -p site/dist/demos/vanilla
-          
+
           # 复制构建产物（如果存在）
           [ -d demos/react/dist ] && cp -r demos/react/dist/* site/dist/demos/react/ || true
           [ -d demos/vue/dist ] && cp -r demos/vue/dist/* site/dist/demos/vue/ || true
           [ -d demos/svelte/dist ] && cp -r demos/svelte/dist/* site/dist/demos/svelte/ || true
           [ -d demos/vanilla/dist ] && cp -r demos/vanilla/dist/* site/dist/demos/vanilla/ || true
-      
+
       - name: Copy 404.html for SPA routing (if using history mode)
         run: |
           # 如果使用 history 模式，复制 404.html 到 dist
@@ -2104,21 +2175,22 @@ jobs:
           if [ -f site/public/404.html ]; then
             cp site/public/404.html site/dist/404.html
           fi
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './site/dist'  # 网站构建产物目录
-      
+          path: './site/dist' # 网站构建产物目录
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 ```
 
 **GitHub Pages 设置**:
+
 1. 在仓库 Settings > Pages 中：
    - Source: GitHub Actions
    - 如果使用自定义域名，在 Custom domain 中输入 `quizerjs.com`
@@ -2181,12 +2253,12 @@ jobs:
 ```html
 <head>
   <title>QuizerJS - Quiz Builder Library</title>
-  <meta name="description" content="Build interactive quizzes with Editor.js and wsx">
-  <meta name="keywords" content="quiz, editorjs, wsx, web-components">
-  <meta property="og:title" content="QuizerJS">
-  <meta property="og:description" content="Build interactive quizzes">
-  <meta property="og:image" content="/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="description" content="Build interactive quizzes with Editor.js and wsx" />
+  <meta name="keywords" content="quiz, editorjs, wsx, web-components" />
+  <meta property="og:title" content="QuizerJS" />
+  <meta property="og:description" content="Build interactive quizzes" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 ```
 
@@ -2211,6 +2283,7 @@ jobs:
 自动生成 sitemap.xml，包含所有页面路径。
 
 **Sitemap 生成脚本** (`scripts/generate-sitemap.ts`):
+
 ```typescript
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
@@ -2270,6 +2343,7 @@ console.log('Sitemap generated successfully');
 ```
 
 在 `package.json` 中添加脚本：
+
 ```json
 {
   "scripts": {
@@ -2322,10 +2396,10 @@ describe('MyComponent', () => {
     expect(component?.querySelector('h1')?.textContent).toBe('Updated');
   });
 
-  it('应该派发自定义事件', (done) => {
+  it('应该派发自定义事件', done => {
     container.innerHTML = '<my-component></my-component>';
     const component = container.querySelector('my-component');
-    
+
     component?.addEventListener('count-change', (e: Event) => {
       const customEvent = e as CustomEvent;
       expect(customEvent.detail.count).toBe(1);
@@ -2339,6 +2413,7 @@ describe('MyComponent', () => {
 ```
 
 **测试配置** (`vitest.config.ts`):
+
 ```typescript
 import { defineConfig } from 'vitest/config';
 import { wsx } from '@wsxjs/wsx-vite-plugin';

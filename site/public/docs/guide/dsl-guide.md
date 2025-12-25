@@ -118,6 +118,7 @@ QuizerJS 支持四种问题类型。让我们逐一了解如何创建它们。
 3. 确保恰好有一个选项的 `isCorrect` 为 `true`
 
 **要求：**
+
 - 必须至少包含 2 个选项
 - 必须恰好有一个正确答案（`isCorrect: true`）
 
@@ -146,6 +147,7 @@ QuizerJS 支持四种问题类型。让我们逐一了解如何创建它们。
 3. 确保至少有一个选项的 `isCorrect` 为 `true`
 
 **要求：**
+
 - 必须至少包含 2 个选项
 - 必须至少有一个正确答案
 
@@ -178,6 +180,7 @@ QuizerJS 支持四种问题类型。让我们逐一了解如何创建它们。
 3. （可选）设置 `caseSensitive` 控制是否区分大小写
 
 **要求：**
+
 - `correctAnswer` 必须是字符串或字符串数组
 - 如果使用数组，数组不能为空
 
@@ -200,6 +203,7 @@ QuizerJS 支持四种问题类型。让我们逐一了解如何创建它们。
 2. 设置 `correctAnswer` 为 `true` 或 `false`
 
 **要求：**
+
 - `correctAnswer` 必须是布尔值（`true` 或 `false`）
 
 ## 验证您的 DSL
@@ -213,7 +217,9 @@ QuizerJS 支持四种问题类型。让我们逐一了解如何创建它们。
 ```typescript
 import { validateQuizDSL } from '@quizerjs/dsl';
 
-const dsl = { /* 您的 DSL 数据 */ };
+const dsl = {
+  /* 您的 DSL 数据 */
+};
 
 const result = validateQuizDSL(dsl);
 
@@ -400,9 +406,11 @@ function validateQuizDSL(dsl: unknown): ValidationResult;
 ```
 
 **参数：**
+
 - `dsl` (unknown): 要验证的 DSL 数据
 
 **返回：**
+
 - `ValidationResult`: 验证结果对象
 
 **示例：**
@@ -445,17 +453,16 @@ interface ValidationError {
 从 JSON 字符串解析 DSL。
 
 ```typescript
-function parseQuizDSL(
-  jsonString: string,
-  options?: ParseOptions
-): ParseResult;
+function parseQuizDSL(jsonString: string, options?: ParseOptions): ParseResult;
 ```
 
 **参数：**
+
 - `jsonString` (string): JSON 字符串
 - `options` (ParseOptions, 可选): 解析选项
 
 **返回：**
+
 - `ParseResult`: 解析结果对象
 
 **示例：**
@@ -464,7 +471,7 @@ function parseQuizDSL(
 const jsonString = JSON.stringify(dslData);
 const result = parseQuizDSL(jsonString, {
   validate: true,
-  strict: false
+  strict: false,
 });
 
 if (result.success) {
@@ -480,18 +487,15 @@ if (result.success) {
 从对象解析 DSL（不进行 JSON 解析）。
 
 ```typescript
-function parseQuizDSLFromObject(
-  data: unknown,
-  options?: ParseOptions
-): ParseResult;
+function parseQuizDSLFromObject(data: unknown, options?: ParseOptions): ParseResult;
 ```
 
 #### ParseOptions
 
 ```typescript
 interface ParseOptions {
-  validate?: boolean;  // 默认: true
-  strict?: boolean;    // 默认: false
+  validate?: boolean; // 默认: true
+  strict?: boolean; // 默认: false
 }
 ```
 
@@ -513,17 +517,16 @@ interface ParseResult {
 将 DSL 序列化为 JSON 字符串。
 
 ```typescript
-function serializeQuizDSL(
-  dsl: QuizDSL,
-  options?: SerializeOptions
-): SerializeResult;
+function serializeQuizDSL(dsl: QuizDSL, options?: SerializeOptions): SerializeResult;
 ```
 
 **参数：**
+
 - `dsl` (QuizDSL): DSL 数据
 - `options` (SerializeOptions, 可选): 序列化选项
 
 **返回：**
+
 - `SerializeResult`: 序列化结果对象
 
 **示例：**
@@ -532,7 +535,7 @@ function serializeQuizDSL(
 const result = serializeQuizDSL(dsl, {
   validate: true,
   pretty: true,
-  indent: 2
+  indent: 2,
 });
 
 if (result.success) {
@@ -556,9 +559,9 @@ function serializeQuizDSLToObject(
 
 ```typescript
 interface SerializeOptions {
-  validate?: boolean;  // 默认: true
-  pretty?: boolean;   // 默认: false
-  indent?: number;    // 默认: 2
+  validate?: boolean; // 默认: true
+  pretty?: boolean; // 默认: false
+  indent?: number; // 默认: 2
 }
 ```
 
@@ -585,10 +588,7 @@ const message = getErrorMessage(ValidationErrorCode.DSL_MUST_BE_OBJECT);
 // 返回: "DSL 必须是对象"
 
 // 参数化消息
-const message2 = getErrorMessage(
-  ValidationErrorCode.QUESTION_ID_DUPLICATE,
-  'q1'
-);
+const message2 = getErrorMessage(ValidationErrorCode.QUESTION_ID_DUPLICATE, 'q1');
 // 返回: '问题 id "q1" 重复'
 ```
 
@@ -647,12 +647,7 @@ const message2 = getErrorMessage(
 ### 示例 1: 完整工作流
 
 ```typescript
-import {
-  validateQuizDSL,
-  parseQuizDSL,
-  serializeQuizDSL,
-  type QuizDSL,
-} from '@quizerjs/dsl';
+import { validateQuizDSL, parseQuizDSL, serializeQuizDSL, type QuizDSL } from '@quizerjs/dsl';
 
 // 1. 从 JSON 字符串解析
 const jsonString = fs.readFileSync('quiz.json', 'utf-8');
@@ -683,7 +678,7 @@ console.log(`问题数量: ${dsl.quiz.questions.length}`);
 // 4. 序列化回 JSON
 const serializeResult = serializeQuizDSL(dsl, {
   pretty: true,
-  indent: 2
+  indent: 2,
 });
 
 if (serializeResult.success) {
@@ -694,23 +689,22 @@ if (serializeResult.success) {
 ### 错误处理
 
 ```typescript
-import {
-  validateQuizDSL,
-  ValidationErrorCode,
-  getErrorMessage,
-} from '@quizerjs/dsl';
+import { validateQuizDSL, ValidationErrorCode, getErrorMessage } from '@quizerjs/dsl';
 
 const result = validateQuizDSL(dslData);
 
 if (!result.valid) {
   // 按错误代码分组
-  const errorsByCode = result.errors.reduce((acc, error) => {
-    if (!acc[error.code]) {
-      acc[error.code] = [];
-    }
-    acc[error.code].push(error);
-    return acc;
-  }, {} as Record<string, ValidationError[]>);
+  const errorsByCode = result.errors.reduce(
+    (acc, error) => {
+      if (!acc[error.code]) {
+        acc[error.code] = [];
+      }
+      acc[error.code].push(error);
+      return acc;
+    },
+    {} as Record<string, ValidationError[]>
+  );
 
   // 处理特定错误
   if (errorsByCode[ValidationErrorCode.QUESTION_ID_DUPLICATE]) {
@@ -719,9 +713,7 @@ if (!result.valid) {
 
   // 显示所有错误
   result.errors.forEach(error => {
-    console.error(
-      `[${error.code}] ${error.path}: ${getErrorMessage(error.code)}`
-    );
+    console.error(`[${error.code}] ${error.path}: ${getErrorMessage(error.code)}`);
   });
 }
 ```

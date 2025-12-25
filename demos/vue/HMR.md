@@ -7,6 +7,7 @@
 已配置以下关键设置：
 
 1. **直接 alias 指向源码**：
+
    ```typescript
    alias: {
      '@quizerjs/vue': path.resolve(__dirname, '../../packages/vue/src'),
@@ -16,15 +17,19 @@
      '@quizerjs/editorjs-tool': path.resolve(__dirname, '../../packages/editorjs-tool/src'),
    }
    ```
+
    这确保 Vite 直接使用源码文件，而不是构建后的文件。
 
 2. **优先使用 source 字段**：
+
    ```typescript
-   conditions: ['source', 'import', 'module', 'browser', 'default']
+   conditions: ['source', 'import', 'module', 'browser', 'default'];
    ```
+
    这会优先使用 package.json 中的 `exports.source` 字段。
 
 3. **排除依赖预构建**：
+
    ```typescript
    optimizeDeps: {
      exclude: ['@quizerjs/vue', '@quizerjs/quizerjs', ...],
@@ -61,6 +66,7 @@
 **推荐方式**：
 
 1. **启动 vue demo**：
+
    ```bash
    pnpm dev:vue
    ```
@@ -81,6 +87,7 @@
 3. 浏览器应该自动更新，无需刷新
 
 如果 HMR 不工作：
+
 - 检查浏览器控制台是否有错误
 - 检查 Vite 终端输出
 - 尝试手动刷新页面
@@ -91,6 +98,7 @@
 **问题**：修改 workspace 包的源码后，demo 没有更新
 
 **解决方案**：
+
 - 确保 `vite.config.ts` 中的 alias 路径正确
 - 确保包的 `package.json` 中有 `exports.source` 字段
 - 检查 Vite 是否正在监听文件变化（查看终端输出）
@@ -98,7 +106,7 @@
 **问题**：HMR 导致页面刷新而不是热更新
 
 **解决方案**：
+
 - 检查是否有语法错误
 - 检查是否有循环依赖
 - 尝试重启开发服务器
-

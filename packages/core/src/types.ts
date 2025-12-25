@@ -62,4 +62,3 @@ export interface QuizResult {
   percentage: number; // 得分百分比
   completedAt: Date; // 完成时间
 }
-

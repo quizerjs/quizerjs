@@ -12,4 +12,3 @@ declare module '@matpool/vue-json-view' {
     collapsedOnClickBrackets?: boolean;
   }>;
 }
-

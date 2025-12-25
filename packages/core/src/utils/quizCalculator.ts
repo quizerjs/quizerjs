@@ -42,7 +42,7 @@ export function checkAnswer(question: Question, answer: string | string[]): bool
       return false;
     }
 
-    return correctAnswers.every((correct) => userAnswers.includes(correct));
+    return correctAnswers.every(correct => userAnswers.includes(correct));
   }
 
   // 处理单选题、判断题、文本输入题
@@ -53,9 +53,7 @@ export function checkAnswer(question: Question, answer: string | string[]): bool
 
   // 文本输入题：支持大小写不敏感比较
   if (question.type === 'text_input') {
-    return (
-      userAnswerStr.trim().toLowerCase() === correctAnswer.trim().toLowerCase()
-    );
+    return userAnswerStr.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
   }
 
   // 其他题型：精确匹配
@@ -68,16 +66,13 @@ export function checkAnswer(question: Question, answer: string | string[]): bool
  * @param userAnswers - 用户答案列表
  * @returns 测验结果
  */
-export function calculateQuizResult(
-  quizData: QuizData,
-  userAnswers: UserAnswer[]
-): QuizResult {
+export function calculateQuizResult(quizData: QuizData, userAnswers: UserAnswer[]): QuizResult {
   let totalScore = 0;
   let userScore = 0;
 
   // 计算每个问题的得分
-  const answersWithScore = userAnswers.map((userAnswer) => {
-    const question = quizData.questions.find((q) => q.id === userAnswer.questionId);
+  const answersWithScore = userAnswers.map(userAnswer => {
+    const question = quizData.questions.find(q => q.id === userAnswer.questionId);
     if (!question) {
       return { ...userAnswer, isCorrect: false };
     }
@@ -108,4 +103,3 @@ export function calculateQuizResult(
     completedAt: new Date(),
   };
 }
-

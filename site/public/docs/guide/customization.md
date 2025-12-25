@@ -38,8 +38,8 @@ const editor = new QuizEditor({
     quiz: {
       id: 'quiz-1',
       title: '我的测验',
-      questions: []
-    }
+      questions: [],
+    },
   },
   onChange: (dsl: QuizDSL) => {
     console.log('数据变化:', dsl);
@@ -51,10 +51,10 @@ const editor = new QuizEditor({
     fetch('/api/quizzes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dsl)
+      body: JSON.stringify(dsl),
     });
   },
-  readOnly: false
+  readOnly: false,
 });
 
 await editor.init();
@@ -66,7 +66,7 @@ await editor.init();
 const editor = new QuizEditor({
   container,
   initialDSL: quizData,
-  readOnly: true // 启用只读模式
+  readOnly: true, // 启用只读模式
 });
 
 await editor.init();
@@ -79,7 +79,7 @@ await editor.init();
 async function loadQuiz(quizId: string) {
   const response = await fetch(`/api/quizzes/${quizId}`);
   const dsl: QuizDSL = await response.json();
-  
+
   await editor.load(dsl);
 }
 
@@ -89,7 +89,7 @@ async function saveQuiz() {
   await fetch('/api/quizzes', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(dsl)
+    body: JSON.stringify(dsl),
   });
 }
 ```
@@ -106,12 +106,12 @@ const editor = new QuizEditor({
     if (autoSaveTimer) {
       clearTimeout(autoSaveTimer);
     }
-    
+
     autoSaveTimer = window.setTimeout(async () => {
       await saveQuiz(dsl);
       console.log('自动保存完成');
     }, 2000);
-  }
+  },
 });
 ```
 
@@ -131,11 +131,11 @@ function MyEditor() {
     <QuizEditor
       initialDSL={dsl}
       readOnly={false}
-      onChange={(newDsl) => {
+      onChange={newDsl => {
         setDsl(newDsl);
         console.log('数据变化:', newDsl);
       }}
-      onSave={(savedDsl) => {
+      onSave={savedDsl => {
         console.log('保存数据:', savedDsl);
         // 发送到服务器
       }}
@@ -163,7 +163,7 @@ function MyEditor() {
   const handleLoad = async (quizId: string) => {
     const response = await fetch(`/api/quizzes/${quizId}`);
     const dsl = await response.json();
-    
+
     if (editorRef.current) {
       await editorRef.current.load(dsl);
     }
@@ -171,10 +171,7 @@ function MyEditor() {
 
   return (
     <div>
-      <QuizEditor
-        ref={editorRef}
-        onChange={(dsl) => console.log('变化:', dsl)}
-      />
+      <QuizEditor ref={editorRef} onChange={dsl => console.log('变化:', dsl)} />
       <button onClick={handleSave}>保存</button>
       <button onClick={() => handleLoad('quiz-1')}>加载</button>
     </div>
@@ -210,7 +207,7 @@ function EditorWithState() {
       await fetch('/api/quizzes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(savedDsl)
+        body: JSON.stringify(savedDsl),
       });
       console.log('保存成功');
     } finally {
@@ -225,11 +222,7 @@ function EditorWithState() {
   return (
     <div>
       {saving && <div>保存中...</div>}
-      <QuizEditor
-        initialDSL={dsl}
-        onChange={setDsl}
-        onSave={handleSave}
-      />
+      <QuizEditor initialDSL={dsl} onChange={setDsl} onSave={handleSave} />
     </div>
   );
 }
@@ -241,12 +234,7 @@ function EditorWithState() {
 
 ```vue
 <template>
-  <QuizEditor
-    :initial-dsl="dsl"
-    :read-only="readOnly"
-    @change="handleChange"
-    @save="handleSave"
-  />
+  <QuizEditor :initial-dsl="dsl" :read-only="readOnly" @change="handleChange" @save="handleSave" />
 </template>
 
 <script setup lang="ts">
@@ -268,7 +256,7 @@ const handleSave = (savedDsl: QuizDSL) => {
   fetch('/api/quizzes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(savedDsl)
+    body: JSON.stringify(savedDsl),
   });
 };
 </script>
@@ -279,11 +267,7 @@ const handleSave = (savedDsl: QuizDSL) => {
 ```vue
 <template>
   <div>
-    <QuizEditor
-      ref="editorRef"
-      :initial-dsl="dsl"
-      @change="handleChange"
-    />
+    <QuizEditor ref="editorRef" :initial-dsl="dsl" @change="handleChange" />
     <button @click="handleSave">保存</button>
     <button @click="handleLoad">加载</button>
   </div>
@@ -311,7 +295,7 @@ const handleSave = async () => {
 const handleLoad = async () => {
   const response = await fetch('/api/quizzes/quiz-1');
   const loadedDsl = await response.json();
-  
+
   if (editorRef.value) {
     await editorRef.value.load(loadedDsl);
   }
@@ -366,7 +350,7 @@ const handleSave = async (savedDsl: QuizDSL) => {
     await fetch('/api/quizzes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(savedDsl)
+      body: JSON.stringify(savedDsl),
     });
     console.log('保存成功');
   } finally {
@@ -384,7 +368,7 @@ const handleSave = async (savedDsl: QuizDSL) => {
 <script lang="ts">
   import { QuizEditor } from '@quizerjs/svelte';
   import type { QuizDSL } from '@quizerjs/dsl';
-  
+
   let dsl: QuizDSL | undefined = undefined;
   let readOnly = false;
 
@@ -418,7 +402,7 @@ const handleSave = async (savedDsl: QuizDSL) => {
 <script lang="ts">
   import { QuizEditor, type QuizEditorRef } from '@quizerjs/svelte';
   import type { QuizDSL } from '@quizerjs/dsl';
-  
+
   let editorRef: QuizEditorRef | null = null;
   let dsl: QuizDSL | undefined = undefined;
 
@@ -432,7 +416,7 @@ const handleSave = async (savedDsl: QuizDSL) => {
   async function handleLoad() {
     const response = await fetch('/api/quizzes/quiz-1');
     const loadedDsl = await response.json();
-    
+
     if (editorRef) {
       await editorRef.load(loadedDsl);
     }
@@ -457,7 +441,7 @@ const handleSave = async (savedDsl: QuizDSL) => {
   import { onMount } from 'svelte';
   import { QuizEditor } from '@quizerjs/svelte';
   import type { QuizDSL } from '@quizerjs/dsl';
-  
+
   let dsl: QuizDSL | undefined = undefined;
   let loading = true;
   let saving = false;
@@ -559,9 +543,9 @@ if (editorInstance) {
 try {
   const editor = new QuizEditor({
     container,
-    initialDSL: invalidDSL // 可能无效的数据
+    initialDSL: invalidDSL, // 可能无效的数据
   });
-  
+
   await editor.init();
 } catch (error) {
   if (error instanceof Error) {

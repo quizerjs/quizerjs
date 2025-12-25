@@ -38,7 +38,7 @@
    - **只在 `render()` 时设置属性**：当 Editor.js 调用 `render()` 时，通过 `options` 属性传递初始值
    - **事件处理中不更新属性**：在 `onoptionschange` 中只调用 `this.block.dispatchChange()`，不更新 `this.data`，不更新属性
    - **保存时读取最新值**：从 `quiz-option-list.getOptions()` 获取最新值（包含追踪的文本值和选中状态）返回给 Editor.js
-   
+
    **关键原则**：
    - **设置值**：只在 `render()` 时设置（Editor.js 提供初始值）
    - **读取值**：只在 `save()` 时读取（从组件获取最新值）
@@ -186,10 +186,10 @@ quiz-option 组件自己管理选中状态，不需要外部更新
 export class QuizOptionList extends LightComponent {
   // 响应式状态 - 用于渲染的选项数组
   @state private items: Option[] = [];
-  
+
   // 非响应式状态 - 追踪文本值的 Map
   private valuesMap = new Map<string, string>();
-  
+
   // 文本改变处理 - 只追踪值，不派发事件，不触发渲染
   private handleOptionTextChange = (e: CustomEvent) => {
     const { optionId, text } = e.detail;
@@ -197,64 +197,64 @@ export class QuizOptionList extends LightComponent {
     // 不派发事件，避免触发 Editor.js 重新渲染
     this.valuesMap.set(optionId, text);
   };
-  
+
   // 添加选项 - 合并追踪值，更新内部状态，触发渲染，派发事件
   private handleAddOption = () => {
     // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
     const mergedItems = this.mergeItemsAndValues();
-    
+
     const newOption: Option = {
       id: this.generateOptionId(),
       text: '',
       isCorrect: false,
     };
     mergedItems.push(newOption);
-    
+
     // 更新响应式状态，触发渲染
     this.items = mergedItems;
-    
+
     // 派发 optionschange 事件，通知 Editor.js 有变化
     this.dispatchOptionsChange();
   };
-  
+
   // 删除选项 - 合并追踪值，更新内部状态，触发渲染，派发事件
   private handleOptionDelete = (e: CustomEvent) => {
     const { optionId } = e.detail;
-    
+
     // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
     const mergedItems = this.mergeItemsAndValues();
-    
+
     // 从 valuesMap 中移除
     this.valuesMap.delete(optionId);
-    
+
     // 过滤删除的选项
     const filteredItems = mergedItems.filter(opt => opt.id !== optionId);
-    
+
     // 更新响应式状态，触发渲染
     this.items = filteredItems;
-    
+
     // 派发 optionschange 事件，通知 Editor.js 有变化
     this.dispatchOptionsChange();
   };
-  
+
   // 选择选项 - 只派发事件，不更新内部状态
   private handleOptionSelect = (e: CustomEvent) => {
     const { optionId, selected } = e.detail;
     const mergedItems = this.mergeItemsAndValues();
-    
+
     // 更新 isCorrect 状态
     const updatedItems = mergedItems.map(opt => ({
       ...opt,
       isCorrect: opt.id === optionId && selected,
     }));
-    
+
     // 更新响应式状态，触发渲染
     this.items = updatedItems;
-    
+
     // 派发 optionschange 事件，通知 Editor.js 有变化
     this.dispatchOptionsChange();
   };
-  
+
   // 合并 items 和 values（使用追踪的文本值）
   private mergeItemsAndValues(): Option[] {
     return this.items.map(item => ({
@@ -262,25 +262,24 @@ export class QuizOptionList extends LightComponent {
       text: this.valuesMap.get(item.id) ?? item.text,
     }));
   }
-  
+
   // 获取完整选项列表（用于保存，包含追踪的文本值）
   getOptions(): Option[] {
     return this.mergeItemsAndValues();
   }
-  
+
   // 属性变化时，只在 options 变化时更新 items
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     if (name === 'options') {
       const options = JSON.parse(newValue || '[]');
       const parsedOptions = Array.isArray(options) ? options : [];
-      
+
       // 比较新旧选项 ID，只在添加/删除时更新
       const currentIds = new Set(this.items.map(item => item.id));
       const newIds = new Set(parsedOptions.map(opt => opt.id));
-      const idsChanged = 
-        currentIds.size !== newIds.size ||
-        [...newIds].some(id => !currentIds.has(id));
-      
+      const idsChanged =
+        currentIds.size !== newIds.size || [...newIds].some(id => !currentIds.has(id));
+
       if (idsChanged) {
         // ID 变化：更新 items，触发渲染
         this.items = parsedOptions;
@@ -303,6 +302,7 @@ export class QuizOptionList extends LightComponent {
 **设计原则：简单的连接器/桥接器**
 
 Editor.js 工具应该作为简单的连接器/桥接器，不追踪任何状态，只负责：
+
 1. 从 Editor.js 传递数据到 `quiz-option-list`
 2. 接收 `quiz-option-list` 的事件，更新 Editor.js 的数据
 3. 保存时从 `quiz-option-list` 获取最新值返回给 Editor.js
@@ -328,10 +328,10 @@ export default class SingleChoiceTool implements BlockTool {
   private data: SingleChoiceData;
   private optionListComponent: QuizOptionListComponent | null = null;
   // 不追踪任何状态，只作为连接器/桥接器
-  
+
   render(): HTMLElement {
     const question = this.data.question;
-    
+
     return (
       <quiz-option-list
         options={JSON.stringify(question.options || [])}
@@ -350,7 +350,7 @@ export default class SingleChoiceTool implements BlockTool {
       />
     );
   }
-  
+
   save(): SingleChoiceData {
     // 保存时：从 quiz-option-list 获取最新值（包含追踪的文本值和选中状态）
     // getOptions() 会合并 items 和 valuesMap，返回完整数据
@@ -414,7 +414,7 @@ export class QuizOption extends LightComponent {
       );
     }
   };
-  
+
   // 属性变化时，只在非焦点状态下更新 DOM
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     if (name === 'text') {
@@ -474,6 +474,7 @@ export class QuizOption extends LightComponent {
 ### 阶段 1: 重构 quiz-option-list 组件
 
 #### 步骤 1.1: 更新 `handleOptionTextChange` 方法
+
 **目标**：文本输入只追踪值，不触发渲染
 
 - [ ] 打开 `packages/core/src/components/quiz-option-list.wsx`
@@ -484,6 +485,7 @@ export class QuizOption extends LightComponent {
 - [ ] 验证：文本输入时焦点不丢失
 
 **预期代码**：
+
 ```typescript
 private handleOptionTextChange = (e: CustomEvent) => {
   const { optionId, text } = e.detail;
@@ -494,6 +496,7 @@ private handleOptionTextChange = (e: CustomEvent) => {
 ```
 
 #### 步骤 1.2: 更新 `handleAddOption` 方法
+
 **目标**：添加选项时合并追踪值，触发渲染，派发事件
 
 - [ ] 找到 `handleAddOption` 方法（约第 84 行）
@@ -504,6 +507,7 @@ private handleOptionTextChange = (e: CustomEvent) => {
 - [ ] 添加注释说明：合并追踪值确保数据一致性
 
 **预期代码**：
+
 ```typescript
 private handleAddOption = () => {
   const isReadonly = this.readonly;
@@ -511,23 +515,24 @@ private handleAddOption = () => {
 
   // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
   const mergedItems = this.mergeItemsAndValues();
-  
+
   const newOption: Option = {
     id: this.generateOptionId(),
     text: '',
     isCorrect: false,
   };
   mergedItems.push(newOption);
-  
+
   // 更新响应式状态，触发渲染
   this.items = mergedItems;
-  
+
   // 派发 optionschange 事件，通知 Editor.js 有变化
   this.dispatchOptionsChange();
 };
 ```
 
 #### 步骤 1.3: 更新 `handleOptionDelete` 方法
+
 **目标**：删除选项时合并追踪值，触发渲染，派发事件
 
 - [ ] 找到 `handleOptionDelete` 方法（约第 142 行）
@@ -538,28 +543,30 @@ private handleAddOption = () => {
 - [ ] 调用 `this.dispatchOptionsChange()` 派发事件
 
 **预期代码**：
+
 ```typescript
 private handleOptionDelete = (e: CustomEvent) => {
   const { optionId } = e.detail;
-  
+
   // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
   const mergedItems = this.mergeItemsAndValues();
-  
+
   // 从 valuesMap 中移除
   this.valuesMap.delete(optionId);
-  
+
   // 过滤删除的选项
   const filteredItems = mergedItems.filter(opt => opt.id !== optionId);
-  
+
   // 更新响应式状态，触发渲染
   this.items = filteredItems;
-  
+
   // 派发 optionschange 事件，通知 Editor.js 有变化
   this.dispatchOptionsChange();
 };
 ```
 
 #### 步骤 1.4: 更新 `handleOptionSelect` 方法
+
 **目标**：选择选项时更新状态，触发渲染，派发事件
 
 - [ ] 找到 `handleOptionSelect` 方法（约第 103 行）
@@ -569,6 +576,7 @@ private handleOptionDelete = (e: CustomEvent) => {
 - [ ] 调用 `this.dispatchOptionsChange()` 派发事件
 
 **预期代码**：
+
 ```typescript
 private handleOptionSelect = (e: CustomEvent) => {
   const { optionId, selected } = e.detail;
@@ -597,13 +605,14 @@ private handleOptionSelect = (e: CustomEvent) => {
 
   // 更新响应式状态，触发渲染
   this.items = updatedItems;
-  
+
   // 派发 optionschange 事件，通知 Editor.js 有变化
   this.dispatchOptionsChange();
 };
 ```
 
 #### 步骤 1.5: 更新 `onAttributeChanged` 方法
+
 **目标**：只在选项 ID 变化时更新 items，避免不必要的渲染
 
 - [ ] 找到 `onAttributeChanged` 方法（约第 42 行）
@@ -613,20 +622,21 @@ private handleOptionSelect = (e: CustomEvent) => {
 - [ ] 只在 ID 变化时重建 `valuesMap`
 
 **预期代码**：
+
 ```typescript
 protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
   switch (name) {
     case 'options':
       const options = JSON.parse(newValue || '[]');
       const parsedOptions = Array.isArray(options) ? options : [];
-      
+
       // 比较新旧选项 ID，只在添加/删除时更新
       const currentIds = new Set(this.items.map(item => item.id));
       const newIds = new Set(parsedOptions.map(opt => opt.id));
-      const idsChanged = 
+      const idsChanged =
         currentIds.size !== newIds.size ||
         [...newIds].some(id => !currentIds.has(id));
-      
+
       if (idsChanged) {
         // ID 变化：更新 items，触发渲染
         this.items = parsedOptions;
@@ -646,6 +656,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ```
 
 #### 步骤 1.6: 验证 quiz-option-list 重构
+
 - [ ] 运行 `cd packages/core && pnpm run build`
 - [ ] 检查是否有编译错误
 - [ ] 运行 `cd packages/core && pnpm run typecheck`
@@ -655,6 +666,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ### 阶段 2: 重构 Editor.js 工具（SingleChoiceTool/MultipleChoiceTool）
 
 #### 步骤 2.1: 更新 SingleChoiceTool 的 `onoptionschange` 处理
+
 **目标**：只通知 Editor.js 有变化，不更新任何值，不更新属性
 
 - [ ] 打开 `packages/editorjs-tool/src/tools/SingleChoiceTool.wsx`
@@ -665,6 +677,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 更新注释说明：不更新任何值，不更新属性，只通知 Editor.js 有变化
 
 **预期代码**：
+
 ```typescript
 <quiz-option-list
   options={JSON.stringify(question.options || [])}
@@ -684,6 +697,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ```
 
 #### 步骤 2.2: 验证 SingleChoiceTool 的 `render()` 方法
+
 **目标**：确认只在 `render()` 时设置属性
 
 - [ ] 检查 `render()` 方法（约第 70 行）
@@ -692,6 +706,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 添加注释说明：只在 `render()` 时设置属性（Editor.js 提供初始值）
 
 #### 步骤 2.3: 验证 SingleChoiceTool 的 `save()` 方法
+
 **目标**：确认从组件读取最新值
 
 - [ ] 检查 `save()` 方法（约第 118 行）
@@ -700,10 +715,12 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 添加注释说明：总是从组件读取最新值（包含追踪的文本值和选中状态）
 
 #### 步骤 2.4: 更新 MultipleChoiceTool（与 SingleChoiceTool 相同）
+
 - [ ] 打开 `packages/editorjs-tool/src/tools/MultipleChoiceTool.wsx`
 - [ ] 重复步骤 2.1、2.2、2.3（将 `SINGLE_CHOICE` 改为 `MULTIPLE_CHOICE`）
 
 #### 步骤 2.5: 验证 Editor.js 工具重构
+
 - [ ] 运行 `cd packages/editorjs-tool && pnpm run build`
 - [ ] 检查是否有编译错误
 - [ ] 运行 `cd packages/editorjs-tool && pnpm run typecheck`
@@ -712,6 +729,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ### 阶段 3: 集成测试与验证
 
 #### 步骤 3.1: 功能测试 - 文本输入
+
 **目标**：验证文本输入不触发重新渲染
 
 - [ ] 在 Editor.js 中创建一个单选题
@@ -721,6 +739,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 验证：保存时文本值正确
 
 #### 步骤 3.2: 功能测试 - 添加选项
+
 **目标**：验证添加选项时合并追踪值，不会从顶部重新渲染
 
 - [ ] 在 Editor.js 中创建一个单选题
@@ -731,6 +750,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 验证：不会从顶部重新渲染（使用浏览器 DevTools 检查 DOM 变化）
 
 #### 步骤 3.3: 功能测试 - 删除选项
+
 **目标**：验证删除选项时数据一致性
 
 - [ ] 在 Editor.js 中创建一个单选题，包含 3 个选项
@@ -741,6 +761,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 验证：保存时数据正确
 
 #### 步骤 3.4: 功能测试 - 选择选项
+
 **目标**：验证选择选项时状态正确更新
 
 - [ ] 在 Editor.js 中创建一个单选题
@@ -750,6 +771,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 验证：保存时选中状态正确
 
 #### 步骤 3.5: 边界情况测试
+
 - [ ] 测试空选项列表
 - [ ] 测试只有一个选项时删除（应该不允许或提示）
 - [ ] 测试快速连续添加多个选项
@@ -757,6 +779,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [ ] 测试 Editor.js 重新加载数据（验证初始值设置正确）
 
 #### 步骤 3.6: 性能测试
+
 - [ ] 测试大量选项（50+）时的性能
 - [ ] 测试快速输入时的响应性
 - [ ] 使用浏览器 DevTools Performance 工具检查重新渲染次数
@@ -765,12 +788,14 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ### 阶段 4: 文档更新
 
 #### 步骤 4.1: 更新开发文档
+
 - [ ] 打开 `docs/guides/editorjs-tool-development.md`
 - [ ] 添加关于渲染优化的说明
 - [ ] 添加关于何时更新属性的指导原则
 - [ ] 添加关于 quiz-option-list 使用的最佳实践
 
 #### 步骤 4.2: 更新代码注释
+
 - [ ] 确保所有关键方法都有清晰的注释
 - [ ] 说明为什么某些操作不触发渲染
 - [ ] 说明数据流和渲染时机
@@ -778,6 +803,7 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 ### 阶段 5: 代码审查与优化
 
 #### 步骤 5.1: 代码审查
+
 - [ ] 审查 quiz-option-list 的实现
   - 检查是否符合 Linus Torvalds 代码风格（CLAUDE.md）
   - 检查是否有不必要的复杂度
@@ -787,11 +813,13 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
   - 检查是否正确处理了所有边界情况
 
 #### 步骤 5.2: 性能优化
+
 - [ ] 检查是否有不必要的计算
 - [ ] 优化 `mergeItemsAndValues` 方法（如果选项很多）
 - [ ] 确保 `onAttributeChanged` 中的 ID 比较高效
 
 #### 步骤 5.3: 最终验证
+
 - [ ] 运行所有测试：`pnpm test`（如果有）
 - [ ] 检查 lint 错误：`pnpm lint`
 - [ ] 检查类型错误：`pnpm typecheck`
@@ -849,4 +877,3 @@ protected onAttributeChanged(name: string, _oldValue: string, newValue: string) 
 - [RFC 0005: Editor Core](./0005-editor-core.md)
 - [Editor.js Block Tool Documentation](https://editorjs.io/creating-a-block-tool)
 - [Web Components Best Practices](https://web.dev/custom-elements-best-practices/)
-

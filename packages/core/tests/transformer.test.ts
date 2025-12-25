@@ -336,9 +336,7 @@ describe('question.text 和 section.title 分离', () => {
     const result = dslToBlock(dsl);
 
     // 查找 H2 header block（section title）
-    const h2Headers = result.blocks.filter(
-      b => b.type === 'header' && (b.data as any).level === 2
-    );
+    const h2Headers = result.blocks.filter(b => b.type === 'header' && (b.data as any).level === 2);
     expect(h2Headers.length).toBe(1);
     expect((h2Headers[0].data as any).text).toContain('Spelling Questions');
 
@@ -426,7 +424,9 @@ describe('question.text 和 section.title 分离', () => {
     expect(convertedDSL.quiz.sections?.[0].questions[0].text).toBe(
       originalDSL.quiz.sections?.[0].questions[0].text
     );
-    expect(convertedDSL.quiz.sections?.[0].questions[0].text).toBe('Which is the correct spelling?');
+    expect(convertedDSL.quiz.sections?.[0].questions[0].text).toBe(
+      'Which is the correct spelling?'
+    );
 
     // 确保 question.text 不包含 section.title
     expect(convertedDSL.quiz.sections?.[0].questions[0].text).not.toContain('Spelling Questions');
@@ -447,17 +447,13 @@ describe('question.text 和 section.title 分离', () => {
                 id: 'q1',
                 type: 'single_choice',
                 text: 'Question 1',
-                options: [
-                  { id: 'o1', text: 'Option 1', isCorrect: true },
-                ],
+                options: [{ id: 'o1', text: 'Option 1', isCorrect: true }],
               },
               {
                 id: 'q2',
                 type: 'single_choice',
                 text: 'Question 2',
-                options: [
-                  { id: 'o1', text: 'Option 1', isCorrect: true },
-                ],
+                options: [{ id: 'o1', text: 'Option 1', isCorrect: true }],
               },
             ],
           },
@@ -469,9 +465,7 @@ describe('question.text 和 section.title 分离', () => {
                 id: 'q3',
                 type: 'single_choice',
                 text: 'Question 3',
-                options: [
-                  { id: 'o1', text: 'Option 1', isCorrect: true },
-                ],
+                options: [{ id: 'o1', text: 'Option 1', isCorrect: true }],
               },
             ],
           },

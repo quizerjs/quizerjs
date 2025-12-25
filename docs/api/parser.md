@@ -9,10 +9,7 @@
 ### 签名
 
 ```typescript
-function parseQuizDSL(
-  jsonString: string,
-  options?: ParseOptions
-): ParseResult;
+function parseQuizDSL(jsonString: string, options?: ParseOptions): ParseResult;
 ```
 
 ### 参数
@@ -32,7 +29,7 @@ import { parseQuizDSL } from '@quizerjs/dsl';
 const jsonString = JSON.stringify(dslData);
 const result = parseQuizDSL(jsonString, {
   validate: true,
-  strict: false
+  strict: false,
 });
 
 if (result.success) {
@@ -50,10 +47,7 @@ if (result.success) {
 ### 签名
 
 ```typescript
-function parseQuizDSLFromObject(
-  data: unknown,
-  options?: ParseOptions
-): ParseResult;
+function parseQuizDSLFromObject(data: unknown, options?: ParseOptions): ParseResult;
 ```
 
 ### 参数
@@ -67,7 +61,7 @@ function parseQuizDSLFromObject(
 import { parseQuizDSLFromObject } from '@quizerjs/dsl';
 
 const result = parseQuizDSLFromObject(dslData, {
-  validate: true
+  validate: true,
 });
 
 if (result.success) {
@@ -81,8 +75,8 @@ if (result.success) {
 
 ```typescript
 interface ParseOptions {
-  validate?: boolean;  // 默认: true
-  strict?: boolean;    // 默认: false
+  validate?: boolean; // 默认: true
+  strict?: boolean; // 默认: false
 }
 ```
 
@@ -140,4 +134,3 @@ const result = parseQuizDSL(jsonString, { validate: false });
 
 - [验证器](./validator.md) - DSL 验证
 - [序列化器](./serializer.md) - DSL 序列化
-

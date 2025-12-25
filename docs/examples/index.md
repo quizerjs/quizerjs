@@ -77,13 +77,13 @@ const parseResult = parseQuizDSL(jsonString);
 
 if (parseResult.success) {
   console.log('解析成功:', parseResult.dsl);
-  
+
   // 序列化回 JSON（格式化）
   const serializeResult = serializeQuizDSL(parseResult.dsl!, {
     pretty: true,
     indent: 2,
   });
-  
+
   if (serializeResult.success) {
     console.log('序列化结果:');
     console.log(serializeResult.json);
@@ -178,11 +178,7 @@ console.log('验证结果:', result.valid ? '✅ 通过' : '❌ 失败');
 ### 处理验证错误
 
 ```typescript
-import {
-  validateQuizDSL,
-  ValidationErrorCode,
-  getErrorMessage,
-} from '@quizerjs/dsl';
+import { validateQuizDSL, ValidationErrorCode, getErrorMessage } from '@quizerjs/dsl';
 
 const dsl = {
   version: '1.0.0',
@@ -207,13 +203,16 @@ const result = validateQuizDSL(dsl);
 
 if (!result.valid) {
   // 按错误代码分组
-  const errorsByCode = result.errors.reduce((acc, error) => {
-    if (!acc[error.code]) {
-      acc[error.code] = [];
-    }
-    acc[error.code].push(error);
-    return acc;
-  }, {} as Record<string, typeof result.errors>);
+  const errorsByCode = result.errors.reduce(
+    (acc, error) => {
+      if (!acc[error.code]) {
+        acc[error.code] = [];
+      }
+      acc[error.code].push(error);
+      return acc;
+    },
+    {} as Record<string, typeof result.errors>
+  );
 
   // 处理特定错误
   if (errorsByCode[ValidationErrorCode.OPTION_ID_DUPLICATE]) {
@@ -289,7 +288,7 @@ const quiz = loadQuizFromFile('quiz.json');
 if (quiz) {
   console.log(`测验: ${quiz.quiz.title}`);
   console.log(`问题数量: ${quiz.quiz.questions.length}`);
-  
+
   // 修改后保存
   quiz.quiz.title = '修改后的标题';
   saveQuizToFile(quiz, 'quiz-updated.json');
@@ -301,12 +300,7 @@ if (quiz) {
 ### 使用 TypeScript 类型
 
 ```typescript
-import type {
-  QuizDSL,
-  Question,
-  QuestionType,
-  SingleChoiceQuestion,
-} from '@quizerjs/dsl';
+import type { QuizDSL, Question, QuestionType, SingleChoiceQuestion } from '@quizerjs/dsl';
 
 // 类型安全地创建 DSL
 const quiz: QuizDSL = {
@@ -348,4 +342,3 @@ quiz.quiz.questions.forEach(question => {
 - [快速开始](/guide/getting-started.md) - 开始使用 quizerjs
 - [DSL 规范](/dsl/) - 了解 DSL 格式
 - [API 参考](/api/) - 查看完整 API
-

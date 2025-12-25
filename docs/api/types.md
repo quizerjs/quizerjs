@@ -180,12 +180,7 @@ interface QuestionMetadata {
 ## 使用示例
 
 ```typescript
-import type {
-  QuizDSL,
-  Question,
-  QuestionType,
-  SingleChoiceQuestion,
-} from '@quizerjs/dsl';
+import type { QuizDSL, Question, QuestionType, SingleChoiceQuestion } from '@quizerjs/dsl';
 
 // 类型安全地创建 DSL
 const dsl: QuizDSL = {
@@ -223,4 +218,3 @@ if (isSingleChoice(question)) {
 
 - [DSL 规范](/dsl/) - DSL 规范文档
 - [验证器](./validator.md) - 验证 API
-

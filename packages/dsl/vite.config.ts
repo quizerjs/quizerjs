@@ -14,11 +14,10 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'js'}`,
+      fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
     },
     rollupOptions: {
       external: [],
     },
   },
 });
-

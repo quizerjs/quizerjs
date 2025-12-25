@@ -14,11 +14,7 @@ npm install @quizerjs/vue @quizerjs/dsl
 
 ```vue
 <template>
-  <QuizComponent
-    :dsl="quizDSL"
-    @submit="handleSubmit"
-    @answer-change="handleAnswerChange"
-  />
+  <QuizComponent :dsl="quizDSL" @submit="handleSubmit" @answer-change="handleAnswerChange" />
 </template>
 
 <script setup lang="ts">
@@ -90,11 +86,13 @@ const { dsl, answers, submitted, score, setAnswer, submit } = useQuiz({
 完整的测验组件。
 
 **Props:**
+
 - `dsl` (QuizDSL, 必需): DSL 数据
 - `disabled` (boolean, 可选): 是否禁用
 - `showResults` (boolean, 可选): 是否显示结果
 
 **Events:**
+
 - `submit`: 提交答案时触发
 - `answer-change`: 答案变化时触发
 
@@ -106,15 +104,15 @@ const { dsl, answers, submitted, score, setAnswer, submit } = useQuiz({
 
 ```typescript
 const {
-  dsl,           // DSL 数据
-  answers,       // 用户答案
-  submitted,     // 是否已提交
-  score,         // 得分
-  loadDSL,       // 加载 DSL
-  setAnswer,     // 设置答案
-  submit,         // 提交
-  reset,          // 重置
-  isAnswerCorrect // 检查答案
+  dsl, // DSL 数据
+  answers, // 用户答案
+  submitted, // 是否已提交
+  score, // 得分
+  loadDSL, // 加载 DSL
+  setAnswer, // 设置答案
+  submit, // 提交
+  reset, // 重置
+  isAnswerCorrect, // 检查答案
 } = useQuiz(options);
 ```
 
@@ -130,4 +128,3 @@ const { validate, isValid, errors } = useQuizValidation();
 
 - [DSL 规范](../../docs/dsl/)
 - [API 参考](../../docs/api/)
-

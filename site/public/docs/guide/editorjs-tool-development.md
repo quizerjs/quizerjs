@@ -83,9 +83,9 @@ export default class MyTool implements BlockTool {
         text: '',
       },
     } as MyToolData;
-    
+
     this.readOnly = options?.readOnly || false;
-    
+
     // ⚠️ 关键：必须保存 block 和 api 引用
     this.block = options!.block;
     this.api = options!.api;
@@ -237,6 +237,7 @@ wsx 组件通过自定义事件通信，事件名称遵循 `on{EventName}` 模�
 ```
 
 **常见事件**：
+
 - `ontextchange`: 文本变化（`CustomEvent<{ text: string }>`）
 - `ontextblur`: 文本失焦（`CustomEvent<{ text: string }>`）
 - `onoptionschange`: 选项列表变化（`CustomEvent<{ options: Option[] }>`）
@@ -337,7 +338,7 @@ render(): HTMLElement {
           this.block.dispatchChange();  // ✅
         }}
       />
-      
+
       {/* 描述变化 */}
       <quiz-question-description
         ontextchange={(e) => {
@@ -345,7 +346,7 @@ render(): HTMLElement {
           this.block.dispatchChange();  // ✅
         }}
       />
-      
+
       {/* 选项变化 */}
       <quiz-option-list
         onoptionschange={(e) => {
@@ -353,7 +354,7 @@ render(): HTMLElement {
           this.block.dispatchChange();  // ✅
         }}
       />
-      
+
       {/* 原生 input 变化 */}
       <input
         oninput={(e) => {
@@ -389,6 +390,7 @@ validate(savedData: TextInputData): boolean {
 ```
 
 **问题**：
+
 - 用户输入标题时，`correctAnswer` 为空 → `validate()` 返回 `false`
 - Editor.js 认为数据无效 → 不触发 `onChange`
 - 结果：标题变化无法被检测到
@@ -409,6 +411,7 @@ validate(savedData: TextInputData): boolean {
 ```
 
 **原则**：
+
 - `validate()` 应该只检查**数据结构**是否有效，而不是**数据内容**是否完整
 - 数据内容的验证应该在最终保存时进行（在 `QuizEditor.save()` 或应用层）
 - 编辑过程中，即使数据不完整，也应该允许并触发 `onChange`
@@ -482,16 +485,11 @@ constructor(options?: BlockToolConstructorOptions<MyToolData>) {
 **✅ 正确**：使用 Editor.js 的类型定义
 
 ```typescript
-import type {
-  BlockTool,
-  BlockToolConstructorOptions,
-  BlockAPI,
-  API,
-} from '@editorjs/editorjs';
+import type { BlockTool, BlockToolConstructorOptions, BlockAPI, API } from '@editorjs/editorjs';
 
 export default class MyTool implements BlockTool {
-  private block: BlockAPI;  // ✅ 使用正确的类型
-  private api: API;         // ✅ 使用正确的类型
+  private block: BlockAPI; // ✅ 使用正确的类型
+  private api: API; // ✅ 使用正确的类型
 }
 ```
 
@@ -567,6 +565,7 @@ render(): HTMLElement {
 **A**: 检查以下几点：
 
 1. **是否调用了 `dispatchChange()`？**
+
    ```typescript
    ontextchange={(e) => {
      question.text = e.detail.text;
@@ -575,6 +574,7 @@ render(): HTMLElement {
    ```
 
 2. **是否正确保存了 `block` 引用？**
+
    ```typescript
    constructor(options) {
      this.block = options!.block;  // ✅ 必须保存
@@ -594,6 +594,7 @@ render(): HTMLElement {
 **A**: 检查以下几点：
 
 1. **`block` 是否正确初始化？**
+
    ```typescript
    constructor(options) {
      this.block = options!.block;  // ✅ 使用非空断言
@@ -601,10 +602,11 @@ render(): HTMLElement {
    ```
 
 2. **是否使用了正确的方法？**
+
    ```typescript
    // ❌ 错误
    this.api?.blocks?.dispatchChange();
-   
+
    // ✅ 正确
    this.block.dispatchChange();
    ```
@@ -633,12 +635,14 @@ validate(savedData: MyToolData): boolean {
 **A**: 使用以下方法：
 
 1. **添加日志**：
+
    ```typescript
    const logger = createLogger('MyTool');
    logger.info('Event fired', { data: this.data });
    ```
 
 2. **检查事件是否触发**：
+
    ```typescript
    ontextchange={(e) => {
      console.log('textchange event:', e.detail);
@@ -662,15 +666,17 @@ validate(savedData: MyToolData): boolean {
 **A**: 检查以下几点：
 
 1. **事件名称是否正确？**
+
    ```typescript
    // ✅ 正确：ontextchange (小写)
    <quiz-question-header ontextchange={...} />
-   
+
    // ❌ 错误：onTextChange (驼峰)
    <quiz-question-header onTextChange={...} />
    ```
 
 2. **事件处理程序类型是否正确？**
+
    ```typescript
    // ✅ 正确
    ontextchange={(e: CustomEvent<{ text: string }>) => {
@@ -706,4 +712,3 @@ validate(savedData: MyToolData): boolean {
 7. ✅ 提供完整的数据默认值
 
 遵循这些原则，可以确保工具正常工作，数据同步正确，Editor.js 的 `onChange` 回调能够正确触发。
-

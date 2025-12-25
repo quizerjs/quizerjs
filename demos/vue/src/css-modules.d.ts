@@ -22,4 +22,3 @@ declare module '@quizerjs/theme/dark.css' {
   const content: string;
   export default content;
 }
-

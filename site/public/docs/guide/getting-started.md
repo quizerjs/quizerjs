@@ -35,15 +35,15 @@ const editor = new QuizEditor({
     quiz: {
       id: 'quiz-1',
       title: '我的第一个测验',
-      questions: []
-    }
+      questions: [],
+    },
   },
   onChange: (dsl: QuizDSL) => {
     console.log('DSL 变化:', dsl);
   },
   onSave: (dsl: QuizDSL) => {
     console.log('保存 DSL:', dsl);
-  }
+  },
 });
 
 await editor.init();
@@ -70,11 +70,11 @@ const dsl = {
         options: [
           { id: 'o1', text: '3', isCorrect: false },
           { id: 'o2', text: '4', isCorrect: true },
-          { id: 'o3', text: '5', isCorrect: false }
-        ]
-      }
-    ]
-  }
+          { id: 'o3', text: '5', isCorrect: false },
+        ],
+      },
+    ],
+  },
 };
 
 // 验证 DSL
@@ -100,14 +100,13 @@ if (result.valid) {
 import { QuizEditor, QuizPlayer } from '@quizerjs/react';
 
 function App() {
-  const dsl = { /* ... */ };
-  
+  const dsl = {
+    /* ... */
+  };
+
   return (
     <>
-      <QuizEditor 
-        initialDSL={dsl}
-        onChange={(dsl) => console.log('变化:', dsl)}
-      />
+      <QuizEditor initialDSL={dsl} onChange={dsl => console.log('变化:', dsl)} />
       <QuizPlayer dsl={dsl} />
     </>
   );
@@ -118,10 +117,7 @@ function App() {
 
 ```vue
 <template>
-  <QuizEditor 
-    :initial-dsl="dsl"
-    @change="handleChange"
-  />
+  <QuizEditor :initial-dsl="dsl" @change="handleChange" />
   <QuizPlayer :dsl="dsl" />
 </template>
 
@@ -129,9 +125,11 @@ function App() {
 import { QuizEditor, QuizPlayer } from '@quizerjs/vue';
 import { ref } from 'vue';
 
-const dsl = ref({ /* ... */ });
+const dsl = ref({
+  /* ... */
+});
 
-const handleChange = (newDsl) => {
+const handleChange = newDsl => {
   console.log('变化:', newDsl);
   dsl.value = newDsl;
 };
@@ -144,16 +142,16 @@ const handleChange = (newDsl) => {
 <script>
   import { QuizEditor, QuizPlayer } from '@quizerjs/svelte';
   import { writable } from 'svelte/store';
-  
+
   let dsl = writable({ /* ... */ });
-  
+
   function handleChange(newDsl) {
     console.log('变化:', newDsl);
     dsl.set(newDsl);
   }
 </script>
 
-<QuizEditor 
+<QuizEditor
   initialDSL={$dsl}
   onChange={handleChange}
 />
@@ -167,4 +165,3 @@ const handleChange = (newDsl) => {
 - [Vue 集成](./vue-integration.md) - 在 Vue 3 中使用
 - [React 集成](../examples/) - 在 React 中使用
 - [框架集成示例](../examples/) - 查看完整示例
-

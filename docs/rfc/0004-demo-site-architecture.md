@@ -32,12 +32,14 @@ quizerjs.io/
 ### 首页 (/)
 
 **功能**:
+
 - 项目介绍
 - 快速开始指南
 - 功能特性展示
 - 链接到其他页面
 
 **内容**:
+
 - Hero 区域：项目标题和简介
 - 特性卡片：展示核心功能
 - 快速开始：代码示例
@@ -46,12 +48,14 @@ quizerjs.io/
 ### 编辑器演示 (/editor)
 
 **功能**:
+
 - 展示 QuizEditor 组件
 - 实时预览 DSL 输出
 - 示例数据加载
 - 导出功能
 
 **交互**:
+
 - 左侧：编辑器界面
 - 右侧：实时 DSL 预览
 - 底部：操作按钮（保存、导出、重置）
@@ -59,12 +63,14 @@ quizerjs.io/
 ### 展示组件演示 (/viewer)
 
 **功能**:
+
 - 展示 QuizViewer 组件
 - 答题交互
 - 结果显示
 - 多种题型演示
 
 **交互**:
+
 - 测验展示区域
 - 答题界面
 - 提交按钮
@@ -73,11 +79,13 @@ quizerjs.io/
 ### 示例集合 (/examples)
 
 **功能**:
+
 - 展示各种使用场景
 - 代码示例
 - 可运行的演示
 
 **示例类型**:
+
 - 基础用法
 - React 集成
 - 自定义样式
@@ -86,6 +94,7 @@ quizerjs.io/
 ### 文档 (/docs)
 
 **功能**:
+
 - API 文档
 - 使用指南
 - DSL 规范
@@ -94,6 +103,7 @@ quizerjs.io/
 ### 在线 Playground (/playground)
 
 **功能**:
+
 - 在线代码编辑器
 - 实时预览
 - 代码分享
@@ -204,7 +214,7 @@ examples/
 import { QuizEditor } from '@quizerjs/react';
 
 function App() {
-  return <QuizEditor />;
+return <QuizEditor />;
 }
 \`\`\`
 ```
@@ -236,4 +246,3 @@ function App() {
 - 更多交互式示例
 - 视频教程
 - 社区贡献展示
-

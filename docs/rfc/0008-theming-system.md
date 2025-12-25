@@ -100,7 +100,7 @@ graph TB
     ThemePresets -->|Apply Theme| WSXComponents
     ThemeBuilder -->|Build CSS| ThemePresets
     DebugPage -->|Test Themes| ThemePresets
-    
+
     WSXComponents -->|Use Variables| CSSVars
     CSSVars -->|Apply Styles| WSXComponents
 
@@ -119,6 +119,7 @@ graph TB
 设计令牌是设计系统的基础，定义了所有可复用的设计值。QuizerJS 设计系统使用 CSS 变量作为设计令牌，遵循以下命名规范：
 
 **命名规则**：
+
 - 前缀：`--quiz-`（所有设计令牌统一前缀）
 - 分类：按功能分类（bg、text、border、accent、spacing、radius、shadow、font、scrollbar）
 - 层级：使用 `-primary`、`-secondary`、`-tertiary` 表示层级
@@ -128,63 +129,63 @@ graph TB
 
 ```css
 /* 基础颜色变量 */
---quiz-bg-primary: <color>;        /* 主背景色 */
---quiz-bg-secondary: <color>;      /* 次背景色 */
---quiz-bg-tertiary: <color>;        /* 第三背景色 */
---quiz-bg-hover: <color>;          /* 悬停背景色 */
---quiz-bg-selected: <color>;       /* 选中背景色 */
+--quiz-bg-primary: <color>; /* 主背景色 */
+--quiz-bg-secondary: <color>; /* 次背景色 */
+--quiz-bg-tertiary: <color>; /* 第三背景色 */
+--quiz-bg-hover: <color>; /* 悬停背景色 */
+--quiz-bg-selected: <color>; /* 选中背景色 */
 
 /* 文本颜色变量 */
---quiz-text-primary: <color>;      /* 主文本色 */
---quiz-text-secondary: <color>;    /* 次文本色 */
---quiz-text-tertiary: <color>;      /* 第三文本色 */
---quiz-text-placeholder: <color>;  /* 占位符文本色 */
+--quiz-text-primary: <color>; /* 主文本色 */
+--quiz-text-secondary: <color>; /* 次文本色 */
+--quiz-text-tertiary: <color>; /* 第三文本色 */
+--quiz-text-placeholder: <color>; /* 占位符文本色 */
 
 /* 边框颜色变量 */
---quiz-border-color: <color>;       /* 默认边框色 */
---quiz-border-hover: <color>;      /* 悬停边框色 */
---quiz-border-focus: <color>;       /* 焦点边框色 */
---quiz-border-selected: <color>;   /* 选中边框色 */
+--quiz-border-color: <color>; /* 默认边框色 */
+--quiz-border-hover: <color>; /* 悬停边框色 */
+--quiz-border-focus: <color>; /* 焦点边框色 */
+--quiz-border-selected: <color>; /* 选中边框色 */
 
 /* 强调色变量 */
---quiz-accent-color: <color>;      /* 强调色（按钮、链接等） */
---quiz-accent-hover: <color>;      /* 强调色悬停状态 */
---quiz-accent-active: <color>;     /* 强调色激活状态 */
+--quiz-accent-color: <color>; /* 强调色（按钮、链接等） */
+--quiz-accent-hover: <color>; /* 强调色悬停状态 */
+--quiz-accent-active: <color>; /* 强调色激活状态 */
 
 /* 状态颜色变量 */
---quiz-success-color: <color>;     /* 成功状态色 */
---quiz-warning-color: <color>;     /* 警告状态色 */
---quiz-error-color: <color>;       /* 错误状态色 */
---quiz-info-color: <color>;        /* 信息状态色 */
+--quiz-success-color: <color>; /* 成功状态色 */
+--quiz-warning-color: <color>; /* 警告状态色 */
+--quiz-error-color: <color>; /* 错误状态色 */
+--quiz-info-color: <color>; /* 信息状态色 */
 
 /* 间距变量 */
---quiz-spacing-xs: <length>;       /* 超小间距（4px） */
---quiz-spacing-sm: <length>;       /* 小间距（8px） */
---quiz-spacing-md: <length>;       /* 中间距（12px） */
---quiz-spacing-lg: <length>;       /* 大间距（16px） */
---quiz-spacing-xl: <length>;       /* 超大间距（24px） */
+--quiz-spacing-xs: <length>; /* 超小间距（4px） */
+--quiz-spacing-sm: <length>; /* 小间距（8px） */
+--quiz-spacing-md: <length>; /* 中间距（12px） */
+--quiz-spacing-lg: <length>; /* 大间距（16px） */
+--quiz-spacing-xl: <length>; /* 超大间距（24px） */
 
 /* 圆角变量 */
---quiz-radius-sm: <length>;        /* 小圆角（4px） */
---quiz-radius-md: <length>;         /* 中间角（6px） */
---quiz-radius-lg: <length>;        /* 大圆角（8px） */
+--quiz-radius-sm: <length>; /* 小圆角（4px） */
+--quiz-radius-md: <length>; /* 中间角（6px） */
+--quiz-radius-lg: <length>; /* 大圆角（8px） */
 
 /* 阴影变量 */
---quiz-shadow-sm: <shadow>;        /* 小阴影 */
---quiz-shadow-md: <shadow>;        /* 中阴影 */
---quiz-shadow-lg: <shadow>;        /* 大阴影 */
+--quiz-shadow-sm: <shadow>; /* 小阴影 */
+--quiz-shadow-md: <shadow>; /* 中阴影 */
+--quiz-shadow-lg: <shadow>; /* 大阴影 */
 
 /* 字体变量 */
---quiz-font-size-sm: <length>;     /* 小字体（0.75rem） */
---quiz-font-size-base: <length>;   /* 基础字体（0.875rem） */
---quiz-font-size-lg: <length>;     /* 大字体（1rem） */
---quiz-font-size-xl: <length>;     /* 超大字体（1.25rem） */
+--quiz-font-size-sm: <length>; /* 小字体（0.75rem） */
+--quiz-font-size-base: <length>; /* 基础字体（0.875rem） */
+--quiz-font-size-lg: <length>; /* 大字体（1rem） */
+--quiz-font-size-xl: <length>; /* 超大字体（1.25rem） */
 --quiz-font-weight-normal: <weight>; /* 正常字重（400） */
 --quiz-font-weight-medium: <weight>; /* 中等字重（500） */
 --quiz-font-weight-semibold: <weight>; /* 半粗字重（600） */
 
 /* 滚动条变量 */
---quiz-scrollbar-width: <length>;  /* 滚动条宽度（8px） */
+--quiz-scrollbar-width: <length>; /* 滚动条宽度（8px） */
 --quiz-scrollbar-height: <length>; /* 滚动条高度（8px） */
 --quiz-scrollbar-track-color: <color>; /* 滚动条轨道颜色 */
 --quiz-scrollbar-thumb-color: <color>; /* 滚动条滑块颜色 */
@@ -203,19 +204,19 @@ graph TB
 %%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#5a9de2','primaryTextColor':'#e0e0e0','primaryBorderColor':'#404040','lineColor':'#808080','secondaryColor':'#2d2d2d','tertiaryColor':'#262626','background':'#1a1a1a','mainBkg':'#1a1a1a','secondBkg':'#262626','tertiaryBkg':'#2d2d2d'}}}%%
 flowchart TD
     Start([应用主题变化]) --> Check{主题传递方式}
-    
+
     Check -->|方式1: CSS 变量继承| CSSInherit["在 :root 或父元素<br/>定义 --quiz-* 变量"]
     Check -->|方式2: CSS 类切换| ClassToggle["切换 .theme-dark 类<br/>document.documentElement.classList.toggle()"]
-    
+
     CSSInherit --> Inherit["LightComponent<br/>自动继承 CSS 变量<br/>无需组件代码"]
     ClassToggle --> ApplyClass["应用到 :root<br/>添加/移除 .theme-dark 类"]
     ApplyClass --> Inherit
-    
+
     Inherit --> ApplyVars["组件样式使用变量<br/>var(--quiz-bg-primary, fallback)"]
-    
+
     ApplyVars --> Reflow["浏览器重新计算样式<br/>CSS 变量更新"]
     Reflow --> End([主题应用完成<br/>组件自动响应])
-    
+
     style Start fill:#2d3a4a,stroke:#5a9de2,color:#e0e0e0
     style CSSInherit fill:#3a2d2d,stroke:#ff6b6b,color:#e0e0e0
     style ClassToggle fill:#3a2d2d,stroke:#ff6b6b,color:#e0e0e0
@@ -252,7 +253,7 @@ graph TD
 
     P1 -->|直接继承| Component
     P2 -->|后备值| Component
-    
+
     Root -->|全局变量| Component
     Parent -->|局部变量| Component
     ThemeClass -->|主题变量| Component
@@ -290,7 +291,7 @@ graph TD
 
 /* 深色主题 */
 .theme-dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   --quiz-bg-primary: #1a1a1a;
   --quiz-text-primary: #e0e0e0;
   --quiz-accent-color: #5a9de2;
@@ -328,6 +329,7 @@ function toggleTheme() {
 ```
 
 **优先级**：
+
 1. 应用层定义的 CSS 变量（`:root` 或父元素）
 2. 组件内部的 fallback 默认值
 
@@ -336,6 +338,7 @@ function toggleTheme() {
 在独立的 `@quizerjs/theme` 包中提供四套预设主题 CSS 文件，所有主题都基于 `base.scss` 构建，确保变量一致性和易于维护。消费者可以选择性导入：
 
 **主题架构**：
+
 - `base.scss`：定义所有 CSS 变量和通用样式（滚动条、基础样式等）
 - 各主题 SCSS 文件：导入 `base.scss` 并覆盖颜色变量
 - 构建系统：使用 Vite + Sass 编译生成 CSS 文件
@@ -353,38 +356,38 @@ function toggleTheme() {
 // 覆盖颜色变量为 Solarized Light
 :root {
   // 背景色 - 基于 Solarized base3/base2/base1
-  --quiz-bg-primary: #fdf6e3;      // base3
-  --quiz-bg-secondary: #eee8d5;    // base2
-  --quiz-bg-tertiary: #fdf6e3;     // base3
-  --quiz-bg-hover: #eee8d5;        // base2
-  --quiz-bg-selected: #eee8d5;     // base2
-  
+  --quiz-bg-primary: #fdf6e3; // base3
+  --quiz-bg-secondary: #eee8d5; // base2
+  --quiz-bg-tertiary: #fdf6e3; // base3
+  --quiz-bg-hover: #eee8d5; // base2
+  --quiz-bg-selected: #eee8d5; // base2
+
   // 文本色 - 基于 Solarized base00/base01/base0
-  --quiz-text-primary: #586e75;    // base00
-  --quiz-text-secondary: #657b83;  // base01
-  --quiz-text-tertiary: #839496;   // base0
+  --quiz-text-primary: #586e75; // base00
+  --quiz-text-secondary: #657b83; // base01
+  --quiz-text-tertiary: #839496; // base0
   --quiz-text-placeholder: #93a1a1; // base1
-  
+
   // 边框色
-  --quiz-border-color: #93a1a1;    // base1
-  --quiz-border-hover: #268bd2;    // blue
-  --quiz-border-focus: #268bd2;    // blue
+  --quiz-border-color: #93a1a1; // base1
+  --quiz-border-hover: #268bd2; // blue
+  --quiz-border-focus: #268bd2; // blue
   --quiz-border-selected: #268bd2; // blue
-  
+
   // 强调色 - 基于 Solarized blue
-  --quiz-accent-color: #268bd2;     // blue
-  --quiz-accent-hover: #1e6fa8;     // blue darker
-  --quiz-accent-active: #15537a;   // blue darkest
-  
+  --quiz-accent-color: #268bd2; // blue
+  --quiz-accent-hover: #1e6fa8; // blue darker
+  --quiz-accent-active: #15537a; // blue darkest
+
   // 状态色
-  --quiz-error-color: #dc322f;      // red
-  --quiz-success-color: #859900;    // green
-  --quiz-warning-color: #b58900;    // yellow
-  --quiz-info-color: #268bd2;       // blue
-  
+  --quiz-error-color: #dc322f; // red
+  --quiz-success-color: #859900; // green
+  --quiz-warning-color: #b58900; // yellow
+  --quiz-info-color: #268bd2; // blue
+
   // 滚动条
   --quiz-scrollbar-track-color: #eee8d5; // base2
-  --quiz-scrollbar-thumb-color: #93a1a1;  // base1
+  --quiz-scrollbar-thumb-color: #93a1a1; // base1
   --quiz-scrollbar-thumb-hover-color: #839496; // base0
   --quiz-scrollbar-thumb-active-color: #657b83; // base00
 }
@@ -394,52 +397,52 @@ function toggleTheme() {
 /* Solarized Light Theme */
 :root {
   /* 背景色 - 基于 Solarized base3/base2/base1 */
-  --quiz-bg-primary: #fdf6e3;      /* base3 - 最浅背景 */
-  --quiz-bg-secondary: #eee8d5;    /* base2 - 次背景 */
-  --quiz-bg-tertiary: #fdf6e3;     /* base3 - 第三背景 */
-  --quiz-bg-hover: #eee8d5;        /* base2 - 悬停背景 */
-  --quiz-bg-selected: #eee8d5;     /* base2 - 选中背景 */
-  
+  --quiz-bg-primary: #fdf6e3; /* base3 - 最浅背景 */
+  --quiz-bg-secondary: #eee8d5; /* base2 - 次背景 */
+  --quiz-bg-tertiary: #fdf6e3; /* base3 - 第三背景 */
+  --quiz-bg-hover: #eee8d5; /* base2 - 悬停背景 */
+  --quiz-bg-selected: #eee8d5; /* base2 - 选中背景 */
+
   /* 文本色 - 基于 Solarized base00/base01/base0 */
-  --quiz-text-primary: #586e75;    /* base00 - 主文本 */
-  --quiz-text-secondary: #657b83;   /* base01 - 次文本 */
-  --quiz-text-tertiary: #839496;   /* base0 - 第三文本 */
+  --quiz-text-primary: #586e75; /* base00 - 主文本 */
+  --quiz-text-secondary: #657b83; /* base01 - 次文本 */
+  --quiz-text-tertiary: #839496; /* base0 - 第三文本 */
   --quiz-text-placeholder: #93a1a1; /* base1 - 占位符 */
-  
+
   /* 边框色 */
-  --quiz-border-color: #93a1a1;    /* base1 - 默认边框 */
-  --quiz-border-hover: #268bd2;     /* blue - 悬停边框 */
-  --quiz-border-focus: #268bd2;     /* blue - 焦点边框 */
-  --quiz-border-selected: #268bd2;  /* blue - 选中边框 */
-  
+  --quiz-border-color: #93a1a1; /* base1 - 默认边框 */
+  --quiz-border-hover: #268bd2; /* blue - 悬停边框 */
+  --quiz-border-focus: #268bd2; /* blue - 焦点边框 */
+  --quiz-border-selected: #268bd2; /* blue - 选中边框 */
+
   /* 强调色 - 基于 Solarized blue */
-  --quiz-accent-color: #268bd2;     /* blue - 主强调色 */
-  --quiz-accent-hover: #1e6fa8;     /* blue darker - 悬停 */
-  --quiz-accent-active: #15537a;    /* blue darkest - 激活 */
-  
+  --quiz-accent-color: #268bd2; /* blue - 主强调色 */
+  --quiz-accent-hover: #1e6fa8; /* blue darker - 悬停 */
+  --quiz-accent-active: #15537a; /* blue darkest - 激活 */
+
   /* 状态色 - 基于 Solarized 调色板 */
-  --quiz-error-color: #dc322f;      /* red - 错误 */
-  --quiz-success-color: #859900;    /* green - 成功 */
-  --quiz-warning-color: #b58900;   /* yellow - 警告 */
-  --quiz-info-color: #268bd2;      /* blue - 信息 */
-  
+  --quiz-error-color: #dc322f; /* red - 错误 */
+  --quiz-success-color: #859900; /* green - 成功 */
+  --quiz-warning-color: #b58900; /* yellow - 警告 */
+  --quiz-info-color: #268bd2; /* blue - 信息 */
+
   /* 间距 */
   --quiz-spacing-xs: 4px;
   --quiz-spacing-sm: 6px;
   --quiz-spacing-md: 12px;
   --quiz-spacing-lg: 16px;
   --quiz-spacing-xl: 24px;
-  
+
   /* 圆角 */
   --quiz-radius-sm: 4px;
   --quiz-radius-md: 6px;
   --quiz-radius-lg: 8px;
-  
+
   /* 阴影 */
   --quiz-shadow-sm: 0 1px 2px rgba(88, 110, 117, 0.1);
   --quiz-shadow-md: 0 2px 4px rgba(88, 110, 117, 0.15);
   --quiz-shadow-lg: 0 4px 8px rgba(88, 110, 117, 0.2);
-  
+
   /* 字体 */
   --quiz-font-size-sm: 0.75rem;
   --quiz-font-size-base: 0.875rem;
@@ -448,7 +451,7 @@ function toggleTheme() {
   --quiz-font-weight-normal: 400;
   --quiz-font-weight-medium: 500;
   --quiz-font-weight-semibold: 600;
-  
+
   /* 滚动条 */
   --quiz-scrollbar-width: 8px;
   --quiz-scrollbar-height: 8px;
@@ -486,7 +489,8 @@ function toggleTheme() {
 /* 滚动条样式（Firefox） */
 :root {
   scrollbar-width: thin;
-  scrollbar-color: var(--quiz-scrollbar-thumb-color, #93a1a1) var(--quiz-scrollbar-track-color, #eee8d5);
+  scrollbar-color: var(--quiz-scrollbar-thumb-color, #93a1a1)
+    var(--quiz-scrollbar-track-color, #eee8d5);
 }
 ```
 
@@ -498,54 +502,54 @@ function toggleTheme() {
 /* Solarized Dark Theme */
 :root,
 .theme-dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   /* 背景色 - 基于 Solarized base03/base02/base01 */
-  --quiz-bg-primary: #002b36;      /* base03 - 最深背景 */
-  --quiz-bg-secondary: #073642;    /* base02 - 次背景 */
-  --quiz-bg-tertiary: #002b36;     /* base03 - 第三背景 */
-  --quiz-bg-hover: #073642;       /* base02 - 悬停背景 */
-  --quiz-bg-selected: #073642;     /* base02 - 选中背景 */
-  
+  --quiz-bg-primary: #002b36; /* base03 - 最深背景 */
+  --quiz-bg-secondary: #073642; /* base02 - 次背景 */
+  --quiz-bg-tertiary: #002b36; /* base03 - 第三背景 */
+  --quiz-bg-hover: #073642; /* base02 - 悬停背景 */
+  --quiz-bg-selected: #073642; /* base02 - 选中背景 */
+
   /* 文本色 - 基于 Solarized base0/base1/base2 */
-  --quiz-text-primary: #839496;   /* base0 - 主文本 */
+  --quiz-text-primary: #839496; /* base0 - 主文本 */
   --quiz-text-secondary: #93a1a1; /* base1 - 次文本 */
-  --quiz-text-tertiary: #586e75;  /* base00 - 第三文本 */
+  --quiz-text-tertiary: #586e75; /* base00 - 第三文本 */
   --quiz-text-placeholder: #657b83; /* base01 - 占位符 */
-  
+
   /* 边框色 */
-  --quiz-border-color: #586e75;   /* base00 - 默认边框 */
-  --quiz-border-hover: #268bd2;    /* blue - 悬停边框 */
-  --quiz-border-focus: #268bd2;    /* blue - 焦点边框 */
+  --quiz-border-color: #586e75; /* base00 - 默认边框 */
+  --quiz-border-hover: #268bd2; /* blue - 悬停边框 */
+  --quiz-border-focus: #268bd2; /* blue - 焦点边框 */
   --quiz-border-selected: #268bd2; /* blue - 选中边框 */
-  
+
   /* 强调色 - 基于 Solarized blue */
-  --quiz-accent-color: #268bd2;    /* blue - 主强调色 */
-  --quiz-accent-hover: #2aa198;    /* cyan - 悬停 */
-  --quiz-accent-active: #1e6fa8;   /* blue darker - 激活 */
-  
+  --quiz-accent-color: #268bd2; /* blue - 主强调色 */
+  --quiz-accent-hover: #2aa198; /* cyan - 悬停 */
+  --quiz-accent-active: #1e6fa8; /* blue darker - 激活 */
+
   /* 状态色 - 基于 Solarized 调色板 */
-  --quiz-error-color: #dc322f;     /* red - 错误 */
-  --quiz-success-color: #859900;   /* green - 成功 */
-  --quiz-warning-color: #b58900;   /* yellow - 警告 */
-  --quiz-info-color: #268bd2;     /* blue - 信息 */
-  
+  --quiz-error-color: #dc322f; /* red - 错误 */
+  --quiz-success-color: #859900; /* green - 成功 */
+  --quiz-warning-color: #b58900; /* yellow - 警告 */
+  --quiz-info-color: #268bd2; /* blue - 信息 */
+
   /* 间距（与浅色主题相同） */
   --quiz-spacing-xs: 4px;
   --quiz-spacing-sm: 6px;
   --quiz-spacing-md: 12px;
   --quiz-spacing-lg: 16px;
   --quiz-spacing-xl: 24px;
-  
+
   /* 圆角（与浅色主题相同） */
   --quiz-radius-sm: 4px;
   --quiz-radius-md: 6px;
   --quiz-radius-lg: 8px;
-  
+
   /* 阴影（深色模式调整） */
   --quiz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --quiz-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4);
   --quiz-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.5);
-  
+
   /* 字体（与浅色主题相同） */
   --quiz-font-size-sm: 0.75rem;
   --quiz-font-size-base: 0.875rem;
@@ -554,7 +558,7 @@ function toggleTheme() {
   --quiz-font-weight-normal: 400;
   --quiz-font-weight-medium: 500;
   --quiz-font-weight-semibold: 600;
-  
+
   /* 滚动条 */
   --quiz-scrollbar-width: 8px;
   --quiz-scrollbar-height: 8px;
@@ -567,38 +571,39 @@ function toggleTheme() {
 
 /* 滚动条样式（Webkit 浏览器） */
 .theme-dark::-webkit-scrollbar,
-[data-theme="dark"]::-webkit-scrollbar {
+[data-theme='dark']::-webkit-scrollbar {
   width: var(--quiz-scrollbar-width, 8px);
   height: var(--quiz-scrollbar-height, 8px);
 }
 
 .theme-dark::-webkit-scrollbar-track,
-[data-theme="dark"]::-webkit-scrollbar-track {
+[data-theme='dark']::-webkit-scrollbar-track {
   background: var(--quiz-scrollbar-track-color, #073642);
   border-radius: var(--quiz-scrollbar-border-radius, 4px);
 }
 
 .theme-dark::-webkit-scrollbar-thumb,
-[data-theme="dark"]::-webkit-scrollbar-thumb {
+[data-theme='dark']::-webkit-scrollbar-thumb {
   background: var(--quiz-scrollbar-thumb-color, #586e75);
   border-radius: var(--quiz-scrollbar-border-radius, 4px);
 }
 
 .theme-dark::-webkit-scrollbar-thumb:hover,
-[data-theme="dark"]::-webkit-scrollbar-thumb:hover {
+[data-theme='dark']::-webkit-scrollbar-thumb:hover {
   background: var(--quiz-scrollbar-thumb-hover-color, #657b83);
 }
 
 .theme-dark::-webkit-scrollbar-thumb:active,
-[data-theme="dark"]::-webkit-scrollbar-thumb:active {
+[data-theme='dark']::-webkit-scrollbar-thumb:active {
   background: var(--quiz-scrollbar-thumb-active-color, #839496);
 }
 
 /* 滚动条样式（Firefox） */
 .theme-dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   scrollbar-width: thin;
-  scrollbar-color: var(--quiz-scrollbar-thumb-color, #586e75) var(--quiz-scrollbar-track-color, #073642);
+  scrollbar-color: var(--quiz-scrollbar-thumb-color, #586e75)
+    var(--quiz-scrollbar-track-color, #073642);
 }
 ```
 
@@ -609,6 +614,7 @@ function toggleTheme() {
 **核心原则：组件完全主题无关（Theme-Agnostic）**
 
 组件不应该知道主题的存在，所有主题逻辑都在应用层处理。组件只需要：
+
 1. 使用 CSS 变量替代硬编码颜色值
 2. 提供合理的默认值（fallback）
 3. 不处理任何主题相关的属性或逻辑
@@ -636,7 +642,8 @@ function toggleTheme() {
 .quiz-option-list {
   /* ... 其他样式 */
   scrollbar-width: thin;
-  scrollbar-color: var(--quiz-scrollbar-thumb-color, #93a1a1) var(--quiz-scrollbar-track-color, #eee8d5);
+  scrollbar-color: var(--quiz-scrollbar-thumb-color, #93a1a1)
+    var(--quiz-scrollbar-track-color, #eee8d5);
 }
 
 .quiz-option-list::-webkit-scrollbar {
@@ -688,7 +695,7 @@ function toggleTheme() {
   --bg-primary: #ffffff;
   --text-primary: #333333;
   --accent-color: #4a90e2;
-  
+
   /* 映射应用主题变量到组件变量 */
   --quiz-bg-primary: var(--bg-primary);
   --quiz-text-primary: var(--text-primary);
@@ -701,7 +708,7 @@ function toggleTheme() {
   --bg-primary: #1a1a1a;
   --text-primary: #e0e0e0;
   --accent-color: #5a9de2;
-  
+
   /* 组件变量自动继承应用变量 */
   --quiz-bg-primary: var(--bg-primary);
   --quiz-text-primary: var(--text-primary);
@@ -716,19 +723,19 @@ function toggleTheme() {
 %%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#5a9de2','primaryTextColor':'#e0e0e0','primaryBorderColor':'#404040','lineColor':'#808080','secondaryColor':'#2d2d2d','tertiaryColor':'#262626','background':'#1a1a1a','mainBkg':'#1a1a1a','secondBkg':'#262626','tertiaryBkg':'#2d2d2d'}}}%%
 flowchart TD
     Start([用户切换主题]) --> Toggle["主题切换器<br/>toggleTheme()"]
-    
+
     Toggle --> UpdateApp["更新应用层 CSS 变量<br/>:root 或 .theme-dark"]
-    
+
     UpdateApp --> UpdateVars["更新 --quiz-* 变量<br/>映射应用变量"]
-    
+
     UpdateVars --> Inherit["LightComponent<br/>自动继承 CSS 变量"]
-    
+
     Inherit --> ApplyStyles["组件样式应用变量<br/>var(--quiz-bg-primary, fallback)"]
-    
+
     ApplyStyles --> Reflow["浏览器重新计算样式<br/>CSS 变量更新"]
-    
+
     Reflow --> End([主题切换完成<br/>组件样式已更新])
-    
+
     style Start fill:#2d3a4a,stroke:#5a9de2,color:#e0e0e0
     style Toggle fill:#3a2d2d,stroke:#ff6b6b,color:#e0e0e0
     style UpdateApp fill:#1e3a5f,stroke:#5a9de2,color:#e0e0e0
@@ -766,7 +773,7 @@ function toggleTheme() {
 
 // 或者在 Vue/React 中
 const isDark = ref(false);
-watch(isDark, (dark) => {
+watch(isDark, dark => {
   if (dark) {
     document.documentElement.classList.add('theme-dark');
   } else {
@@ -935,7 +942,7 @@ export default defineConfig({
       input,
       output: {
         entryFileNames: () => 'dummy.js',
-        assetFileNames: (assetInfo) => {
+        assetFileNames: assetInfo => {
           if (assetInfo.name?.endsWith('.css')) {
             // 如果只构建一个主题，使用主题名称
             if (theme !== 'all' && Object.keys(input).length === 1) {
@@ -1011,6 +1018,7 @@ for (const theme of themes) {
 ```
 
 **构建方式**：
+
 - `pnpm build`：运行构建脚本，生成 4 个独立的 CSS 文件
 - `THEME=solarized-light pnpm build:single`：单独构建指定主题
 
@@ -1033,12 +1041,12 @@ for (const theme of themes) {
   --quiz-spacing-md: 12px;
   --quiz-spacing-lg: 16px;
   --quiz-spacing-xl: 24px;
-  
+
   // 圆角变量（所有主题相同）
   --quiz-radius-sm: 4px;
   --quiz-radius-md: 6px;
   --quiz-radius-lg: 8px;
-  
+
   // 字体变量（所有主题相同）
   --quiz-font-size-sm: 0.75rem;
   --quiz-font-size-base: 0.875rem;
@@ -1047,52 +1055,52 @@ for (const theme of themes) {
   --quiz-font-weight-normal: 400;
   --quiz-font-weight-medium: 500;
   --quiz-font-weight-semibold: 600;
-  
+
   // 滚动条尺寸（所有主题相同）
   --quiz-scrollbar-width: 8px;
   --quiz-scrollbar-height: 8px;
   --quiz-scrollbar-border-radius: 4px;
-  
+
   // ============================================
   // 颜色变量（由各主题文件覆盖）
   // ============================================
-  
+
   // 背景色（默认值，将被主题覆盖）
   --quiz-bg-primary: #ffffff;
   --quiz-bg-secondary: #fafafa;
   --quiz-bg-tertiary: #f5f5f5;
   --quiz-bg-hover: #f5f8ff;
   --quiz-bg-selected: #e8f2ff;
-  
+
   // 文本色（默认值，将被主题覆盖）
   --quiz-text-primary: #333333;
   --quiz-text-secondary: #666666;
   --quiz-text-tertiary: #999999;
   --quiz-text-placeholder: #999999;
-  
+
   // 边框色（默认值，将被主题覆盖）
   --quiz-border-color: #e0e0e0;
   --quiz-border-hover: #4a90e2;
   --quiz-border-focus: #4a90e2;
   --quiz-border-selected: #4a90e2;
-  
+
   // 强调色（默认值，将被主题覆盖）
   --quiz-accent-color: #4a90e2;
   --quiz-accent-hover: #357abd;
   --quiz-accent-active: #2a5f8f;
-  
+
   // 状态色（默认值，将被主题覆盖）
   --quiz-error-color: #ff4d4f;
   --quiz-success-color: #52c41a;
   --quiz-warning-color: #faad14;
   --quiz-info-color: #1890ff;
-  
+
   // 滚动条颜色（默认值，将被主题覆盖）
   --quiz-scrollbar-track-color: #f5f5f5;
   --quiz-scrollbar-thumb-color: #cccccc;
   --quiz-scrollbar-thumb-hover-color: #999999;
   --quiz-scrollbar-thumb-active-color: #666666;
-  
+
   // 阴影（默认值，将被主题覆盖）
   --quiz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
   --quiz-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -1149,36 +1157,36 @@ for (const theme of themes) {
   --quiz-bg-tertiary: #fdf6e3;
   --quiz-bg-hover: #eee8d5;
   --quiz-bg-selected: #eee8d5;
-  
+
   // 文本色
   --quiz-text-primary: #586e75;
   --quiz-text-secondary: #657b83;
   --quiz-text-tertiary: #839496;
   --quiz-text-placeholder: #93a1a1;
-  
+
   // 边框色
   --quiz-border-color: #93a1a1;
   --quiz-border-hover: #268bd2;
   --quiz-border-focus: #268bd2;
   --quiz-border-selected: #268bd2;
-  
+
   // 强调色
   --quiz-accent-color: #268bd2;
   --quiz-accent-hover: #1e6fa8;
   --quiz-accent-active: #15537a;
-  
+
   // 状态色
   --quiz-error-color: #dc322f;
   --quiz-success-color: #859900;
   --quiz-warning-color: #b58900;
   --quiz-info-color: #268bd2;
-  
+
   // 滚动条颜色
   --quiz-scrollbar-track-color: #eee8d5;
   --quiz-scrollbar-thumb-color: #93a1a1;
   --quiz-scrollbar-thumb-hover-color: #839496;
   --quiz-scrollbar-thumb-active-color: #657b83;
-  
+
   // 阴影
   --quiz-shadow-sm: 0 1px 2px rgba(88, 110, 117, 0.1);
   --quiz-shadow-md: 0 2px 4px rgba(88, 110, 117, 0.15);
@@ -1187,6 +1195,7 @@ for (const theme of themes) {
 ```
 
 **优势**：
+
 - 所有通用样式和变量结构在 `base.scss` 中定义一次
 - 主题文件只需覆盖颜色变量，避免重复代码
 - 添加新变量时只需更新 `base.scss`，所有主题自动继承
@@ -1197,6 +1206,7 @@ for (const theme of themes) {
 **文件位置**：`packages/theme/index.html`
 
 **目的**：提供交互式的设计系统测试和验证工具，帮助开发者：
+
 - 实时预览所有主题
 - 验证组件在不同主题下的表现
 - 检查设计令牌的正确应用
@@ -1206,310 +1216,311 @@ for (const theme of themes) {
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuizerJS Theme Debug</title>
-  <!-- 主题样式表将通过 JavaScript 动态加载 -->
-  <link rel="stylesheet" href="" id="theme-stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-    .theme-selector {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      padding: 10px;
-      background: var(--quiz-bg-secondary);
-      border: 1px solid var(--quiz-border-color);
-      border-radius: var(--quiz-radius-md);
-    }
-    .theme-selector select {
-      padding: 6px 12px;
-      border: 1px solid var(--quiz-border-color);
-      border-radius: var(--quiz-radius-sm);
-      background: var(--quiz-bg-primary);
-      color: var(--quiz-text-primary);
-    }
-    .component-demo {
-      margin: 20px 0;
-      padding: 20px;
-      background: var(--quiz-bg-primary);
-      border: 1px solid var(--quiz-border-color);
-      border-radius: var(--quiz-radius-md);
-    }
-    
-    .demo-description {
-      font-size: 0.875rem;
-      color: var(--quiz-text-secondary);
-      margin-bottom: 12px;
-    }
-    
-    .scrollable-demo {
-      max-height: 400px;
-    }
-    
-    .tokens-section {
-      margin-top: 40px;
-      padding: 20px;
-      background: var(--quiz-bg-secondary);
-      border: 1px solid var(--quiz-border-color);
-      border-radius: var(--quiz-radius-md);
-    }
-    
-    .tokens-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
-    
-    .token-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      background: var(--quiz-bg-primary);
-      border: 1px solid var(--quiz-border-color);
-      border-radius: var(--quiz-radius-sm);
-    }
-    
-    .token-color {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--quiz-radius-sm);
-      border: 1px solid var(--quiz-border-color);
-      flex-shrink: 0;
-    }
-    
-    .token-item code {
-      flex: 1;
-      font-size: 0.875rem;
-      color: var(--quiz-text-primary);
-    }
-    
-    .token-value {
-      font-size: 0.75rem;
-      color: var(--quiz-text-secondary);
-      font-family: monospace;
-    }
-  </style>
-</head>
-<body>
-  <div class="theme-selector">
-    <label for="theme-select">主题：</label>
-    <select id="theme-select">
-      <option value="solarized-light">Solarized Light</option>
-      <option value="solarized-dark">Solarized Dark</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
-  </div>
-
-  <h1>QuizerJS 主题调试页面</h1>
-
-  <!-- 组件示例区域 -->
-  <section class="components-section">
-    <h2>组件示例</h2>
-    
-    <div class="component-demo">
-      <h3>quiz-option-list（单选）</h3>
-      <p class="demo-description">测试选项列表的背景、边框、文本颜色和交互状态</p>
-      <quiz-option-list 
-        options='[{"id":"1","text":"选项 1"},{"id":"2","text":"选项 2"},{"id":"3","text":"选项 3"}]'
-        type="single"
-      ></quiz-option-list>
-    </div>
-
-    <div class="component-demo">
-      <h3>quiz-option-list（多选）</h3>
-      <p class="demo-description">测试多选模式下的样式</p>
-      <quiz-option-list 
-        options='[{"id":"1","text":"选项 A"},{"id":"2","text":"选项 B"},{"id":"3","text":"选项 C"}]'
-        type="multiple"
-      ></quiz-option-list>
-    </div>
-
-    <div class="component-demo">
-      <h3>quiz-option（单个选项）</h3>
-      <p class="demo-description">测试单个选项的选中、悬停、焦点状态</p>
-      <quiz-option 
-        option-id="1"
-        text="未选中选项（悬停查看效果）"
-      ></quiz-option>
-      <quiz-option 
-        option-id="2"
-        text="已选中选项"
-        selected
-      ></quiz-option>
-    </div>
-
-    <div class="component-demo">
-      <h3>quiz-question-header</h3>
-      <p class="demo-description">测试标题的字体、颜色、必填标记</p>
-      <quiz-question-header 
-        title="普通问题标题"
-      ></quiz-question-header>
-      <quiz-question-header 
-        title="必填问题标题"
-        required
-      ></quiz-question-header>
-    </div>
-
-    <div class="component-demo">
-      <h3>quiz-question-description</h3>
-      <p class="demo-description">测试描述文本的颜色和字体大小</p>
-      <quiz-question-description 
-        description="这是问题的描述文本，用于说明问题的背景和要求。描述文本应该清晰易读，颜色对比度符合可访问性标准。"
-      ></quiz-question-description>
-    </div>
-
-    <div class="component-demo scrollable-demo">
-      <h3>滚动条测试</h3>
-      <p class="demo-description">测试滚动条样式（需要滚动查看）</p>
-      <div style="height: 200px; overflow-y: auto; border: 1px solid var(--quiz-border-color); padding: 10px;">
-        <p>这是一个可滚动的容器，用于测试滚动条样式。</p>
-        <p>滚动条轨道颜色：<code>--quiz-scrollbar-track-color</code></p>
-        <p>滚动条滑块颜色：<code>--quiz-scrollbar-thumb-color</code></p>
-        <p>悬停时滑块颜色：<code>--quiz-scrollbar-thumb-hover-color</code></p>
-        <p>请向下滚动查看更多内容...</p>
-        <p style="height: 500px; background: var(--quiz-bg-secondary); padding: 20px; margin: 10px 0;">
-          这是足够长的内容，用于触发滚动条显示。
-          在不同主题下，滚动条的颜色应该与主题保持一致。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 设计令牌展示区域 -->
-  <section class="tokens-section">
-    <h2>设计令牌预览</h2>
-    <div class="tokens-grid">
-      <div class="token-item">
-        <div class="token-color" style="background: var(--quiz-bg-primary);"></div>
-        <code>--quiz-bg-primary</code>
-        <span class="token-value" id="token-bg-primary"></span>
-      </div>
-      <div class="token-item">
-        <div class="token-color" style="background: var(--quiz-text-primary);"></div>
-        <code>--quiz-text-primary</code>
-        <span class="token-value" id="token-text-primary"></span>
-      </div>
-      <div class="token-item">
-        <div class="token-color" style="background: var(--quiz-accent-color);"></div>
-        <code>--quiz-accent-color</code>
-        <span class="token-value" id="token-accent-color"></span>
-      </div>
-      <div class="token-item">
-        <div class="token-color" style="background: var(--quiz-border-color);"></div>
-        <code>--quiz-border-color</code>
-        <span class="token-value" id="token-border-color"></span>
-      </div>
-    </div>
-  </section>
-
-  <script type="module">
-    import '@quizerjs/core';
-    
-    const themeSelect = document.getElementById('theme-select');
-    const themeStylesheet = document.getElementById('theme-stylesheet');
-    
-    // 主题切换函数
-    function switchTheme(themeName) {
-      // 动态更新样式表链接
-      const newHref = `../dist/${themeName}.css`;
-      
-      // 如果样式表已存在且链接不同，则更新
-      if (themeStylesheet.href !== new URL(newHref, window.location.href).href) {
-        themeStylesheet.href = newHref;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizerJS Theme Debug</title>
+    <!-- 主题样式表将通过 JavaScript 动态加载 -->
+    <link rel="stylesheet" href="" id="theme-stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
       }
-    }
-    
-    // 从 URL 参数或 localStorage 读取初始主题
-    function getInitialTheme() {
-      // 1. 检查 URL 参数
-      const urlParams = new URLSearchParams(window.location.search);
-      const themeFromUrl = urlParams.get('theme');
-      if (themeFromUrl && ['solarized-light', 'solarized-dark', 'light', 'dark'].includes(themeFromUrl)) {
-        return themeFromUrl;
+      .theme-selector {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        padding: 10px;
+        background: var(--quiz-bg-secondary);
+        border: 1px solid var(--quiz-border-color);
+        border-radius: var(--quiz-radius-md);
       }
-      
-      // 2. 检查 localStorage
-      const themeFromStorage = localStorage.getItem('quizerjs-debug-theme');
-      if (themeFromStorage && ['solarized-light', 'solarized-dark', 'light', 'dark'].includes(themeFromStorage)) {
-        return themeFromStorage;
+      .theme-selector select {
+        padding: 6px 12px;
+        border: 1px solid var(--quiz-border-color);
+        border-radius: var(--quiz-radius-sm);
+        background: var(--quiz-bg-primary);
+        color: var(--quiz-text-primary);
       }
-      
-      // 3. 默认使用 Solarized Light
-      return 'solarized-light';
-    }
-    
-    // 初始化主题
-    const initialTheme = getInitialTheme();
-    themeSelect.value = initialTheme;
-    switchTheme(initialTheme);
-    
-    // 监听主题选择器变化
-    themeSelect.addEventListener('change', (e) => {
-      const selectedTheme = e.target.value;
-      
-      // 切换主题
-      switchTheme(selectedTheme);
-      
-      // 保存到 localStorage
-      localStorage.setItem('quizerjs-debug-theme', selectedTheme);
-      
-      // 更新 URL 参数（不刷新页面）
-      const url = new URL(window.location);
-      url.searchParams.set('theme', selectedTheme);
-      window.history.replaceState({}, '', url);
-      
+      .component-demo {
+        margin: 20px 0;
+        padding: 20px;
+        background: var(--quiz-bg-primary);
+        border: 1px solid var(--quiz-border-color);
+        border-radius: var(--quiz-radius-md);
+      }
+
+      .demo-description {
+        font-size: 0.875rem;
+        color: var(--quiz-text-secondary);
+        margin-bottom: 12px;
+      }
+
+      .scrollable-demo {
+        max-height: 400px;
+      }
+
+      .tokens-section {
+        margin-top: 40px;
+        padding: 20px;
+        background: var(--quiz-bg-secondary);
+        border: 1px solid var(--quiz-border-color);
+        border-radius: var(--quiz-radius-md);
+      }
+
+      .tokens-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .token-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--quiz-bg-primary);
+        border: 1px solid var(--quiz-border-color);
+        border-radius: var(--quiz-radius-sm);
+      }
+
+      .token-color {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--quiz-radius-sm);
+        border: 1px solid var(--quiz-border-color);
+        flex-shrink: 0;
+      }
+
+      .token-item code {
+        flex: 1;
+        font-size: 0.875rem;
+        color: var(--quiz-text-primary);
+      }
+
+      .token-value {
+        font-size: 0.75rem;
+        color: var(--quiz-text-secondary);
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="theme-selector">
+      <label for="theme-select">主题：</label>
+      <select id="theme-select">
+        <option value="solarized-light">Solarized Light</option>
+        <option value="solarized-dark">Solarized Dark</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <h1>QuizerJS 主题调试页面</h1>
+
+    <!-- 组件示例区域 -->
+    <section class="components-section">
+      <h2>组件示例</h2>
+
+      <div class="component-demo">
+        <h3>quiz-option-list（单选）</h3>
+        <p class="demo-description">测试选项列表的背景、边框、文本颜色和交互状态</p>
+        <quiz-option-list
+          options='[{"id":"1","text":"选项 1"},{"id":"2","text":"选项 2"},{"id":"3","text":"选项 3"}]'
+          type="single"
+        ></quiz-option-list>
+      </div>
+
+      <div class="component-demo">
+        <h3>quiz-option-list（多选）</h3>
+        <p class="demo-description">测试多选模式下的样式</p>
+        <quiz-option-list
+          options='[{"id":"1","text":"选项 A"},{"id":"2","text":"选项 B"},{"id":"3","text":"选项 C"}]'
+          type="multiple"
+        ></quiz-option-list>
+      </div>
+
+      <div class="component-demo">
+        <h3>quiz-option（单个选项）</h3>
+        <p class="demo-description">测试单个选项的选中、悬停、焦点状态</p>
+        <quiz-option option-id="1" text="未选中选项（悬停查看效果）"></quiz-option>
+        <quiz-option option-id="2" text="已选中选项" selected></quiz-option>
+      </div>
+
+      <div class="component-demo">
+        <h3>quiz-question-header</h3>
+        <p class="demo-description">测试标题的字体、颜色、必填标记</p>
+        <quiz-question-header title="普通问题标题"></quiz-question-header>
+        <quiz-question-header title="必填问题标题" required></quiz-question-header>
+      </div>
+
+      <div class="component-demo">
+        <h3>quiz-question-description</h3>
+        <p class="demo-description">测试描述文本的颜色和字体大小</p>
+        <quiz-question-description
+          description="这是问题的描述文本，用于说明问题的背景和要求。描述文本应该清晰易读，颜色对比度符合可访问性标准。"
+        ></quiz-question-description>
+      </div>
+
+      <div class="component-demo scrollable-demo">
+        <h3>滚动条测试</h3>
+        <p class="demo-description">测试滚动条样式（需要滚动查看）</p>
+        <div
+          style="height: 200px; overflow-y: auto; border: 1px solid var(--quiz-border-color); padding: 10px;"
+        >
+          <p>这是一个可滚动的容器，用于测试滚动条样式。</p>
+          <p>滚动条轨道颜色：<code>--quiz-scrollbar-track-color</code></p>
+          <p>滚动条滑块颜色：<code>--quiz-scrollbar-thumb-color</code></p>
+          <p>悬停时滑块颜色：<code>--quiz-scrollbar-thumb-hover-color</code></p>
+          <p>请向下滚动查看更多内容...</p>
+          <p
+            style="height: 500px; background: var(--quiz-bg-secondary); padding: 20px; margin: 10px 0;"
+          >
+            这是足够长的内容，用于触发滚动条显示。 在不同主题下，滚动条的颜色应该与主题保持一致。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 设计令牌展示区域 -->
+    <section class="tokens-section">
+      <h2>设计令牌预览</h2>
+      <div class="tokens-grid">
+        <div class="token-item">
+          <div class="token-color" style="background: var(--quiz-bg-primary);"></div>
+          <code>--quiz-bg-primary</code>
+          <span class="token-value" id="token-bg-primary"></span>
+        </div>
+        <div class="token-item">
+          <div class="token-color" style="background: var(--quiz-text-primary);"></div>
+          <code>--quiz-text-primary</code>
+          <span class="token-value" id="token-text-primary"></span>
+        </div>
+        <div class="token-item">
+          <div class="token-color" style="background: var(--quiz-accent-color);"></div>
+          <code>--quiz-accent-color</code>
+          <span class="token-value" id="token-accent-color"></span>
+        </div>
+        <div class="token-item">
+          <div class="token-color" style="background: var(--quiz-border-color);"></div>
+          <code>--quiz-border-color</code>
+          <span class="token-value" id="token-border-color"></span>
+        </div>
+      </div>
+    </section>
+
+    <script type="module">
+      import '@quizerjs/core';
+
+      const themeSelect = document.getElementById('theme-select');
+      const themeStylesheet = document.getElementById('theme-stylesheet');
+
+      // 主题切换函数
+      function switchTheme(themeName) {
+        // 动态更新样式表链接
+        const newHref = `../dist/${themeName}.css`;
+
+        // 如果样式表已存在且链接不同，则更新
+        if (themeStylesheet.href !== new URL(newHref, window.location.href).href) {
+          themeStylesheet.href = newHref;
+        }
+      }
+
+      // 从 URL 参数或 localStorage 读取初始主题
+      function getInitialTheme() {
+        // 1. 检查 URL 参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const themeFromUrl = urlParams.get('theme');
+        if (
+          themeFromUrl &&
+          ['solarized-light', 'solarized-dark', 'light', 'dark'].includes(themeFromUrl)
+        ) {
+          return themeFromUrl;
+        }
+
+        // 2. 检查 localStorage
+        const themeFromStorage = localStorage.getItem('quizerjs-debug-theme');
+        if (
+          themeFromStorage &&
+          ['solarized-light', 'solarized-dark', 'light', 'dark'].includes(themeFromStorage)
+        ) {
+          return themeFromStorage;
+        }
+
+        // 3. 默认使用 Solarized Light
+        return 'solarized-light';
+      }
+
+      // 初始化主题
+      const initialTheme = getInitialTheme();
+      themeSelect.value = initialTheme;
+      switchTheme(initialTheme);
+
+      // 监听主题选择器变化
+      themeSelect.addEventListener('change', e => {
+        const selectedTheme = e.target.value;
+
+        // 切换主题
+        switchTheme(selectedTheme);
+
+        // 保存到 localStorage
+        localStorage.setItem('quizerjs-debug-theme', selectedTheme);
+
+        // 更新 URL 参数（不刷新页面）
+        const url = new URL(window.location);
+        url.searchParams.set('theme', selectedTheme);
+        window.history.replaceState({}, '', url);
+
+        // 更新设计令牌显示
+        updateTokenDisplay();
+      });
+
       // 更新设计令牌显示
+      function updateTokenDisplay() {
+        // 等待样式表加载完成
+        setTimeout(() => {
+          const styles = getComputedStyle(document.documentElement);
+          const tokenMap = {
+            '--quiz-bg-primary': 'token-bg-primary',
+            '--quiz-text-primary': 'token-text-primary',
+            '--quiz-accent-color': 'token-accent-color',
+            '--quiz-border-color': 'token-border-color',
+          };
+
+          Object.entries(tokenMap).forEach(([token, elementId]) => {
+            const value = styles.getPropertyValue(token).trim();
+            const element = document.getElementById(elementId);
+            if (element) {
+              element.textContent = value || '未定义';
+            }
+          });
+        }, 100); // 给样式表加载一些时间
+      }
+
+      // 监听样式表加载完成
+      themeStylesheet.addEventListener('load', () => {
+        updateTokenDisplay();
+      });
+
+      // 初始化时显示令牌值
       updateTokenDisplay();
-    });
-    
-    // 更新设计令牌显示
-    function updateTokenDisplay() {
-      // 等待样式表加载完成
-      setTimeout(() => {
-        const styles = getComputedStyle(document.documentElement);
-        const tokenMap = {
-          '--quiz-bg-primary': 'token-bg-primary',
-          '--quiz-text-primary': 'token-text-primary',
-          '--quiz-accent-color': 'token-accent-color',
-          '--quiz-border-color': 'token-border-color',
-        };
-        
-        Object.entries(tokenMap).forEach(([token, elementId]) => {
-          const value = styles.getPropertyValue(token).trim();
-          const element = document.getElementById(elementId);
-          if (element) {
-            element.textContent = value || '未定义';
-          }
-        });
-      }, 100); // 给样式表加载一些时间
-    }
-    
-    // 监听样式表加载完成
-    themeStylesheet.addEventListener('load', () => {
-      updateTokenDisplay();
-    });
-    
-    // 初始化时显示令牌值
-    updateTokenDisplay();
-    
-    // 定期更新令牌显示（防止样式表加载延迟）
-    setInterval(updateTokenDisplay, 500);
-  </script>
-</body>
+
+      // 定期更新令牌显示（防止样式表加载延迟）
+      setInterval(updateTokenDisplay, 500);
+    </script>
+  </body>
 </html>
 ```
 
 **调试页面功能**：
+
 - 实时切换 4 个主题预览
 - 展示所有 WSX 组件在不同主题下的效果
 - 验证 CSS 变量是否正确应用
@@ -1552,16 +1563,18 @@ vite preview --open
   - 支持的主题值：`solarized-light`、`solarized-dark`、`light`、`dark`
 
 - **方式 3：通过浏览器控制台**
+
   ```javascript
   // 直接切换主题
   document.getElementById('theme-stylesheet').href = '../dist/solarized-dark.css';
-  
+
   // 或触发选择器变化
   document.getElementById('theme-select').value = 'solarized-dark';
   document.getElementById('theme-select').dispatchEvent(new Event('change'));
   ```
 
 **主题切换机制说明**：
+
 - 样式表链接（`<link id="theme-stylesheet">`）通过 JavaScript 动态更新
 - 切换时更新 `href` 属性，浏览器自动加载新的 CSS 文件
 - 主题选择会保存到 `localStorage`，下次访问时自动恢复
@@ -1577,6 +1590,7 @@ vite preview --open
 - **quiz-question-description**：测试描述文本的颜色和字体
 
 **测试检查点**：
+
 - [ ] 背景色是否正确应用（`--quiz-bg-primary`、`--quiz-bg-secondary`）
 - [ ] 文本颜色是否清晰可读（`--quiz-text-primary`、`--quiz-text-secondary`）
 - [ ] 边框颜色是否正确（`--quiz-border-color`）
@@ -1624,12 +1638,14 @@ Array.from(document.styleSheets)
 **7. 对比度检查**：
 
 使用浏览器开发者工具或在线工具检查文本对比度：
+
 - 主文本（`--quiz-text-primary`）与主背景（`--quiz-bg-primary`）的对比度应 ≥ 4.5:1（WCAG AA）
 - 次文本（`--quiz-text-secondary`）与主背景的对比度应 ≥ 3:1（WCAG AA Large Text）
 
 **8. 深色模式验证**：
 
 切换到深色主题（Solarized Dark 或 Dark）后验证：
+
 - [ ] 背景色足够深，不会造成眼睛疲劳
 - [ ] 文本颜色足够亮，保持良好的可读性
 - [ ] 滚动条在深色背景下清晰可见
@@ -1726,21 +1742,21 @@ export class QuizOptionList extends LightComponent {
   --quiz-bg-tertiary: #f5f5f5;
   --quiz-bg-hover: #f5f8ff;
   --quiz-bg-selected: #e8f2ff;
-  
+
   --quiz-text-primary: #333333;
   --quiz-text-secondary: #666666;
   --quiz-text-tertiary: #999999;
   --quiz-text-placeholder: #999999;
-  
+
   --quiz-border-color: #e0e0e0;
   --quiz-border-hover: #4a90e2;
   --quiz-border-focus: #4a90e2;
   --quiz-border-selected: #4a90e2;
-  
+
   --quiz-accent-color: #4a90e2;
   --quiz-accent-hover: #357abd;
   --quiz-accent-active: #2a5f8f;
-  
+
   --quiz-error-color: #ff4d4f;
   --quiz-success-color: #52c41a;
   --quiz-warning-color: #faad14;
@@ -1749,27 +1765,27 @@ export class QuizOptionList extends LightComponent {
 
 /* 深色主题 */
 .theme-dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   --quiz-bg-primary: #1a1a1a;
   --quiz-bg-secondary: #262626;
   --quiz-bg-tertiary: #2d2d2d;
   --quiz-bg-hover: #2d3a4a;
   --quiz-bg-selected: #1e3a5f;
-  
+
   --quiz-text-primary: #e0e0e0;
   --quiz-text-secondary: #b0b0b0;
   --quiz-text-tertiary: #808080;
   --quiz-text-placeholder: #666666;
-  
+
   --quiz-border-color: #404040;
   --quiz-border-hover: #5a9de2;
   --quiz-border-focus: #5a9de2;
   --quiz-border-selected: #5a9de2;
-  
+
   --quiz-accent-color: #5a9de2;
   --quiz-accent-hover: #4a8dd2;
   --quiz-accent-active: #3a7dc2;
-  
+
   --quiz-error-color: #ff6b6b;
   --quiz-success-color: #6bcf7f;
   --quiz-warning-color: #ffb84d;
@@ -1795,7 +1811,7 @@ import '@quizerjs/theme/solarized-light.css';
 
 ```html
 <!-- 方式 3：在 HTML 中引入 -->
-<link rel="stylesheet" href="node_modules/@quizerjs/theme/dist/solarized-light.css">
+<link rel="stylesheet" href="node_modules/@quizerjs/theme/dist/solarized-light.css" />
 ```
 
 ```html
@@ -1846,7 +1862,7 @@ function toggleTheme() {
 
 // 或者在 Vue/React 中
 const isDark = ref(false);
-watch(isDark, (dark) => {
+watch(isDark, dark => {
   if (dark) {
     document.documentElement.classList.add('theme-dark');
   } else {
@@ -1963,6 +1979,7 @@ npx quizerjs-theme styles.css
 ### 工作原理
 
 CLI 工具会：
+
 1. 读取指定的主题 CSS 文件（从 `dist/` 目录）
 2. 读取目标 CSS 文件
 3. 将主题 CSS 内容添加到目标 CSS 文件的开头
@@ -1973,4 +1990,3 @@ CLI 工具会：
 ### 实现细节
 
 CLI 工具位于 `packages/theme/src/index.js`，通过 `package.json` 的 `bin` 字段注册为 `quizerjs-theme` 命令。
-

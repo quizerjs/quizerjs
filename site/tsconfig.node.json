@@ -8,4 +8,3 @@
   },
   "include": ["vite.config.ts", "uno.config.ts", "vitest.config.ts", "scripts/**/*.ts"]
 }
-

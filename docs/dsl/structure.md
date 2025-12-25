@@ -105,6 +105,7 @@ DSL 版本号，当前版本为 `"1.0.0"`。
 ```
 
 **支持的字段：**
+
 - `author` (string): 作者
 - `createdAt` (string): 创建时间（ISO 8601 格式）
 - `updatedAt` (string): 更新时间（ISO 8601 格式）
@@ -131,6 +132,7 @@ DSL 版本号，当前版本为 `"1.0.0"`。
 ```
 
 **支持的设置：**
+
 - `allowRetry` (boolean): 是否允许重试
 - `showResults` (boolean): 是否显示结果
 - `timeLimit` (number): 时间限制（秒）
@@ -173,4 +175,3 @@ DSL 版本号，当前版本为 `"1.0.0"`。
 
 - [问题类型](./question-types.md) - 了解所有支持的问题类型
 - [验证规则](./validation.md) - 了解数据验证规则
-

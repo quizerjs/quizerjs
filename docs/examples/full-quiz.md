@@ -85,4 +85,3 @@ if (result.valid) {
   console.log(`总分数: ${fullQuiz.quiz.questions.reduce((sum, q) => sum + (q.points || 0), 0)}`);
 }
 ```
-

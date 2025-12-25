@@ -87,6 +87,7 @@ graph TB
 **依赖**: 无
 
 **导出**:
+
 - `QuizDSL` 类型
 - `validateQuizDSL()` 函数
 - `parseQuizDSL()` 函数
@@ -103,11 +104,13 @@ graph TB
 - 提供结果计算功能
 - 不包含编辑功能
 
-**依赖**: 
+**依赖**:
+
 - `@quizerjs/dsl`
 - `@wsxjs/wsx-core`
 
 **导出**:
+
 - `QuizBlock` 组件
 - `Question` 组件
 - `Option` 组件
@@ -127,6 +130,7 @@ graph TB
   - **Doc Mode**: 基于 Markdown 的文档阅读和答题界面（使用 marked.js）
 
 **依赖**:
+
 - `@quizerjs/dsl`
 - `@quizerjs/core`
 - `@editorjs/editorjs` (编辑器)
@@ -134,6 +138,7 @@ graph TB
 - `[wizard-library]` (Wizard 模式动画库，待选择)
 
 **导出**:
+
 - `QuizEditor` 类（基于 Editor.js）
 - `QuizPlayer` 类（支持 wizard/doc 两种模式）
 
@@ -151,7 +156,7 @@ classDiagram
         +setDSL(dsl: QuizDSL)
         +save()
     }
-    
+
     class QuizPlayer {
         +container: HTMLElement
         +mode: 'wizard' | 'doc'
@@ -166,11 +171,12 @@ classDiagram
         +renderWizardMode()
         +renderDocMode()
     }
-    
+
     note for QuizPlayer "QuizPlayer 通过 mode 参数\n支持两种模式：\n- wizard: 使用 wizard 库\n- doc: 使用 marked.js"
 ```
 
 **关键特性**:
+
 - 框架无关（纯 JavaScript/TypeScript）
 - 基于 Editor.js 的编辑器
 - 基于 marked.js 的 Markdown 渲染
@@ -188,34 +194,37 @@ classDiagram
 - **不包含核心逻辑**: 所有核心功能来自 `@quizerjs/quizerjs`
 
 **依赖**:
+
 - `@quizerjs/quizerjs` (核心包)
 - `react`
 - `react-dom`
 
 **导出**:
+
 - `<QuizEditor />` 组件（包装 `@quizerjs/quizerjs` 的编辑器）
 - `<QuizPlayer />` 组件（包装 `@quizerjs/quizerjs` 的播放器，支持 mode 属性）
 - `useQuizEditor()` hook（封装编辑器状态）
 - `useQuizPlayer()` hook（封装播放器状态）
 
 **实现方式**:
+
 ```tsx
 // 示例：React 组件包装核心编辑器
 import { QuizEditor as CoreEditor } from '@quizerjs/quizerjs';
 
 export function QuizEditor(props) {
   const editorRef = useRef(null);
-  
+
   useEffect(() => {
     // 创建核心编辑器实例
     const editor = new CoreEditor({
       container: editorRef.current,
-      ...props
+      ...props,
     });
-    
+
     return () => editor.destroy();
   }, []);
-  
+
   return <div ref={editorRef} />;
 }
 ```
@@ -232,16 +241,19 @@ export function QuizEditor(props) {
 - **不包含核心逻辑**: 所有核心功能来自 `@quizerjs/quizerjs`
 
 **依赖**:
+
 - `@quizerjs/quizerjs` (核心包)
 - `vue`
 
 **导出**:
+
 - `<QuizEditor />` 组件（包装 `@quizerjs/quizerjs` 的编辑器）
 - `<QuizPlayer />` 组件（包装 `@quizerjs/quizerjs` 的播放器，支持 mode 属性）
 - `useQuizEditor()` composable（封装编辑器状态）
 - `useQuizPlayer()` composable（封装播放器状态）
 
 **实现方式**:
+
 ```vue
 <!-- 示例：Vue 组件包装核心编辑器 -->
 <script setup lang="ts">
@@ -256,7 +268,7 @@ onMounted(() => {
     // 创建核心编辑器实例
     editor = new CoreEditor({
       container: containerRef.value,
-      ...props
+      ...props,
     });
   }
 });
@@ -282,6 +294,7 @@ onUnmounted(() => {
 - 输出 Quiz DSL 格式
 
 **依赖**:
+
 - `@quizerjs/dsl`
 - `@quizerjs/core`
 - `@editorjs/editorjs`
@@ -293,6 +306,7 @@ onUnmounted(() => {
 ### Wizard Mode（向导模式）
 
 **特点**:
+
 - 幻灯片风格的步骤式界面
 - 分步骤引导用户创建测验
 - 清晰的进度指示
@@ -314,6 +328,7 @@ stateDiagram-v2
 ```
 
 **技术实现**:
+
 - 基于原生 JavaScript/DOM API
 - 使用 CSS 实现幻灯片效果
 - 状态管理使用简单的对象/类
@@ -321,12 +336,14 @@ stateDiagram-v2
 ### Doc Mode（文档模式）
 
 **特点**:
+
 - 基于 Markdown 的编辑界面
 - 支持 Markdown 语法编写测验
 - 实时预览
 - 适合熟悉 Markdown 的用户
 
 **Markdown 语法扩展**:
+
 ```markdown
 # 测验标题
 
@@ -363,6 +380,7 @@ JavaScript 是一种编译型语言。
 ```
 
 **技术实现**:
+
 - 使用 `marked.js` 解析 Markdown
 - 自定义扩展语法解析
 - 转换为 Quiz DSL 格式
@@ -376,6 +394,7 @@ QuizPlayer 是一个类，通过 `mode` 参数支持两种播放模式。
 #### Wizard Mode（向导模式）
 
 **特点**:
+
 - 幻灯片风格的答题界面
 - 一题一页显示
 - 流畅的动画过渡效果
@@ -399,12 +418,14 @@ stateDiagram-v2
 ```
 
 **交互**:
+
 - 左右箭头切换题目
 - 键盘快捷键支持（← → 方向键）
 - 流畅的滑动动画
 - 提交后显示结果
 
 **技术实现**:
+
 - 使用 wizard 库实现动画效果（待选择）
 - 基于原生 JavaScript/DOM API
 - CSS 过渡动画
@@ -412,6 +433,7 @@ stateDiagram-v2
 #### Doc Mode（文档模式）
 
 **特点**:
+
 - 完整的文档阅读体验
 - 在文档中嵌入答题区域
 - 支持 Markdown 渲染的内容
@@ -431,16 +453,19 @@ graph TD
 ```
 
 **交互**:
+
 - 滚动阅读
 - 在相应位置答题
 - 提交后显示结果和解析
 
 **技术实现**:
+
 - 使用 `marked.js` 解析和渲染 Markdown
 - 自定义扩展语法识别问题
 - 在渲染的 HTML 中嵌入答题组件
 
 **使用示例**:
+
 ```typescript
 import { QuizPlayer } from '@quizerjs/quizerjs';
 
@@ -451,7 +476,7 @@ const wizardPlayer = new QuizPlayer({
   mode: 'wizard',
   onSubmit: (answers, score) => {
     console.log('得分:', score);
-  }
+  },
 });
 
 // Doc 模式
@@ -461,7 +486,7 @@ const docPlayer = new QuizPlayer({
   mode: 'doc',
   onSubmit: (answers, score) => {
     console.log('得分:', score);
-  }
+  },
 });
 ```
 
@@ -482,7 +507,7 @@ Quiz DSL → Player (Wizard/Doc) → 渲染界面 → 用户答题 → 计算结
 ### React 集成流程（包装器模式）
 
 ```
-React Component 
+React Component
   → useQuizEditor Hook (状态管理)
     → 创建 @quizerjs/quizerjs Editor 实例
       → 挂载到 DOM
@@ -492,7 +517,7 @@ React Component
 ### Vue 集成流程（包装器模式）
 
 ```
-Vue Component 
+Vue Component
   → useQuizEditor Composable (状态管理)
     → 创建 @quizerjs/quizerjs Editor 实例
       → 挂载到 DOM
@@ -500,6 +525,7 @@ Vue Component
 ```
 
 **关键点**:
+
 - React/Vue 组件只负责**生命周期管理**和**状态同步**
 - 所有**核心逻辑**都在 `@quizerjs/quizerjs` 中
 - 包装器通过 DOM 引用将核心实例挂载到组件中
@@ -528,7 +554,8 @@ Vue Component
 以下是一些支持良好动画效果的 JavaScript wizard/slideshow 库：
 
 #### 1. Swiper.js ⭐ 推荐
-- **优点**: 
+
+- **优点**:
   - 功能强大，动画流畅
   - 支持触摸滑动
   - 轻量级（~40KB gzipped）
@@ -539,6 +566,7 @@ Vue Component
 - **许可证**: MIT
 
 #### 2. Embla Carousel
+
 - **优点**:
   - 极轻量（~2KB gzipped）
   - 模块化设计
@@ -549,6 +577,7 @@ Vue Component
 - **许可证**: MIT
 
 #### 3. Glide.js
+
 - **优点**:
   - 轻量级（~12KB gzipped）
   - 简单易用
@@ -559,6 +588,7 @@ Vue Component
 - **许可证**: MIT
 
 #### 4. Splide.js
+
 - **优点**:
   - 零依赖
   - 轻量级（~20KB gzipped）
@@ -569,6 +599,7 @@ Vue Component
 - **许可证**: MIT
 
 #### 5. Keen Slider
+
 - **优点**:
   - 非常轻量（~5KB gzipped）
   - 高性能
@@ -583,6 +614,7 @@ Vue Component
 如果您需要将 Markdown 文档转换为幻灯片风格的向导，以下是一些专门的库：
 
 #### 1. reveal.js ⭐ 推荐（如果支持 Markdown）
+
 - **优点**:
   - 专门用于创建 HTML 演示文稿
   - 支持 Markdown 内容
@@ -595,6 +627,7 @@ Vue Component
 - **特点**: 可以将 Markdown 转换为幻灯片，支持代码高亮、数学公式等
 
 #### 2. Marp
+
 - **优点**:
   - 专门为 Markdown 演示文稿设计
   - 轻量级
@@ -604,6 +637,7 @@ Vue Component
 - **特点**: 使用 Markdown 语法编写演示文稿，非常适合文档驱动的场景
 
 #### 3. Slide.js
+
 - **优点**:
   - 轻量级
   - 支持 Markdown
@@ -612,6 +646,7 @@ Vue Component
 - **特点**: 专注于将 Markdown 转换为幻灯片
 
 **对于 quizerjs 的建议**:
+
 - **Wizard Mode**: 使用 **Swiper.js** 或 **Embla Carousel**（纯 JavaScript，轻量级）
 - **如果需要 Markdown 支持**: 可以考虑 **reveal.js**，但体积较大
 - **最佳方案**: 使用 **Swiper.js/Embla** + **marked.js** 的组合

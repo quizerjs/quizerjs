@@ -81,8 +81,8 @@ const testDSL = {
   quiz: {
     id: 'test',
     title: '测试',
-    questions: []
-  }
+    questions: [],
+  },
 };
 
 const result = validateQuizDSL(testDSL);
@@ -123,4 +123,3 @@ yarn add @quizerjs/quizerjs @quizerjs/core @quizerjs/dsl
 - [快速开始](./getting-started.md) - 5 分钟快速上手
 - [DSL 指南](./dsl-guide.md) - 了解 DSL 数据格式
 - [框架集成](./vue-integration.md) - 在 Vue、React、Svelte 中使用
-

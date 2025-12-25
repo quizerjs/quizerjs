@@ -39,10 +39,7 @@ if (result.valid) {
 ## 验证错误处理
 
 ```typescript
-import {
-  validateQuizDSL,
-  ValidationErrorCode,
-} from '@quizerjs/dsl';
+import { validateQuizDSL, ValidationErrorCode } from '@quizerjs/dsl';
 
 const invalidDSL = {
   version: '1.0.0',
@@ -70,10 +67,9 @@ if (!result.valid) {
   const duplicateIdError = result.errors.find(
     e => e.code === ValidationErrorCode.OPTION_ID_DUPLICATE
   );
-  
+
   if (duplicateIdError) {
     console.error('发现重复的选项 ID:', duplicateIdError.path);
   }
 }
 ```
-

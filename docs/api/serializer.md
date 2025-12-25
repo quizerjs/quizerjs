@@ -9,10 +9,7 @@
 ### 签名
 
 ```typescript
-function serializeQuizDSL(
-  dsl: QuizDSL,
-  options?: SerializeOptions
-): SerializeResult;
+function serializeQuizDSL(dsl: QuizDSL, options?: SerializeOptions): SerializeResult;
 ```
 
 ### 参数
@@ -32,7 +29,7 @@ import { serializeQuizDSL } from '@quizerjs/dsl';
 const result = serializeQuizDSL(dsl, {
   validate: true,
   pretty: true,
-  indent: 2
+  indent: 2,
 });
 
 if (result.success) {
@@ -78,9 +75,9 @@ if (result.success) {
 
 ```typescript
 interface SerializeOptions {
-  validate?: boolean;  // 默认: true
-  pretty?: boolean;   // 默认: false
-  indent?: number;    // 默认: 2
+  validate?: boolean; // 默认: true
+  pretty?: boolean; // 默认: false
+  indent?: number; // 默认: 2
 }
 ```
 
@@ -115,7 +112,7 @@ interface SerializeResult {
 ```typescript
 const result = serializeQuizDSL(dsl, {
   pretty: true,
-  indent: 2
+  indent: 2,
 });
 
 if (result.success) {
@@ -127,7 +124,7 @@ if (result.success) {
 
 ```typescript
 const result = serializeQuizDSL(dsl, {
-  pretty: false
+  pretty: false,
 });
 
 if (result.success) {
@@ -152,4 +149,3 @@ if (result.success) {
 
 - [验证器](./validator.md) - DSL 验证
 - [解析器](./parser.md) - DSL 解析
-
