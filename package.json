@@ -45,7 +45,8 @@
     "site:lint:fix": "pnpm --filter @quizerjs/site lint:fix",
     "site:test": "pnpm --filter @quizerjs/site test",
     "build:pages": "pnpm build:react && pnpm build:vue && pnpm build:svelte && pnpm build:vanilla && pnpm --filter @quizerjs/site build:pages",
-    "deploy:pages": "pnpm build:pages && pnpm --filter @quizerjs/site deploy:pages"
+    "deploy:pages": "pnpm build:pages && pnpm --filter @quizerjs/site deploy:pages",
+    "release": "node scripts/publish.mjs"
   },
   "keywords": [
     "quiz",
@@ -63,12 +64,14 @@
     "@typescript-eslint/parser": "^8.49.0",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@wsxjs/wsx-press": "^0.0.19",
+    "chalk": "^5.6.2",
     "cross-env": "^7.0.3",
     "eslint": "^9.39.2",
     "eslint-plugin-svelte": "^3.13.1",
     "eslint-plugin-vue": "^10.6.2",
     "husky": "^9.0.11",
     "inquirer": "^9.2.15",
+    "listr2": "^9.0.5",
     "ora": "^8.0.1",
     "prettier": "^3.1.0",
     "svelte-eslint-parser": "^1.4.1",
