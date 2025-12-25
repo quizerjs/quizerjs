@@ -1364,7 +1364,7 @@ export default class App extends LightComponent {
           <wsx-view route="/features" component="features-page"></wsx-view>
           
           {/* 文档路由 - 嵌套结构 */}
-          <wsx-view route="/docs" component="docs-layout">
+          <wsx-view route="/docs/guide/getting-started" component="docs-layout">
             {/* 快速开始 */}
             <wsx-view route="/docs/guide/getting-started" component="getting-started-doc"></wsx-view>
             <wsx-view route="/docs/installation" component="installation-doc"></wsx-view>

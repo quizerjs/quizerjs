@@ -34,7 +34,7 @@ export class AppFooter extends LightComponent {
               <h4 class="footer-heading">{this.t('resources.title')}</h4>
               <ul class="footer-links">
                 <li>
-                  <a href="/docs">{this.t('resources.docs')}</a>
+                  <a href="/docs/guide/getting-started">{this.t('resources.docs')}</a>
                 </li>
                 <li>
                   <a href="/demos">{this.t('resources.demos')}</a>
