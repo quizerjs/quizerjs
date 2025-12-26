@@ -148,12 +148,12 @@ function checkBuild(pkg, distPath) {
  */
 async function checkGitStatus() {
   const currentBranch = execSilent('git branch --show-current');
-  if (currentBranch !== 'master') {
+  if (currentBranch !== 'main') {
     const { continue: shouldContinue } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'continue',
-        message: chalk.yellow(`当前不在 master 分支 (${currentBranch})，是否继续?`),
+        message: chalk.yellow(`当前不在 main 分支 (${currentBranch})，是否继续?`),
         default: false,
       },
     ]);
