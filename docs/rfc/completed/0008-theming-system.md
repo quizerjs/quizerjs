@@ -1,9 +1,10 @@
 # RFC 0008: QuizerJS 设计系统
 
-**状态**: 草案  
+**状态**: 已完成 (Completed)  
 **创建日期**: 2025-12-14  
+**完成日期**: 2025-12-24  
 **作者**: quizerjs 团队  
-**相关 RFC**: [RFC 0005: Editor Core](./0005-editor-core.md), [RFC 0007: Option List Render Optimization](./0007-option-list-render-optimization.md)
+**相关 RFC**: [RFC 0005: Editor Core](./completed/0005-editor-core.md), [RFC 0007: Option List Render Optimization](./completed/0007-option-list-render-optimization.md)
 
 ## 摘要
 

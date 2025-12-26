@@ -47,6 +47,24 @@ const DEMO_OPTIONS = [
     description: 'QuizerJS 开源网站',
     package: '@quizerjs/site',
   },
+  {
+    name: 'SlideJS (reveal.js)',
+    value: 'slidejs',
+    description: 'Slide DSL + reveal.js 演示',
+    package: 'slidejs-revealjs-demo',
+  },
+  {
+    name: 'SlideJS (Swiper)',
+    value: 'slidejs-swiper',
+    description: 'Slide DSL + Swiper.js 演示',
+    package: 'slidejs-swiper-demo',
+  },
+  {
+    name: 'SlideJS (Splide)',
+    value: 'slidejs-splide',
+    description: 'Slide DSL + Splide 轻量级轮播演示',
+    package: 'slidejs-splide-demo',
+  },
 ] as const;
 
 /**

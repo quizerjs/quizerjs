@@ -1,0 +1,47 @@
+{
+  "name": "@slidejs/dsl",
+  "version": "0.0.1",
+  "description": "Slide DSL 语法解析器和编译器",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src/generated/parser.js"
+  ],
+  "scripts": {
+    "generate:parser": "peggy --format es -o src/generated/parser.js src/grammar.peggy",
+    "build": "pnpm generate:parser && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist src/generated"
+  },
+  "dependencies": {
+    "@slidejs/core": "workspace:*",
+    "@slidejs/context": "workspace:*"
+  },
+  "devDependencies": {
+    "peggy": "^4.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.0.0",
+    "vitest": "^1.0.0"
+  },
+  "keywords": [
+    "slide",
+    "dsl",
+    "parser",
+    "compiler",
+    "presentation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -567,30 +567,218 @@ const docPlayer = new QuizPlayer({
 await docPlayer.init();
 ```
 
+## Slide DSL 设计
+
+### 概述
+
+Slide DSL 是一个独立的领域特定语言，用于定义如何将 Quiz DSL 数据转换为 reveal.js 幻灯片。它采用声明式语法，支持规则引擎和模板变量系统。
+
+### 根声明：`present type name`
+
+**语法**:
+```javascript
+present quiz "my quiz" {
+  rules {
+    // 规则定义
+  }
+}
+```
+
+**类型说明**:
+- `present`: 关键字，表示这是一个演示文稿定义
+- `type`: 支持的类型标识符
+  - `quiz`: **当前支持的类型**，表示要为 Quiz DSL 数据生成 slides
+  - 未来可能支持的类型：`survey`、`form`、`assessment` 等
+- `name`: 演示文稿名称（字符串，用引号包裹），会映射到 JSON 的 `quizId` 字段
+
+**语义**:
+- 当指定 `present quiz` 时，表示要为 Quiz DSL 数据生成幻灯片
+- 编译器会根据 `quiz` 类型，提供相应的数据上下文（如 `quiz.questions`、`quiz.sections` 等）
+- `name` 参数用于标识这个演示文稿，在编译后的 JSON 中作为 `quizId`
+
+**示例**:
+```javascript
+// 为 Quiz DSL 生成幻灯片
+present quiz "math-quiz" {
+  rules {
+    // 规则定义
+  }
+}
+
+// 未来可能支持的类型（示例）
+// present survey "user-feedback" { ... }
+// present form "registration" { ... }
+```
+
+### 规则类型
+
+Slide DSL 支持三种规则类型：
+
+1. **`rule start`**: 开始规则（必需），在内容前执行，用于生成介绍页
+2. **`rule content`**: 内容规则（可选），从数据动态生成 slides
+3. **`rule end`**: 结束规则（必需），在内容后执行，用于生成总结页
+
+**执行顺序**: `start` → `content`（按定义顺序）→ `end`
+
+### 内容类型
+
+**1. 动态内容（WSX 组件）**:
+```javascript
+content dynamic {
+  name "wsx-quiz-question"
+  attrs {
+    title section.title      // key value 格式
+    question question        // key value 格式
+    "show-hint" true         // key value 格式（带引号的 key）
+  }
+}
+```
+
+**2. 文本内容（直接文本）**:
+```javascript
+content text {
+  "欢迎参加测验"
+  "本测验包含 " + quiz.questions.length + " 道题目"
+}
+```
+
+### 行为配置（Behavior）
+
+**语法**:
+```javascript
+behavior {
+  transition [type] {
+    // transition 参数配置
+  }
+  // 其他行为配置（如 background、fragments 等）
+}
+```
+
+**Transition 配置**:
+- `transition`: 过渡动画类型（如 `slide`、`zoom`、`fade`、`cube` 等）
+- Transition 块中可以包含参数配置，用于自定义过渡效果
+- 参数示例：`speed`、`direction`、`easing` 等（具体参数取决于 reveal.js 的实现）
+
+**示例**:
+```javascript
+behavior {
+  transition slide {
+    speed "fast"        // 过渡速度
+    direction "horizontal"  // 过渡方向
+  }
+  
+  transition zoom {
+    duration 500        // 持续时间（毫秒）
+  }
+}
+```
+
+### 完整示例
+
+```javascript
+// Slide DSL 文件（.dsl 扩展名）
+// 语法：present type name
+present quiz "my quiz" {
+  rules {
+    // 开始规则：介绍页（必需）
+    rule start "intro" {
+      slide {
+        content dynamic {
+          name "wsx-quiz-intro"
+          attrs {
+            title "欢迎参加测验"
+            body "本测验包含 " + quiz.questions.length + " 道题目"
+          }
+        }
+        behavior {
+          transition zoom {
+            duration 500
+          }
+        }
+      }
+    }
+    
+    // 内容规则：问题 slides（从数据生成）
+    rule content "questions" {
+      for section in quiz.sections {
+        for question in section.questions {
+          slide {
+            content dynamic {
+              name "wsx-quiz-question"
+              attrs {
+                title section.title      // key value 格式
+                question question        // key value 格式
+                "show-hint" true         // key value 格式（带引号的 key）
+              }
+            }
+            behavior {
+              transition slide {
+                speed "fast"
+                direction "horizontal"
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // 结束规则：感谢页（必需）
+    rule end "thanks" {
+      slide {
+        content text {
+          "感谢您的参与！"
+          "测验已完成"
+        }
+        behavior {
+          transition zoom {
+            duration 500
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ## 实施计划
 
-### 阶段 1: QuizPlayer Wizard Mode
+### 阶段 1: Slide DSL 核心
 
-1. 📋 选择并集成 wizard 库（Swiper.js 或 Embla）
-2. 📋 创建 QuizPlayer 类基础结构
-3. 📋 实现 Wizard Mode 渲染
-4. 📋 实现答案收集
-5. 📋 实现评分逻辑
-6. 📋 编写单元测试
+1. 📋 设计 Slide DSL JSON 格式规范
+2. 📋 实现 Slide DSL 解析器（JSON）
+3. 📋 实现规则引擎
+4. 📋 实现模板变量系统
+5. 📋 编写单元测试
 
-### 阶段 2: QuizPlayer Doc Mode
+### 阶段 2: DSL 语法支持
 
-1. 📋 集成 marked.js
-2. 📋 实现 Doc Mode 渲染
-3. 📋 实现滚动和导航
+1. 📋 设计 DSL 语法规范
+2. 📋 实现 DSL 语法解析器（Lexer + Parser）
+3. 📋 实现 DSL 语法到 JSON 的编译器
 4. 📋 编写单元测试
 
-### 阶段 3: 集成和优化
+### 阶段 3: reveal.js 集成
 
-1. 📋 实现模式切换
-2. 📋 性能优化
-3. 📋 文档完善
-4. 📋 示例代码
+1. 📋 安装 reveal.js 依赖
+2. 📋 实现 reveal.js HTML 生成器
+3. 📋 实现 WSX 组件集成
+4. 📋 实现 reveal.js 特性支持（Fragments、Backgrounds、Nested Slides）
+5. 📋 编写集成测试
+
+### 阶段 4: QuizPlayer 实现
+
+1. 📋 创建 QuizPlayer 类基础结构
+2. 📋 实现 `initWizardMode()` 方法
+3. 📋 实现答案收集和评分
+4. 📋 实现模式切换
+5. 📋 编写单元测试和集成测试
+
+### 阶段 5: Doc Mode（可选）
+
+1. 📋 实现 `initDocMode()` 方法
+2. 📋 使用 marked.js 渲染 Markdown
+3. 📋 嵌入 WSX 组件
+4. 📋 编写测试
 
 ## 依赖关系
 
@@ -598,8 +786,9 @@ await docPlayer.init();
 @quizerjs/quizerjs (QuizPlayer)
 ├── @quizerjs/dsl (必需)
 ├── @quizerjs/core (必需)
+├── reveal.js (Wizard Mode 必需，用于幻灯片渲染)
 ├── marked (Doc Mode 必需)
-└── swiper 或 embla-carousel (Wizard Mode 必需)
+└── @slidejs (Slide DSL 解析器和编译器，未来实现)
 ```
 
 ## 参考

@@ -11,7 +11,21 @@
       "Bash(pnpm -F @quizerjs/theme build:*)",
       "WebFetch(domain:editorjs.io)",
       "WebFetch(domain:quilljs.com)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(pnpm install)",
+      "Bash(pnpm generate:parser:*)",
+      "Bash(pnpm test:*)",
+      "Bash(cat:*)",
+      "Bash(vitest run:*)",
+      "Bash(pnpm vitest run:*)",
+      "Bash(pnpm build:*)",
+      "WebFetch(domain:revealjs.com)",
+      "Bash(pnpm -F @slidejs/runner build:*)",
+      "Bash(pnpm -F @slidejs/revealjs build:*)",
+      "Bash(pnpm -F slidejs-revealjs-demo install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm dev)",
+      "Bash(pnpm:*)"
     ],
     "deny": [],
     "ask": []

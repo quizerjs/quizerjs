@@ -1,7 +1,8 @@
 # RFC 0005: 编辑器核心组件设计
 
-**状态**: 草案 (Draft)  
+**状态**: 已完成 (Completed)  
 **创建日期**: 2025-12-07  
+**完成日期**: 2025-12-24  
 **作者**: quizerjs 团队
 
 ## 摘要
@@ -1785,42 +1786,96 @@ await editor.load(dsl);
 ### 阶段 1: @quizerjs/core 转换器实现
 
 1. ✅ DSL 包完成
-2. 📋 在 @quizerjs/core 中实现 dslToBlock 函数
-3. 📋 在 @quizerjs/core 中实现 blockToDSL 函数
-4. 📋 编写转换器单元测试
-5. 📋 导出转换器 API (`@quizerjs/core/transformer`)
+2. ✅ 在 @quizerjs/core 中实现 dslToBlock 函数
+3. ✅ 在 @quizerjs/core 中实现 blockToDSL 函数
+4. ✅ 编写转换器单元测试
+5. ✅ 导出转换器 API (`@quizerjs/core/transformer`)
 
 ### 阶段 2: QuizEditor 基础结构
 
-1. 📋 创建 QuizEditor 类基础结构
-2. 📋 集成 Editor.js
-3. 📋 使用 @quizerjs/core 转换器
-4. 📋 实现元数据管理 API
-5. 📋 添加错误处理
-6. 📋 编写单元测试
+1. ✅ 创建 QuizEditor 类基础结构
+2. ✅ 集成 Editor.js
+3. ✅ 使用 @quizerjs/core 转换器
+4. ✅ 实现元数据管理 API
+5. ❌ 添加错误处理（QuizEditorError 类未实现）
+6. ⚠️ 编写单元测试（部分完成）
 
 ### 阶段 3: Editor.js 工具实现
 
-1. 📋 在 `@quizerjs/core` 中实现细粒度 wsx 组件：
-   - `quiz-question-header.wsx` - 问题标题组件
-   - `quiz-question-description.wsx` - 问题描述组件
-   - `quiz-option-list.wsx` - 选项列表组件
-   - `quiz-option.wsx` - 单个选项组件
-   - `quiz-correct-answer.wsx` - 正确答案组件
-   - `quiz-points.wsx` - 分值组件
-   - `quiz-explanation.wsx` - 解析说明组件
-2. 📋 实现 SingleChoiceTool（使用细粒度 wsx 组件）
-3. 📋 实现 MultipleChoiceTool（使用细粒度 wsx 组件）
-4. 📋 实现 TextInputTool（使用细粒度 wsx 组件）
-5. 📋 实现 TrueFalseTool（使用细粒度 wsx 组件）
-6. 📋 编写工具单元测试
+1. ⚠️ 在 `@quizerjs/core` 中实现细粒度 wsx 组件：
+   - ✅ `quiz-question-header.wsx` - 问题标题组件
+   - ✅ `quiz-question-description.wsx` - 问题描述组件
+   - ✅ `quiz-option-list.wsx` - 选项列表组件
+   - ✅ `quiz-option.wsx` - 单个选项组件
+   - ⚠️ `quiz-correct-answer.wsx` - 正确答案组件（使用原生元素替代，功能可用）
+   - ❌ `quiz-points.wsx` - 分值组件（**未实现**）
+   - ❌ `quiz-explanation.wsx` - 解析说明组件（**未实现**）
+2. ✅ 实现 SingleChoiceTool（使用细粒度 wsx 组件，但缺少 points 和 explanation）
+3. ✅ 实现 MultipleChoiceTool（使用细粒度 wsx 组件，但缺少 points 和 explanation）
+4. ✅ 实现 TextInputTool（使用细粒度 wsx 组件，但缺少 points 和 explanation）
+5. ✅ 实现 TrueFalseTool（使用细粒度 wsx 组件，但缺少 points 和 explanation）
+6. ✅ 编写工具单元测试
 
 ### 阶段 4: 集成和优化
 
-1. 📋 性能优化
-2. 📋 文档完善
-3. 📋 示例代码
-4. 📋 集成测试
+1. 📋 性能优化（标记为 v1.1+）
+2. ✅ 文档完善
+3. ✅ 示例代码
+4. ⚠️ 集成测试（部分完成）
+
+## 剩余待实现项
+
+### 🔴 高优先级（核心功能缺失）
+
+#### 1. 细粒度 wsx 组件
+
+##### ❌ `quiz-points` 组件
+- **状态**: 未实现
+- **影响**: 用户无法在编辑器中设置问题分值
+- **需要**: 在所有 Editor.js 工具中集成
+
+##### ❌ `quiz-explanation` 组件
+- **状态**: 未实现
+- **影响**: 用户无法在编辑器中添加问题解析
+- **需要**: 在所有 Editor.js 工具中集成
+
+#### 2. 错误处理类
+
+##### ❌ `QuizEditorError` 类
+- **状态**: 未实现
+- **影响**: 缺少结构化的错误处理
+- **当前**: 使用标准 `Error` 类
+- **需要**: 实现 `QuizEditorError` 类和 `QuizEditorErrorCode` 枚举
+
+### 🟡 中优先级（设计一致性）
+
+#### 3. `quiz-correct-answer` 组件
+- **状态**: 使用原生元素替代（功能可用）
+- **TextInputTool**: 使用 `<input>` 元素
+- **TrueFalseTool**: 使用 `<select>` 元素
+- **建议**: 可选实现，保持现状也可接受
+
+### 🟢 低优先级（未来优化）
+
+#### 4. 性能优化（v1.1+）
+- 虚拟滚动（大量问题场景）
+- 组件懒加载
+- 性能监控
+
+## 当前完成度
+
+**总体完成度**: 约 **85%**
+
+| 功能模块 | 完成度 | 状态 |
+|---------|--------|------|
+| QuizEditor 核心类 | 100% | ✅ 完成 |
+| Editor.js 集成 | 100% | ✅ 完成 |
+| DSL 转换器 | 100% | ✅ 完成 |
+| Editor.js 工具 | 80% | ⚠️ 缺少 points/explanation |
+| 细粒度组件 | 60% | ⚠️ 缺少 2 个组件 |
+| 错误处理 | 30% | ❌ 未实现 |
+| 性能优化 | 0% | 📋 计划中 (v1.1+) |
+| 框架集成 | 100% | ✅ 完成 |
 
 ## 依赖关系
 
@@ -2137,6 +2192,638 @@ class QuizEditor {
 ```
 
 ---
+
+## 剩余待实现项完成计划
+
+### 概述
+
+RFC 0005 的当前完成度约为 85%，仍有以下核心功能缺失：
+
+1. **`quiz-points` 组件**：用户无法在编辑器中设置问题分值
+2. **`quiz-explanation` 组件**：用户无法在编辑器中添加问题解析
+3. **`QuizEditorError` 类**：缺少结构化的错误处理
+
+这些功能的缺失影响了编辑器的完整性和用户体验。
+
+### 目标
+
+完成 RFC 0005 中剩余的核心功能，使编辑器达到 95% 完成度（性能优化除外）。
+
+### 实施计划
+
+#### 阶段 1: 实现细粒度 wsx 组件
+
+##### 1.1 实现 `quiz-points` 组件
+
+**文件**: `packages/core/src/components/quiz-points.wsx`
+
+**设计规范**：
+
+```typescript
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import styles from './quiz-points.css?inline';
+
+@autoRegister({ tagName: 'quiz-points' })
+export class QuizPoints extends LightComponent {
+  @state private points = '10';
+  @state private readonly = false;
+
+  private inputElement: HTMLInputElement | null = null;
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'quiz-points',
+    });
+  }
+
+  static get observedAttributes() {
+    return ['points', 'readonly'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'points':
+        this.points = newValue || '10';
+        if (this.inputElement) {
+          this.inputElement.value = this.points;
+        }
+        break;
+      case 'readonly':
+        this.readonly = newValue === 'true';
+        if (this.inputElement) {
+          this.inputElement.disabled = this.readonly;
+        }
+        break;
+    }
+  }
+
+  onConnected() {
+    this.setupInputElement();
+  }
+
+  private setupInputElement(): void {
+    // 设置 input 元素
+  }
+
+  /**
+   * 获取当前分值
+   */
+  public getPoints(): number {
+    const value = this.inputElement?.value || this.points;
+    const num = parseInt(value, 10);
+    return isNaN(num) ? 10 : Math.max(0, num);
+  }
+
+  private handleInputChange = (e: Event): void => {
+    const value = (e.target as HTMLInputElement).value;
+    this.points = value;
+    const points = this.getPoints();
+    this.dispatchEvent(
+      new CustomEvent('pointschange', {
+        detail: { points },
+        bubbles: true,
+      })
+    );
+  };
+
+  render() {
+    return (
+      <div className="quiz-points">
+        <label className="quiz-points-label">分值：</label>
+        <input
+          type="number"
+          min="0"
+          value={this.points}
+          disabled={this.readonly}
+          oninput={this.handleInputChange}
+          ref={(el: HTMLInputElement) => {
+            this.inputElement = el;
+          }}
+          className="quiz-points-input"
+        />
+      </div>
+    );
+  }
+}
+```
+
+**属性**:
+- `points: string` - 分值（字符串形式，默认 "10"）
+- `readonly: "true" | "false"` - 是否只读
+
+**事件**:
+- `pointschange` - 分值变化时触发（CustomEvent<{ points: number }>）
+
+**方法**:
+- `getPoints(): number` - 获取当前分值
+
+##### 1.2 实现 `quiz-explanation` 组件
+
+**文件**: `packages/core/src/components/quiz-explanation.wsx`
+
+**设计规范**：
+
+```typescript
+/** @jsxImportSource @wsxjs/wsx-core */
+
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import styles from './quiz-explanation.css?inline';
+
+@autoRegister({ tagName: 'quiz-explanation' })
+export class QuizExplanation extends LightComponent {
+  @state private explanation = '';
+  @state private readonly = false;
+
+  private editableElement: HTMLElement | null = null;
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'quiz-explanation',
+    });
+  }
+
+  static get observedAttributes() {
+    return ['explanation', 'readonly'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'explanation':
+        this.explanation = newValue || '';
+        if (this.editableElement) {
+          this.editableElement.innerHTML = this.explanation;
+        }
+        break;
+      case 'readonly':
+        this.readonly = newValue === 'true';
+        this.setupEditableElement();
+        break;
+    }
+  }
+
+  onConnected() {
+    this.setupEditableElement();
+  }
+
+  private setupEditableElement(): void {
+    // 设置 contentEditable 元素，支持 Editor.js inline tools
+    // 参考 quiz-question-header 的实现
+  }
+
+  /**
+   * 获取当前解析说明（HTML 格式）
+   */
+  public getExplanation(): string {
+    return this.editableElement?.innerHTML || this.explanation || '';
+  }
+
+  private handleTextChange = (): void => {
+    const explanation = this.getExplanation();
+    this.explanation = explanation;
+    this.dispatchEvent(
+      new CustomEvent('explanationchange', {
+        detail: { explanation },
+        bubbles: true,
+      })
+    );
+  };
+
+  render() {
+    return (
+      <div className="quiz-explanation">
+        <label className="quiz-explanation-label">解析说明：</label>
+        <div
+          contentEditable={!this.readonly}
+          className="quiz-explanation-editor"
+          innerHTML={this.explanation}
+          oninput={this.handleTextChange}
+          ref={(el: HTMLElement) => {
+            this.editableElement = el;
+          }}
+        />
+      </div>
+    );
+  }
+}
+```
+
+**属性**:
+- `explanation: string` - 解析说明文本（HTML 格式）
+- `readonly: "true" | "false"` - 是否只读
+
+**事件**:
+- `explanationchange` - 解析说明变化时触发（CustomEvent<{ explanation: string }>）
+
+**方法**:
+- `getExplanation(): string` - 获取当前解析说明（**HTML 格式**，供 Editor.js 使用）
+
+**实现要点**:
+- 使用 `contentEditable` div
+- 启用 Editor.js inline toolbar（通过 Block Tool 配置 `inlineToolbar: true`）
+- 支持加粗、斜体、链接等格式化
+- **保存时返回 HTML 格式的文本**
+- **格式转换由转换器处理**：`blockToDSL` 将 HTML 转换为 Markdown 存储到 DSL
+
+#### 阶段 2: 在 Editor.js 工具中集成组件
+
+##### 2.1 更新 SingleChoiceTool
+
+**文件**: `packages/editorjs-tool/src/tools/SingleChoiceTool.wsx`
+
+**需要修改**:
+
+1. 导入组件类型：
+```typescript
+import type {
+  QuizQuestionHeaderComponent,
+  QuizQuestionDescriptionComponent,
+  QuizOptionListComponent,
+  QuizPointsComponent,        // 新增
+  QuizExplanationComponent,   // 新增
+} from './editor-api';
+```
+
+2. 添加组件引用：
+```typescript
+private pointsComponent: QuizPointsComponent | null = null;
+private explanationComponent: QuizExplanationComponent | null = null;
+```
+
+3. 在 `render()` 方法中添加组件：
+```typescript
+render(): HTMLElement {
+  return (
+    <div className="quiz-single-choice-tool">
+      <quiz-question-header ... />
+      <quiz-question-description ... />
+      <quiz-option-list ... />
+      
+      {/* 新增：分值组件 */}
+      <quiz-points
+        points={this.data.question.points?.toString() || "10"}
+        readonly={this.readOnly ? 'true' : 'false'}
+        onpointschange={(e: CustomEvent<{ points: number }>) => {
+          this.data.question.points = e.detail.points;
+          this.block.dispatchChange();
+        }}
+        ref={(component: QuizPointsComponent) => {
+          this.pointsComponent = component;
+        }}
+      ></quiz-points>
+      
+      {/* 新增：解析说明组件 */}
+      <quiz-explanation
+        explanation={this.data.question.explanation || ""}
+        readonly={this.readOnly ? 'true' : 'false'}
+        onexplanationchange={(e: CustomEvent<{ explanation: string }>) => {
+          this.data.question.explanation = e.detail.explanation;
+          this.block.dispatchChange();
+        }}
+        ref={(component: QuizExplanationComponent) => {
+          this.explanationComponent = component;
+        }}
+      ></quiz-explanation>
+    </div>
+  );
+}
+```
+
+4. 在 `save()` 方法中收集数据：
+```typescript
+save(): SingleChoiceData {
+  // ... 现有代码 ...
+  
+  if (this.pointsComponent?.getPoints) {
+    this.data.question.points = this.pointsComponent.getPoints();
+  }
+  
+  if (this.explanationComponent?.getExplanation) {
+    const explanationHTML = this.explanationComponent.getExplanation();
+    // 注意：explanation 在 DSL 中存储为 Markdown，转换由 blockToDSL 处理
+    this.data.question.explanation = explanationHTML;
+  }
+  
+  return this.data;
+}
+```
+
+##### 2.2 更新其他工具
+
+同样的修改需要应用到：
+- `MultipleChoiceTool.wsx`
+- `TextInputTool.wsx`
+- `TrueFalseTool.wsx`
+
+##### 2.3 更新 editor-api.ts
+
+**文件**: `packages/editorjs-tool/src/tools/editor-api.ts`
+
+添加新的组件类型定义：
+
+```typescript
+export interface QuizPointsComponent extends HTMLElement {
+  getPoints(): number;
+}
+
+export interface QuizExplanationComponent extends HTMLElement {
+  getExplanation(): string;
+}
+```
+
+#### 阶段 3: 实现错误处理类
+
+##### 3.1 创建 QuizEditorError 类
+
+**文件**: `packages/quizerjs/src/editor/QuizEditorError.ts`
+
+```typescript
+/**
+ * QuizEditor 错误类
+ * 提供结构化的错误处理
+ */
+export class QuizEditorError extends Error {
+  constructor(
+    message: string,
+    public code: QuizEditorErrorCode,
+    public cause?: Error
+  ) {
+    super(message);
+    this.name = 'QuizEditorError';
+    
+    // 保持堆栈跟踪
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, QuizEditorError);
+    }
+  }
+}
+
+/**
+ * QuizEditor 错误代码枚举
+ */
+export enum QuizEditorErrorCode {
+  // 初始化错误
+  NOT_INITIALIZED = 'NOT_INITIALIZED',
+  EDITOR_INIT_FAILED = 'EDITOR_INIT_FAILED',
+  
+  // DSL 验证错误
+  INVALID_DSL = 'INVALID_DSL',
+  DSL_SCHEMA_ERROR = 'DSL_SCHEMA_ERROR',
+  
+  // 编辑器操作错误
+  EDITOR_ERROR = 'EDITOR_ERROR',
+  BLOCK_RENDER_ERROR = 'BLOCK_RENDER_ERROR',
+  
+  // 转换错误
+  CONVERSION_ERROR = 'CONVERSION_ERROR',
+  MARKDOWN_PARSE_ERROR = 'MARKDOWN_PARSE_ERROR',
+  HTML_PARSE_ERROR = 'HTML_PARSE_ERROR',
+  
+  // 组件错误
+  COMPONENT_RENDER_ERROR = 'COMPONENT_RENDER_ERROR',
+  COMPONENT_STATE_ERROR = 'COMPONENT_STATE_ERROR',
+  
+  // 数据同步错误
+  STATE_SYNC_ERROR = 'STATE_SYNC_ERROR',
+  SAVE_ERROR = 'SAVE_ERROR',
+  LOAD_ERROR = 'LOAD_ERROR',
+}
+```
+
+##### 3.2 在 QuizEditor 中使用错误类
+
+**文件**: `packages/quizerjs/src/editor/QuizEditor.ts`
+
+更新所有错误抛出：
+
+```typescript
+import { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
+
+// 示例：在 load() 方法中
+async load(dsl: QuizDSL): Promise<void> {
+  if (!this.editor) {
+    throw new QuizEditorError(
+      '编辑器尚未初始化',
+      QuizEditorErrorCode.NOT_INITIALIZED
+    );
+  }
+
+  const validation = validateQuizDSL(dsl);
+  if (!validation.valid) {
+    throw new QuizEditorError(
+      `Invalid DSL: ${validation.errors.map(e => e.message).join(', ')}`,
+      QuizEditorErrorCode.INVALID_DSL
+    );
+  }
+
+  // ...
+}
+```
+
+##### 3.3 导出错误类
+
+**文件**: `packages/quizerjs/src/editor/index.ts`
+
+```typescript
+export { QuizEditor } from './QuizEditor';
+export type { QuizEditorOptions } from './QuizEditor';
+export { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
+```
+
+#### 阶段 4: 样式实现
+
+##### 4.1 quiz-points.css
+
+**文件**: `packages/core/src/components/quiz-points.css`
+
+```css
+.quiz-points {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.quiz-points-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.quiz-points-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+.quiz-points-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+```
+
+##### 4.2 quiz-explanation.css
+
+**文件**: `packages/core/src/components/quiz-explanation.css`
+
+```css
+.quiz-explanation {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.quiz-explanation-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.quiz-explanation-editor {
+  min-height: 60px;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ffffff;
+  outline: none;
+}
+
+.quiz-explanation-editor:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.quiz-explanation-editor[contenteditable="false"] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+```
+
+#### 阶段 5: 测试
+
+##### 5.1 组件单元测试
+
+创建测试文件：
+- `packages/core/tests/components/quiz-points.test.ts`
+- `packages/core/tests/components/quiz-explanation.test.ts`
+
+##### 5.2 工具集成测试
+
+更新现有测试：
+- `packages/editorjs-tool/src/tools/__tests__/SingleChoiceTool.test.ts`
+- `packages/editorjs-tool/src/tools/__tests__/MultipleChoiceTool.test.ts`
+- `packages/editorjs-tool/src/tools/__tests__/TextInputTool.test.ts`
+- `packages/editorjs-tool/src/tools/__tests__/TrueFalseTool.test.ts`
+
+测试要点：
+- 组件正确渲染
+- 属性传递正确
+- 事件触发正确
+- `save()` 方法正确收集数据
+- 只读模式正常工作
+
+##### 5.3 错误处理测试
+
+创建测试文件：
+- `packages/quizerjs/tests/QuizEditorError.test.ts`
+
+测试要点：
+- 错误类正确创建
+- 错误代码正确
+- 堆栈跟踪正确
+- 错误消息正确
+
+### 验收标准
+
+#### quiz-points 组件
+
+- ✅ 组件可以正确渲染
+- ✅ 可以设置和获取分值
+- ✅ 只读模式正常工作
+- ✅ 事件正确触发
+- ✅ 在所有 Editor.js 工具中正确集成
+- ✅ 数据正确保存到 DSL
+
+#### quiz-explanation 组件
+
+- ✅ 组件可以正确渲染
+- ✅ 支持 contentEditable 编辑
+- ✅ 支持 Editor.js inline tools
+- ✅ 可以设置和获取解析说明（HTML 格式）
+- ✅ 只读模式正常工作
+- ✅ 事件正确触发
+- ✅ 在所有 Editor.js 工具中正确集成
+- ✅ HTML 正确转换为 Markdown 存储到 DSL
+
+#### QuizEditorError 类
+
+- ✅ 错误类正确实现
+- ✅ 所有错误代码定义完整
+- ✅ QuizEditor 中所有错误都使用 QuizEditorError
+- ✅ 错误信息清晰有用
+- ✅ 堆栈跟踪正确
+
+### 依赖关系
+
+本计划的实现依赖于：
+
+- `@quizerjs/core` - wsx 组件基础
+- `@quizerjs/editorjs-tool` - Editor.js 工具
+- `@quizerjs/dsl` - DSL 类型定义
+- `@wsxjs/wsx-core` - wsx 框架
+- `marked` - Markdown 转换（用于 explanation 的 HTML → Markdown）
+
+### 风险评估
+
+#### 低风险
+
+- 组件实现：已有类似的组件（quiz-question-header）作为参考
+- 样式实现：使用标准 CSS，风险低
+
+#### 中风险
+
+- Editor.js inline tools 集成：需要确保 quiz-explanation 正确支持 inline tools
+- HTML → Markdown 转换：需要确保转换器正确处理 explanation 字段
+
+#### 缓解措施
+
+- 参考现有组件的实现模式
+- 充分测试 HTML → Markdown 转换
+- 在多个浏览器中测试 inline tools 功能
+
+### 时间估算
+
+- **阶段 1**（组件实现）：2-3 天
+- **阶段 2**（工具集成）：1-2 天
+- **阶段 3**（错误处理）：1 天
+- **阶段 4**（样式）：0.5 天
+- **阶段 5**（测试）：1-2 天
+
+**总计**: 约 5-8 天
+
+### 后续工作
+
+完成本计划后，RFC 0005 的完成度将达到约 95%（性能优化除外）。
+
+剩余工作（可选）：
+- 实现 `quiz-correct-answer` 组件以替代原生元素（设计一致性）
+- 性能优化（v1.1+）
 
 ## 参考
 

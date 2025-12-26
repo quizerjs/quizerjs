@@ -53,3 +53,7 @@ lerna-debug.log*
 # WSX-Press output
 **/.wsx-press/
 
+# VitePress
+.vitepress/
+**/.vitepress/cache/
+

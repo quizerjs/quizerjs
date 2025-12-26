@@ -1,10 +1,11 @@
 # RFC 0007: Option List Render Optimization
 
-**状态**: 进行中  
+**状态**: 已完成 (Completed)  
 **创建日期**: 2025-01-27  
+**完成日期**: 2025-12-24  
 **最后更新**: 2025-12-12  
 **作者**: AI Assistant  
-**相关 RFC**: [RFC 0005: Editor Core](./0005-editor-core.md)
+**相关 RFC**: [RFC 0005: Editor Core](./completed/0005-editor-core.md)
 
 ## 摘要
 

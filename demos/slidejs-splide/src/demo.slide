@@ -1,0 +1,73 @@
+present quiz "splide-demo" {
+  rules {
+    rule start "intro" {
+      slide {
+        content text {
+          "# Slide DSL + Splide"
+          "## 轻量级、灵活的幻灯片"
+          ""
+          "Splide 是一个用 TypeScript 编写的轻量级轮播库，无依赖，性能优秀。"
+        }
+        behavior {
+          transition fade {}
+        }
+      }
+    }
+
+    rule content "quiz-slides" {
+      slide {
+        content dynamic {
+          name: "my-quiz-question"
+          attrs {
+            question: "What is 2 + 2?"
+            options: "[\"2\", \"3\", \"4\", \"5\"]"
+          }
+        }
+        behavior {
+          transition slide {}
+        }
+      }
+
+      slide {
+        content dynamic {
+          name: "my-quiz-question"
+          attrs {
+            question: "Which is a JavaScript framework?"
+            options: "[\"React\", \"Python\", \"Java\", \"C++\"]"
+          }
+        }
+        behavior {
+          transition slide {}
+        }
+      }
+
+      slide {
+        content text {
+          "# Features"
+          ""
+          "- 轻量级，无依赖"
+          "- TypeScript 编写"
+          "- 键盘和触摸导航"
+          "- 支持 Web Components"
+          "- 流畅的过渡动画"
+        }
+        behavior {
+          transition slide {}
+        }
+      }
+    }
+
+    rule end "thanks" {
+      slide {
+        content text {
+          "# Thank You!"
+          ""
+          "## 使用 Splide 创建优雅的幻灯片演示"
+        }
+        behavior {
+          transition fade {}
+        }
+      }
+    }
+  }
+}
