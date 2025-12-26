@@ -74,4 +74,3 @@ describe('SlideEngine', () => {
     expect(slides[1].content.type).toBe('text');
   });
 });
-
