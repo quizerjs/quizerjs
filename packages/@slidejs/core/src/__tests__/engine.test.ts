@@ -1,15 +1,26 @@
 import { describe, it, expect } from 'vitest';
 import { SlideEngine } from '../engine';
-import type { SlideDSL, SlideDefinition } from '../types';
+import type { SlideDSL } from '../types';
 import type { SlideContext } from '@slidejs/context';
 
 describe('SlideEngine', () => {
   it('should create an instance', () => {
-    const dsl: SlideDSL = {
+    const dsl: SlideDSL<SlideContext> = {
       version: '1.0.0',
       sourceType: 'quiz',
       sourceId: 'test',
-      rules: [],
+      rules: [
+        {
+          type: 'start',
+          name: 'intro',
+          generate: () => [],
+        },
+        {
+          type: 'end',
+          name: 'thanks',
+          generate: () => [],
+        },
+      ],
     };
 
     const engine = new SlideEngine(dsl);
@@ -34,6 +45,18 @@ describe('SlideEngine', () => {
             },
           ],
         },
+        {
+          type: 'end',
+          name: 'thanks',
+          generate: () => [
+            {
+              content: {
+                type: 'text',
+                lines: ['Thank you'],
+              },
+            },
+          ],
+        },
       ],
     };
 
@@ -46,8 +69,9 @@ describe('SlideEngine', () => {
     const engine = new SlideEngine(dsl);
     const slides = engine.generate(context);
 
-    expect(slides).toHaveLength(1);
+    expect(slides).toHaveLength(2);
     expect(slides[0].content.type).toBe('text');
+    expect(slides[1].content.type).toBe('text');
   });
 });
 
