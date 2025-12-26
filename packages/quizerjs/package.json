@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/quizerjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "quizerjs 主包 - 提供测验编辑器和播放器",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

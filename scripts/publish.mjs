@@ -178,8 +178,8 @@ async function checkGitStatus() {
   }
 
   // 先获取远程更新，避免检查过时的信息
-  execSilent('git fetch origin master 2>/dev/null');
-  const unpushedCommits = execSilent('git log origin/master..HEAD 2>/dev/null');
+  execSilent('git fetch origin main 2>/dev/null');
+  const unpushedCommits = execSilent('git log origin/main..HEAD 2>/dev/null');
   if (unpushedCommits) {
     const { continue: shouldContinue } = await inquirer.prompt([
       {
@@ -300,9 +300,9 @@ function checkPackageExists(packageName, version) {
 async function checkRemoteUpToDate() {
   try {
     // 获取远程更新
-    execSilent('git fetch origin master 2>/dev/null');
+    execSilent('git fetch origin main 2>/dev/null');
     const localCommit = execSilent('git rev-parse HEAD');
-    const remoteCommit = execSilent('git rev-parse origin/master 2>/dev/null');
+    const remoteCommit = execSilent('git rev-parse origin/main 2>/dev/null');
 
     // 如果无法获取本地提交，跳过检查（这是可接受的，因为可能不在 git 仓库中）
     if (localCommit === null) {
@@ -326,7 +326,7 @@ async function checkRemoteUpToDate() {
         const pullSpinner = ora('拉取远程更新').start();
         try {
           // 使用 --no-edit 避免在 rebase 时打开编辑器
-          exec('git pull origin master --rebase --no-edit', { silent: true });
+          exec('git pull origin main --rebase --no-edit', { silent: true });
           pullSpinner.succeed('已拉取远程更新');
         } catch (error) {
           pullSpinner.fail('拉取失败，请手动解决冲突');
@@ -517,7 +517,7 @@ async function main() {
           title: '推送到远程仓库',
           task: () => {
             // git push 本身不会询问，除非需要认证（通过环境变量处理）
-            exec('git push origin master', { silent: true });
+            exec('git push origin main', { silent: true });
             exec('git push --follow-tags', { silent: true });
           },
         },

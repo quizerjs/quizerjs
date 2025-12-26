@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/theme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "QuizerJS Design System - Theme package with preset themes",
   "type": "module",
   "main": "./dist/index.js",
