@@ -24,8 +24,8 @@ importers:
         specifier: ^14.6.0
         version: 14.6.0(eslint-plugin-vue@10.6.2(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3))(eslint@9.39.2(jiti@1.21.7))(vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@1.21.7))))(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
       '@wsxjs/wsx-press':
-        specifier: ^0.0.19
-        version: 0.0.19(typedoc-plugin-markdown@4.9.0(typedoc@0.26.11(typescript@5.9.3)))(typedoc@0.26.11(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.0.23
+        version: 0.0.23(typedoc-plugin-markdown@4.9.0(typedoc@0.26.11(typescript@5.9.3)))(typedoc@0.26.11(typescript@5.9.3))(typescript@5.9.3)
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
@@ -286,7 +286,13 @@ importers:
       '@quizerjs/theme':
         specifier: workspace:*
         version: link:../../packages/theme
+      '@wsxjs/wsx-core':
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.9.3)
     devDependencies:
+      '@wsxjs/wsx-vite-plugin':
+        specifier: ^0.0.23
+        version: 0.0.23(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -843,17 +849,17 @@ importers:
         specifier: workspace:*
         version: link:../packages/theme
       '@wsxjs/wsx-base-components':
-        specifier: ^0.0.19
-        version: 0.0.19(typescript@5.9.3)
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.9.3)
       '@wsxjs/wsx-core':
-        specifier: ^0.0.19
-        version: 0.0.19(typescript@5.9.3)
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.9.3)
       '@wsxjs/wsx-i18next':
-        specifier: ^0.0.19
-        version: 0.0.19(i18next@23.16.8)(typescript@5.9.3)
+        specifier: ^0.0.23
+        version: 0.0.23(i18next@23.16.8)(typescript@5.9.3)
       '@wsxjs/wsx-router':
-        specifier: ^0.0.19
-        version: 0.0.19(typescript@5.9.3)
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.9.3)
       i18next:
         specifier: ^23.7.0
         version: 23.16.8
@@ -865,8 +871,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(vitest@1.6.1)
       '@wsxjs/wsx-vite-plugin':
-        specifier: ^0.0.19
-        version: 0.0.19(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
+        specifier: ^0.0.23
+        version: 0.0.23(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -2301,8 +2307,8 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
-  '@wsxjs/wsx-base-components@0.0.19':
-    resolution: {integrity: sha512-LakOupcfTfXoNZLsM2lbFbS/IKFNmNw6BrJtUB4uRpLL52xba77lSGjb+G4ervYD7teDEWzka3G169EA2oX7ZA==}
+  '@wsxjs/wsx-base-components@0.0.23':
+    resolution: {integrity: sha512-hnjc4617iQY2Zu0XIMnxUIV6m0Re2hJR/Wt838PjpU7m5AIJskazuikgT1n5La+5s0XynjVWZkng1AEoCGeNng==}
 
   '@wsxjs/wsx-core@0.0.17':
     resolution: {integrity: sha512-XvvumCmE+nqSBbtMsjCVDqTspwgm0dAZeZkIv0vQHX9kKPnRnLHoD5dYtKyOtqLGzztxK1iu+schYO0qdYx9IQ==}
@@ -2314,33 +2320,33 @@ packages:
     peerDependencies:
       typescript: '>=4.7.0'
 
-  '@wsxjs/wsx-core@0.0.19':
-    resolution: {integrity: sha512-TFXPlnuOYCqZOyNmoM5lzX3Z3n0P3NNdNO2Fk/JUQYtQRyw0vve7jtWxXJzO7KJUUXZHtp6+LRTnSQe9Ga8Bww==}
+  '@wsxjs/wsx-core@0.0.23':
+    resolution: {integrity: sha512-6gV5ZXo6M3L0PLXSsJZIqhwsLLTFMPjvE4wlvw/oXwVoAfwQ6PXvrMx/4ooDuy5Ce4AefjMU9zXczCyOGVbxww==}
     peerDependencies:
       typescript: '>=4.7.0'
 
-  '@wsxjs/wsx-i18next@0.0.19':
-    resolution: {integrity: sha512-aZvHc4LcHgqDGW6vzFq1V/lVRKEhTiyNUnF+8WvIulW2PgTtLU1Aq5vG2XbyKT/nWJ1dTxjCwf8ydFn6Pn/+yw==}
+  '@wsxjs/wsx-i18next@0.0.23':
+    resolution: {integrity: sha512-hSBdpvsHZ2VUI0LVbMfIXH86FqzgcRwQOyew3ORsMvbP5todABeiNDrK8g7Qnk8BwQcxKGkKQo8QqgOT5IhsAg==}
     peerDependencies:
       i18next: ^23.0.0
 
   '@wsxjs/wsx-logger@0.0.18':
     resolution: {integrity: sha512-a/dw4Tcw664Pj4BcB9CB5Cgska55qrIyeE2wKxzJo//NzIJACA0QiE+8eslrylExzWXwIfA+829WpB/F5Edyvg==}
 
-  '@wsxjs/wsx-logger@0.0.19':
-    resolution: {integrity: sha512-XWugo8JF6jQ5CxcpQ7N9uATb9AeDH40+bVYmejaFZrgWw6m02M247T/Cfxdfh4Nw3qwZs5SzNsnf1TvNNdilpw==}
+  '@wsxjs/wsx-logger@0.0.23':
+    resolution: {integrity: sha512-a7fVreCGkOgLeh+884ZMKI2uUlu/oWXZSGFx2e1UJp1acu/VKsZVEobhNlvjQpH8zmt3TLPaEgn5dw++viVwMg==}
 
-  '@wsxjs/wsx-marked-components@0.0.19':
-    resolution: {integrity: sha512-k1+sgHuK0lVMwJSsD/W8rlblicODa5ws/V+4Xqz0IKp05lbarTGzIR6Dc4pXvWDEYoRuDsdXxn5p2WY8pGuiSg==}
+  '@wsxjs/wsx-marked-components@0.0.23':
+    resolution: {integrity: sha512-qC308F/XfjCes50KmTO0+9Nd8AEhL4gaPzDBJ6hCXY573/qujRPZMC3zhhb677ip4lhyZ6J1OwdCXRJbYWL6AQ==}
 
-  '@wsxjs/wsx-press@0.0.19':
-    resolution: {integrity: sha512-S9sAS5agPLH6Pk4X+3Hj7yX7kow0OmSycqtWSUVBRKeb4+9r8iWkP+D0FINnYJdn85EQqSajDaeBOn/ObkKLug==}
+  '@wsxjs/wsx-press@0.0.23':
+    resolution: {integrity: sha512-Prvmgi0/bg5uJS1TlpUsJF6A3VHkK+G2a/A2s3d76yVhdzrKpNr58X7birsxEtvTgx5hb+LITf2BLIEyZ3fgTQ==}
     peerDependencies:
       typedoc: ^0.26.0
       typedoc-plugin-markdown: ^4.0.0
 
-  '@wsxjs/wsx-router@0.0.19':
-    resolution: {integrity: sha512-W0Yxm0lAHd7Wmk1PV/jf7CiHFgSB7yz3Myntq9fGlDWGc3eS7yw7Hx+rc1cVozg+g+eNfEB5as+qW0CqHJtpvA==}
+  '@wsxjs/wsx-router@0.0.23':
+    resolution: {integrity: sha512-LMRhQSuBURa9UftRy4U104J0KrCw7aa9ps4fgUAckiU18kgE11ej4xuruaH+ciFu0qMLXa6pyC5JZ7KlIyn2Xg==}
 
   '@wsxjs/wsx-vite-plugin@0.0.17':
     resolution: {integrity: sha512-CKQI8lCoFknKxtyS5Hgwqdyp9a43RfaqFEfgeXKz83mLOfKhXc2UZIrxV+/d/kusM3TdKsAbnk+/ZBE/YJJA4g==}
@@ -2354,8 +2360,8 @@ packages:
       esbuild: '>=0.25.0'
       vite: '>=4.0.0'
 
-  '@wsxjs/wsx-vite-plugin@0.0.19':
-    resolution: {integrity: sha512-AneKXx6DDxYi9N7ECbIP7N+EAcpmszZCL9RR+KGvkd08/DUFeJ6YtZ6R3M0Y13nm6KGpzuQwhjlT2emTWMVZjw==}
+  '@wsxjs/wsx-vite-plugin@0.0.23':
+    resolution: {integrity: sha512-UjByRu7tX1lqwdbdHW1p0GcCUq/EyQlxiIQdkXio7G8325ofJLhnmI14QHr4801fretRlqflC4fpbGpXj9ffzQ==}
     peerDependencies:
       esbuild: '>=0.25.0'
       vite: '>=4.0.0'
@@ -3408,6 +3414,10 @@ packages:
   log-update@6.1.0:
     resolution: {integrity: sha512-9ie8ItPR6tjY5uYJh8K/Zrv/RMZ5VOlOWvtZdEHYSTFKZfIBPQa9tOAEeAWhd+AnIneLJ22w5fjOYtoutpWq5w==}
     engines: {node: '>=18'}
+
+  loglevel@1.9.2:
+    resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
+    engines: {node: '>= 0.6.0'}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -6208,7 +6218,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      vitest: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
+      vitest: 1.6.1(@types/node@25.0.2)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
 
   '@vitest/utils@1.6.1':
     dependencies:
@@ -6387,10 +6397,10 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@wsxjs/wsx-base-components@0.0.19(typescript@5.9.3)':
+  '@wsxjs/wsx-base-components@0.0.23(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
-      '@wsxjs/wsx-logger': 0.0.19
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
+      '@wsxjs/wsx-logger': 0.0.23
       prismjs: 1.30.0
     transitivePeerDependencies:
       - typescript
@@ -6404,14 +6414,14 @@ snapshots:
       '@wsxjs/wsx-logger': 0.0.18
       typescript: 5.9.3
 
-  '@wsxjs/wsx-core@0.0.19(typescript@5.9.3)':
+  '@wsxjs/wsx-core@0.0.23(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-logger': 0.0.19
+      '@wsxjs/wsx-logger': 0.0.23
       typescript: 5.9.3
 
-  '@wsxjs/wsx-i18next@0.0.19(i18next@23.16.8)(typescript@5.9.3)':
+  '@wsxjs/wsx-i18next@0.0.23(i18next@23.16.8)(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
       i18next: 23.16.8
       i18next-browser-languagedetector: 7.2.2
       i18next-http-backend: 2.7.3
@@ -6424,25 +6434,24 @@ snapshots:
       pino: 9.14.0
       pino-pretty: 13.1.3
 
-  '@wsxjs/wsx-logger@0.0.19':
+  '@wsxjs/wsx-logger@0.0.23':
     dependencies:
-      pino: 9.14.0
-      pino-pretty: 13.1.3
+      loglevel: 1.9.2
 
-  '@wsxjs/wsx-marked-components@0.0.19(typescript@5.9.3)':
+  '@wsxjs/wsx-marked-components@0.0.23(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
-      '@wsxjs/wsx-logger': 0.0.19
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
+      '@wsxjs/wsx-logger': 0.0.23
       marked: 12.0.2
     transitivePeerDependencies:
       - typescript
 
-  '@wsxjs/wsx-press@0.0.19(typedoc-plugin-markdown@4.9.0(typedoc@0.26.11(typescript@5.9.3)))(typedoc@0.26.11(typescript@5.9.3))(typescript@5.9.3)':
+  '@wsxjs/wsx-press@0.0.23(typedoc-plugin-markdown@4.9.0(typedoc@0.26.11(typescript@5.9.3)))(typedoc@0.26.11(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
-      '@wsxjs/wsx-logger': 0.0.19
-      '@wsxjs/wsx-marked-components': 0.0.19(typescript@5.9.3)
-      '@wsxjs/wsx-router': 0.0.19(typescript@5.9.3)
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
+      '@wsxjs/wsx-logger': 0.0.23
+      '@wsxjs/wsx-marked-components': 0.0.23(typescript@5.9.3)
+      '@wsxjs/wsx-router': 0.0.23(typescript@5.9.3)
       fuse.js: 7.1.0
       marked: 12.0.2
       typedoc: 0.26.11(typescript@5.9.3)
@@ -6450,10 +6459,10 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@wsxjs/wsx-router@0.0.19(typescript@5.9.3)':
+  '@wsxjs/wsx-router@0.0.23(typescript@5.9.3)':
     dependencies:
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
-      '@wsxjs/wsx-logger': 0.0.19
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
+      '@wsxjs/wsx-logger': 0.0.23
     transitivePeerDependencies:
       - typescript
 
@@ -6502,7 +6511,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@wsxjs/wsx-vite-plugin@0.0.19(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))':
+  '@wsxjs/wsx-vite-plugin@0.0.23(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.28.5)
@@ -6510,9 +6519,24 @@ snapshots:
       '@babel/plugin-transform-class-static-block': 7.28.3(@babel/core@7.28.5)
       '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
       '@babel/types': 7.28.5
-      '@wsxjs/wsx-core': 0.0.19(typescript@5.9.3)
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
       esbuild: 0.27.1
       vite: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@wsxjs/wsx-vite-plugin@0.0.23(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))':
+    dependencies:
+      '@babel/core': 7.28.5
+      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.28.5)
+      '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.28.5)
+      '@babel/plugin-transform-class-static-block': 7.28.3(@babel/core@7.28.5)
+      '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
+      '@babel/types': 7.28.5
+      '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
+      esbuild: 0.27.1
+      vite: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -7626,6 +7650,8 @@ snapshots:
       slice-ansi: 7.1.2
       strip-ansi: 7.1.2
       wrap-ansi: 9.0.2
+
+  loglevel@1.9.2: {}
 
   loose-envify@1.4.0:
     dependencies:

@@ -1,0 +1,229 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * 主应用组件
+ * 使用 wsx 组件实现，参考 React demo 的设计
+ */
+
+import { WebComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import { QuizEditor, type QuizEditorOptions } from '@quizerjs/quizerjs';
+import { sampleDataList, defaultSampleDataId, getSampleDataById } from '@quizerjs/sample-data';
+import { dslToBlock } from '@quizerjs/core';
+import type { QuizDSL } from '@quizerjs/dsl';
+import { themeManager } from './theme';
+import './App.css';
+import './components/JsonViewer.wsx';
+import './components/ThemeToggle.wsx';
+
+@autoRegister({ tagName: 'quizerjs-app' })
+export class App extends WebComponent {
+  @state private dslPreview = '';
+  @state private blockDataPreview = '';
+  @state private selectedSampleDataId = defaultSampleDataId;
+  @state private isDark = false;
+
+  private editorInstance: QuizEditor | null = null;
+  private editorContainerRef: HTMLElement | null = null;
+
+  onConnected() {
+    // 初始化主题状态
+    this.isDark = themeManager.getTheme();
+
+    // 订阅主题变化
+    themeManager.subscribe((isDark: boolean) => {
+      this.isDark = isDark;
+    });
+
+    // 初始化预览数据
+    const currentDSL = this.getCurrentSampleDSL();
+    this.updatePreview(currentDSL);
+  }
+
+  onDisconnected() {
+    if (this.editorInstance) {
+      this.editorInstance.destroy();
+      this.editorInstance = null;
+    }
+  }
+
+  /**
+   * 获取当前示例数据 DSL
+   */
+  private getCurrentSampleDSL(): QuizDSL {
+    return getSampleDataById(this.selectedSampleDataId) || sampleDataList[0].dsl;
+  }
+
+  /**
+   * 更新预览数据
+   */
+  private updatePreview(dsl: QuizDSL) {
+    this.dslPreview = JSON.stringify(dsl, null, 2);
+    const blockData = dslToBlock(dsl);
+    this.blockDataPreview = JSON.stringify(blockData, null, 2);
+  }
+
+  /**
+   * 处理编辑器变化
+   */
+  private handleChange = async (dsl: QuizDSL) => {
+    this.updatePreview(dsl);
+
+    // 获取 Editor.js block data
+    if (this.editorInstance) {
+      try {
+        const editorJsInstance = this.editorInstance.getEditorInstance();
+        if (editorJsInstance) {
+          const blockData = await editorJsInstance.save();
+          this.blockDataPreview = JSON.stringify(blockData, null, 2);
+        }
+      } catch (error) {
+        console.error('获取 block data 失败:', error);
+      }
+    }
+
+    console.log('DSL 变化:', dsl);
+  };
+
+  /**
+   * 处理保存
+   */
+  private handleSave = async (dsl: QuizDSL) => {
+    this.updatePreview(dsl);
+
+    // 获取 Editor.js block data
+    if (this.editorInstance) {
+      try {
+        const editorJsInstance = this.editorInstance.getEditorInstance();
+        if (editorJsInstance) {
+          const blockData = await editorJsInstance.save();
+          this.blockDataPreview = JSON.stringify(blockData, null, 2);
+        }
+      } catch (error) {
+        console.error('获取 block data 失败:', error);
+      }
+    }
+
+    console.log('保存的 DSL:', dsl);
+  };
+
+  /**
+   * 初始化编辑器
+   */
+  private initEditor = async () => {
+    if (!this.editorContainerRef || this.editorInstance) {
+      return;
+    }
+
+    try {
+      const currentDSL = this.getCurrentSampleDSL();
+
+      const options: QuizEditorOptions = {
+        container: this.editorContainerRef,
+        initialDSL: currentDSL,
+        onChange: this.handleChange,
+        onSave: this.handleSave,
+      };
+
+      this.editorInstance = new QuizEditor(options);
+      await this.editorInstance.init();
+    } catch (error) {
+      console.error('初始化编辑器失败:', error);
+      this.editorInstance = null;
+    }
+  };
+
+  /**
+   * 处理示例数据切换
+   */
+  private handleSampleDataChange = async (event: Event) => {
+    const target = event.target as HTMLSelectElement;
+    this.selectedSampleDataId = target.value;
+    const newDSL = this.getCurrentSampleDSL();
+
+    if (this.editorInstance && newDSL) {
+      try {
+        await this.editorInstance.load(newDSL);
+        this.updatePreview(newDSL);
+      } catch (error) {
+        console.error('加载测试数据失败:', error);
+      }
+    }
+  };
+
+  /**
+   * 处理主题切换
+   */
+  private handleThemeToggle = () => {
+    themeManager.toggleTheme();
+  };
+
+  render() {
+    const currentDSL = this.getCurrentSampleDSL();
+
+    return (
+      <div class="app">
+        <header class="app-header">
+          <div class="header-content">
+            <h1>Editor(quizerjs) Demo</h1>
+            <div class="header-controls">
+              <label for="sample-data-select" class="sample-data-label">
+                Sample Data:
+              </label>
+              <select
+                id="sample-data-select"
+                class="sample-data-select"
+                value={this.selectedSampleDataId}
+                onChange={this.handleSampleDataChange}
+              >
+                {sampleDataList.map(item => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <theme-toggle
+                is-dark={this.isDark ? 'true' : 'false'}
+                onToggle={this.handleThemeToggle}
+              />
+            </div>
+          </div>
+        </header>
+
+        <main class="app-main">
+          <div class="editor-panel">
+            <div class="panel-header">
+              <span class="panel-title">Editor</span>
+            </div>
+            <div class="panel-content">
+              <div
+                ref={el => {
+                  this.editorContainerRef = el;
+                  this.initEditor();
+                }}
+                class="quiz-editor-container"
+              />
+            </div>
+          </div>
+
+          <div class="preview-panel">
+            <div class="preview-section">
+              <div class="section-header">
+                <span class="section-title">Block Data</span>
+              </div>
+              <div class="section-content">
+                <json-viewer code={this.blockDataPreview} />
+              </div>
+            </div>
+            <div class="preview-section">
+              <div class="section-header">
+                <span class="section-title">DSL Preview</span>
+              </div>
+              <div class="section-content">
+                <json-viewer code={this.dslPreview} />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+}

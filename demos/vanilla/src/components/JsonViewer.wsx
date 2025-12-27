@@ -1,0 +1,87 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * JSON 查看器组件
+ * 用于显示格式化的 JSON 数据，支持语法高亮
+ */
+
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import styles from './JsonViewer.css?inline';
+
+@autoRegister({ tagName: 'json-viewer' })
+export class JsonViewer extends LightComponent {
+  @state private code = '';
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'json-viewer',
+    });
+  }
+
+  static get observedAttributes() {
+    return ['code'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    if (name === 'code') {
+      this.code = newValue || '';
+    }
+  }
+
+  /**
+   * 格式化代码
+   */
+  private formatCode(code: string): string {
+    if (!code || code.trim() === '') {
+      return '';
+    }
+    try {
+      const parsed = JSON.parse(code);
+      return JSON.stringify(parsed, null, 2);
+    } catch {
+      return code;
+    }
+  }
+
+  /**
+   * 语法高亮
+   */
+  private highlightJSON(json: string): string {
+    return json
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        match => {
+          let cls = 'json-number';
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'json-key';
+            } else {
+              cls = 'json-string';
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'json-boolean';
+          } else if (/null/.test(match)) {
+            cls = 'json-null';
+          }
+          return `<span class="${cls}">${match}</span>`;
+        }
+      );
+  }
+
+  render() {
+    const formatted = this.formatCode(this.code);
+
+    if (!formatted) {
+      return <div class="json-viewer-empty">// 暂无数据</div>;
+    }
+
+    return (
+      <pre class="json-viewer-highlight">
+        <code class="json-viewer-code" innerHTML={this.highlightJSON(formatted)} />
+      </pre>
+    );
+  }
+}

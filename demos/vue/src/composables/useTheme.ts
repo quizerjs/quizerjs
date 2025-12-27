@@ -45,11 +45,16 @@ export function useTheme() {
   // 监听主题变化并保存到 localStorage，同时加载对应的主题 CSS
   watch(
     isDark,
-    newValue => {
+    (newValue, oldValue) => {
+      // 避免重复加载相同的主题
+      if (newValue === oldValue) return;
+      
       try {
         localStorage.setItem(THEME_STORAGE_KEY, newValue ? 'dark' : 'light');
-        // 动态加载主题 CSS
-        loadThemeCSS(newValue);
+        // 动态加载主题 CSS（异步，不阻塞）
+        loadThemeCSS(newValue).catch(err => {
+          console.warn('加载主题 CSS 失败:', err);
+        });
       } catch (error) {
         console.warn('无法保存主题设置到 localStorage:', error);
       }

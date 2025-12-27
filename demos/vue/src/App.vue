@@ -1,5 +1,5 @@
 <template>
-  <div class="app" :class="{ 'theme-dark': isDark }">
+  <div class="app" :class="{ 'theme-dark': isDark.value }">
     <AppHeader
       v-model:selected-test-data-id="selectedTestDataId"
       @test-data-change="handleTestDataChange"

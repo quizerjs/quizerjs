@@ -14,9 +14,11 @@
     "@quizerjs/core": "workspace:*",
     "@quizerjs/quizerjs": "workspace:*",
     "@quizerjs/sample-data": "workspace:*",
-    "@quizerjs/theme": "workspace:*"
+    "@quizerjs/theme": "workspace:*",
+    "@wsxjs/wsx-core": "^0.0.23"
   },
   "devDependencies": {
+    "@wsxjs/wsx-vite-plugin": "^0.0.23",
     "vite": "^5.0.0",
     "typescript": "^5.3.3"
   }

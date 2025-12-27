@@ -1,6 +1,7 @@
 /** @jsxImportSource @wsxjs/wsx-core */
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import { escape } from 'querystring';
 
 /**
  * 自定义 Web Component 示例
@@ -9,15 +10,24 @@ import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 @autoRegister({ tagName: 'my-quiz-question' })
 export class MyQuizQuestion extends LightComponent {
   @state private selectedOption: number | null = null;
+  @state private question: string = '';
+  @state private options: string[] = [];
 
   static get observedAttributes() {
     return ['question', 'options'];
   }
 
+  // 监听属性变化 作为 Property 在DOM中使用，需要监听属性变化 因为没有Framework协助设置Property 必须依赖Attribute
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     if (name === 'question' || name === 'options') {
       // 属性变化时重置选择
       this.selectedOption = null;
+    }
+    if (name === 'question') {
+      this.question = this.getQuestion();
+    }
+    if (name === 'options') {
+      this.options = this.getOptions();
     }
   }
 
@@ -49,14 +59,11 @@ export class MyQuizQuestion extends LightComponent {
   };
 
   render() {
-    const question = this.getQuestion();
-    const options = this.getOptions();
-
     return (
       <div className="my-quiz-question">
-        <h3 className="my-quiz-question-title">{question}</h3>
+        <h3 className="my-quiz-question-title">{this.question}</h3>
         <div className="my-quiz-question-options">
-          {options.map((opt: string, i: number) => (
+          {this.options.map((opt: string, i: number) => (
             <button
               key={i}
               className={`my-quiz-question-option ${this.selectedOption === i ? 'selected' : ''}`}

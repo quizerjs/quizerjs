@@ -1,16 +1,11 @@
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 
-// 动态导入主题 CSS
-const loadThemeCSS = async (isDark: boolean) => {
-  try {
-    if (isDark) {
-      await import('@quizerjs/theme/solarized-dark.css');
-    } else {
-      await import('@quizerjs/theme/solarized-light.css');
-    }
-  } catch (error) {
-    console.warn('无法加载主题 CSS:', error);
-  }
+/**
+ * 应用主题到 document.documentElement
+ * 使用 data-theme 属性切换主题
+ */
+const applyTheme = (isDark: boolean) => {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
 };
 
 /**
@@ -49,8 +44,8 @@ export class ThemeManager {
    * 初始化主题
    */
   private init() {
-    // 加载初始主题 CSS
-    loadThemeCSS(this.isDark);
+    // 应用初始主题
+    applyTheme(this.isDark);
 
     // 监听系统主题变化（仅在用户未手动设置时）
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -84,7 +79,7 @@ export class ThemeManager {
     this.isDark = dark;
     try {
       localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light');
-      loadThemeCSS(dark);
+      applyTheme(dark);
       // 通知所有监听器
       this.listeners.forEach(listener => listener(dark));
     } catch (error) {

@@ -14,7 +14,7 @@
             {{ item.name }}
           </option>
         </select>
-        <ThemeToggle :is-dark="isDark.value" @toggle="handleThemeToggle" />
+        <ThemeToggle :is-dark="isDark" @toggle="handleThemeToggle" />
       </div>
     </div>
   </header>
