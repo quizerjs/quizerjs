@@ -1,8 +1,22 @@
 import './style.css';
-// 静态导入主题 CSS
-import '@quizerjs/theme/solarized-light.css';
-import '@quizerjs/theme/solarized-dark.css';
 import './App.wsx';
+// 初始化主题（使用 CSS Hook API）
+import { setPlayerTheme } from '@quizerjs/theme/player';
+import { setEditorTheme } from '@quizerjs/theme/editor';
+import { themeManager } from './theme';
+
+// 应用主题（使用 CSS Hook API）
+const applyTheme = (isDark: boolean) => {
+  const themeName = isDark ? 'solarized-dark' : 'solarized-light';
+  setPlayerTheme(themeName);
+  setEditorTheme(themeName);
+};
+
+// 初始化时应用主题
+applyTheme(themeManager.getTheme());
+
+// 监听主题变化
+themeManager.subscribe(applyTheme);
 
 // 初始化应用
 const appRoot = document.getElementById('app');

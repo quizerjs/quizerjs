@@ -1,19 +1,8 @@
 import { ref, watch, onMounted } from 'vue';
+import { setPlayerTheme } from '@quizerjs/theme/player';
+import { setEditorTheme } from '@quizerjs/theme/editor';
 
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
-
-// 动态导入主题 CSS
-const loadThemeCSS = async (isDark: boolean) => {
-  try {
-    if (isDark) {
-      await import('@quizerjs/theme/solarized-dark.css');
-    } else {
-      await import('@quizerjs/theme/solarized-light.css');
-    }
-  } catch (error) {
-    console.warn('无法加载主题 CSS:', error);
-  }
-};
 
 /**
  * 获取初始主题
@@ -36,25 +25,36 @@ const getInitialTheme = (): boolean => {
 };
 
 /**
+ * 应用主题（使用新的主题 API）
+ */
+const applyTheme = (isDark: boolean) => {
+  const themeName = isDark ? 'solarized-dark' : 'solarized-light';
+
+  // Player 主题
+  setPlayerTheme(themeName);
+
+  // Editor 主题（也用于应用级别的 UI）
+  setEditorTheme(themeName);
+};
+
+/**
  * 主题管理 Composable
  * 提供主题状态管理和持久化存储
  */
 export function useTheme() {
   const isDark = ref<boolean>(getInitialTheme());
 
-  // 监听主题变化并保存到 localStorage，同时加载对应的主题 CSS
+  // 监听主题变化并保存到 localStorage，同时应用主题
   watch(
     isDark,
     (newValue, oldValue) => {
-      // 避免重复加载相同的主题
+      // 避免重复应用相同的主题
       if (newValue === oldValue) return;
-      
+
       try {
         localStorage.setItem(THEME_STORAGE_KEY, newValue ? 'dark' : 'light');
-        // 动态加载主题 CSS（异步，不阻塞）
-        loadThemeCSS(newValue).catch(err => {
-          console.warn('加载主题 CSS 失败:', err);
-        });
+        // 应用主题
+        applyTheme(newValue);
       } catch (error) {
         console.warn('无法保存主题设置到 localStorage:', error);
       }
@@ -68,14 +68,14 @@ export function useTheme() {
   };
 
   // 设置主题
-  const setTheme = (dark: boolean) => {
+  const setThemeValue = (dark: boolean) => {
     isDark.value = dark;
   };
 
-  // 初始化时加载主题 CSS 和监听系统主题变化
+  // 初始化时应用主题和监听系统主题变化
   onMounted(() => {
-    // 初始化时加载主题 CSS
-    loadThemeCSS(isDark.value);
+    // 初始化时应用主题
+    applyTheme(isDark.value);
 
     // 监听系统主题变化（仅在用户未手动设置时）
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -83,7 +83,7 @@ export function useTheme() {
       // 只有在用户没有手动设置主题时才跟随系统
       if (!localStorage.getItem(THEME_STORAGE_KEY)) {
         isDark.value = e.matches;
-        loadThemeCSS(e.matches);
+        applyTheme(e.matches);
       }
     };
     mediaQuery.addEventListener('change', handleSystemThemeChange);
@@ -92,6 +92,6 @@ export function useTheme() {
   return {
     isDark,
     toggleTheme,
-    setTheme,
+    setTheme: setThemeValue,
   };
 }

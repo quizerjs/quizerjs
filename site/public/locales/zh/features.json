@@ -45,7 +45,7 @@
         "基于 CSS 变量",
         "响应式设计"
       ],
-      "codeExample": "import '@quizerjs/theme/light.css';\n// 或\nimport '@quizerjs/theme/dark.css';\n// 或创建您自己的主题"
+      "codeExample": "import { setEditorTheme } from '@quizerjs/theme/editor';\nimport { setPlayerTheme } from '@quizerjs/theme/player';\n\n// 应用主题\nsetEditorTheme('solarized-dark');\nsetPlayerTheme('solarized-dark');\n\n// 或使用自定义主题配置\nsetEditorTheme({ '--quiz-bg-primary': '#1a1a1a', /* ... */ });"
     },
     "frameworkIntegration": {
       "title": "框架集成",

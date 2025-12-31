@@ -1,14 +1,6 @@
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 
 /**
- * 应用主题到 document.documentElement
- * 使用 data-theme 属性切换主题
- */
-const applyTheme = (isDark: boolean) => {
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-};
-
-/**
  * 获取初始主题
  * 优先级：localStorage > 系统偏好 > 默认浅色
  */
@@ -44,9 +36,6 @@ export class ThemeManager {
    * 初始化主题
    */
   private init() {
-    // 应用初始主题
-    applyTheme(this.isDark);
-
     // 监听系统主题变化（仅在用户未手动设置时）
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
@@ -79,8 +68,7 @@ export class ThemeManager {
     this.isDark = dark;
     try {
       localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light');
-      applyTheme(dark);
-      // 通知所有监听器
+      // 通知所有监听器（主题应用由监听器处理）
       this.listeners.forEach(listener => listener(dark));
     } catch (error) {
       console.warn('无法保存主题设置到 localStorage:', error);

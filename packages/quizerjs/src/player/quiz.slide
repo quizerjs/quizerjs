@@ -1,0 +1,54 @@
+present quiz "quiz" {
+  rules {
+    // 开始规则：介绍页
+    rule start "intro" {
+      slide {
+        content text {
+          quiz.title
+          quiz.description
+          "本测验包含 " + quiz.questions.length + " 道题目"
+        }
+        behavior {
+          transition zoom {
+            duration: 500
+          }
+        }
+      }
+    }
+
+    // 内容规则：问题 slides
+    rule content "questions" {
+      for question in quiz.questions {
+        slide {
+          content dynamic {
+            name: "wsx-quiz-question"
+            attrs {
+              question: question
+            }
+          }
+          behavior {
+            transition slide {
+              speed: 300
+              direction: "horizontal"
+            }
+          }
+        }
+      }
+    }
+
+    // 结束规则：感谢页
+    rule end "thanks" {
+      slide {
+        content text {
+          "感谢您的参与！"
+          "测验已完成"
+        }
+        behavior {
+          transition zoom {
+            duration: 500
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,4 +5,5 @@
  */
 
 export { default as QuizEditor } from './QuizEditor.vue';
+export { default as QuizPlayer } from './QuizPlayer.vue';
 export type * from './types';

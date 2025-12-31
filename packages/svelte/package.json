@@ -3,16 +3,16 @@
   "version": "0.0.3",
   "description": "quizerjs Svelte 集成包",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "svelte": "./dist/index.js",
+  "svelte": "./dist/index.cjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "svelte": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "svelte": "./dist/index.cjs",
       "source": "./src/index.ts"
     }
   },

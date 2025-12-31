@@ -51,7 +51,7 @@
         "CSS variable based",
         "Responsive design"
       ],
-      "codeExample": "import '@quizerjs/theme/light.css';\n// or\nimport '@quizerjs/theme/dark.css';\n// or create your own theme"
+      "codeExample": "import { setEditorTheme } from '@quizerjs/theme/editor';\nimport { setPlayerTheme } from '@quizerjs/theme/player';\n\n// Apply theme\nsetEditorTheme('solarized-dark');\nsetPlayerTheme('solarized-dark');\n\n// Or use custom theme config\nsetEditorTheme({ '--quiz-bg-primary': '#1a1a1a', /* ... */ });"
     },
     "frameworkIntegration": {
       "title": "Framework Integration",

@@ -138,7 +138,6 @@ const handleSave = async (dsl: QuizDSL) => {
 
 <style scoped>
 /* 使用 @quizerjs/theme 的 CSS 变量 */
-/* 将自定义变量映射到 --quiz-* 变量，保持向后兼容 */
 .app {
   /* 映射到 @quizerjs/theme 的 CSS 变量 */
   --bg-primary: var(--quiz-bg-primary);
@@ -164,17 +163,7 @@ const handleSave = async (dsl: QuizDSL) => {
   --json-punctuation: var(--quiz-text-primary);
   --json-hint: var(--quiz-text-tertiary);
   --json-line: var(--quiz-bg-secondary);
-}
 
-/* 深色主题 - 使用 theme-dark 类或 data-theme="dark" */
-.app.theme-dark {
-  /* 深色主题的 CSS 变量已由 @quizerjs/theme/solarized-dark.css 提供 */
-  /* 这里只需要覆盖 JSON 查看器的特定颜色（如果需要） */
-  --json-key: var(--quiz-accent-color);
-  --json-number: var(--quiz-info-color);
-}
-
-.app {
   height: 100vh;
   display: flex;
   flex-direction: column;

@@ -1,18 +1,14 @@
 import { writable } from 'svelte/store';
+import { setPlayerTheme } from '@quizerjs/theme/player';
+import { setEditorTheme } from '@quizerjs/theme/editor';
 
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 
-// 动态导入主题 CSS
-const loadThemeCSS = async (isDark: boolean) => {
-  try {
-    if (isDark) {
-      await import('@quizerjs/theme/solarized-dark.css');
-    } else {
-      await import('@quizerjs/theme/solarized-light.css');
-    }
-  } catch (error) {
-    console.warn('无法加载主题 CSS:', error);
-  }
+// 使用 CSS Hook API 设置主题（在 :root 上设置 CSS 变量）
+const applyTheme = (isDark: boolean) => {
+  const themeName = isDark ? 'solarized-dark' : 'solarized-light';
+  setPlayerTheme(themeName);
+  setEditorTheme(themeName);
 };
 
 /**
@@ -48,7 +44,7 @@ function createThemeStore() {
         const newValue = !isDark;
         try {
           localStorage.setItem(THEME_STORAGE_KEY, newValue ? 'dark' : 'light');
-          loadThemeCSS(newValue);
+          applyTheme(newValue);
         } catch (error) {
           console.warn('无法保存主题设置到 localStorage:', error);
         }
@@ -59,7 +55,7 @@ function createThemeStore() {
       set(dark);
       try {
         localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light');
-        loadThemeCSS(dark);
+        applyTheme(dark);
       } catch (error) {
         console.warn('无法保存主题设置到 localStorage:', error);
       }
@@ -67,7 +63,7 @@ function createThemeStore() {
     init: () => {
       const initialTheme = getInitialTheme();
       set(initialTheme);
-      loadThemeCSS(initialTheme);
+      applyTheme(initialTheme);
 
       // 监听系统主题变化（仅在用户未手动设置时）
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -75,7 +71,7 @@ function createThemeStore() {
         // 只有在用户没有手动设置主题时才跟随系统
         if (!localStorage.getItem(THEME_STORAGE_KEY)) {
           set(e.matches);
-          loadThemeCSS(e.matches);
+          applyTheme(e.matches);
         }
       };
       mediaQuery.addEventListener('change', handleSystemThemeChange);

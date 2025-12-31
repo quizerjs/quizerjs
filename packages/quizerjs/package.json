@@ -2,15 +2,14 @@
   "name": "@quizerjs/quizerjs",
   "version": "0.0.3",
   "description": "quizerjs 主包 - 提供测验编辑器和播放器",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "source": "./src/index.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -31,12 +30,25 @@
     "@quizerjs/core": "workspace:*",
     "@quizerjs/dsl": "workspace:*",
     "@quizerjs/editorjs-tool": "workspace:*",
+    "@quizerjs/theme": "workspace:*",
+    "@slidejs/context": "^0.1.6",
+    "@slidejs/runner": "^0.1.6",
+    "@slidejs/runner-swiper": "^0.1.6",
+    "@slidejs/theme": "^0.1.6",
     "marked": "^11.0.0",
     "swiper": "^12.0.3"
   },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

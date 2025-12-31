@@ -16,8 +16,10 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es', 'cjs'],
-      fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
+      fileName: format => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
+    sourcemap: true, // 生成 source map
+    minify: false, // 不压缩
     rollupOptions: {
       external: ['vue', '@quizerjs/dsl', '@quizerjs/core', '@quizerjs/quizerjs'],
       output: {

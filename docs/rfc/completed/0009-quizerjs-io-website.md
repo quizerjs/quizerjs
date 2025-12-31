@@ -1436,7 +1436,6 @@ export default class App extends LightComponent {
           {/* 演示路由 */}
           <wsx-view route="/demos" component="demos-layout">
             <wsx-view route="/demos/editor" component="editor-demo-page"></wsx-view>
-            <wsx-view route="/demos/player" component="player-demo-page"></wsx-view>
 
             {/* Playground */}
             <wsx-view route="/demos/playground" component="playground-layout">
@@ -2312,7 +2311,6 @@ const routes = [
   '/docs/examples/interactive',
   '/demos',
   '/demos/editor',
-  '/demos/player',
   '/demos/playground',
   '/demos/playground/react',
   '/demos/playground/vue',

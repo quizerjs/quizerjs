@@ -1,0 +1,165 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+/**
+ * Quiz Results 组件
+ * 用于显示测验结果
+ */
+
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import type { ResultDSL } from '@quizerjs/dsl';
+import styles from './quiz-results.css?inline';
+
+@autoRegister({ tagName: 'wsx-quiz-results' })
+export class QuizResults extends LightComponent {
+  @state private resultDSL: ResultDSL | null = null;
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'quiz-results',
+    });
+  }
+
+  static get observedAttributes() {
+    return ['result-dsl'];
+  }
+
+  protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
+    if (name === 'result-dsl') {
+      try {
+        this.resultDSL = newValue ? JSON.parse(newValue) : null;
+      } catch {
+        this.resultDSL = null;
+      }
+    }
+  }
+
+  /**
+   * 格式化时长
+   */
+  private formatDuration(ms: number): string {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (minutes > 0) {
+      return `${minutes}分${remainingSeconds}秒`;
+    }
+    return `${remainingSeconds}秒`;
+  }
+
+  render() {
+    if (!this.resultDSL) {
+      return (
+        <div className="quiz-results-loading">
+          <p>加载中...</p>
+        </div>
+      );
+    }
+
+    const { scoring, metadata, quiz } = this.resultDSL;
+    const { totalScore, maxScore, percentage, passed, passingScore, questionResults } = scoring;
+
+    return (
+      <div className="quiz-results">
+        {/* 结果标题 */}
+        <div className="quiz-results-header">
+          <h2 className="quiz-results-title">测验结果</h2>
+          <p className="quiz-results-subtitle">{quiz.quiz.title}</p>
+        </div>
+
+        {/* 得分卡片 */}
+        <div className="quiz-results-score-card">
+          <div className="quiz-results-score-main">
+            <div className="quiz-results-score-value">{percentage.toFixed(1)}%</div>
+            <div className="quiz-results-score-label">
+              {totalScore} / {maxScore} 分
+            </div>
+          </div>
+
+          {/* 通过状态 */}
+          {passingScore > 0 && (
+            <div className={`quiz-results-status ${passed ? 'passed' : 'failed'}`}>
+              {passed ? '✅ 通过' : '❌ 未通过'}
+              <span className="quiz-results-passing-score">（通过分数线: {passingScore} 分）</span>
+            </div>
+          )}
+        </div>
+
+        {/* 统计信息 */}
+        <div className="quiz-results-stats">
+          <div className="quiz-results-stat-item">
+            <span className="quiz-results-stat-label">答题时长</span>
+            <span className="quiz-results-stat-value">
+              {this.formatDuration(metadata.duration)}
+            </span>
+          </div>
+          <div className="quiz-results-stat-item">
+            <span className="quiz-results-stat-label">完成时间</span>
+            <span className="quiz-results-stat-value">
+              {new Date(metadata.completedAt).toLocaleString('zh-CN')}
+            </span>
+          </div>
+        </div>
+
+        {/* 每题详情 */}
+        <div className="quiz-results-details">
+          <h3 className="quiz-results-details-title">答题详情</h3>
+          <div className="quiz-results-questions">
+            {questionResults.map((result, index) => {
+              // 支持 sections 和直接 questions
+              const allQuestions = quiz.quiz.questions || [];
+              const question = allQuestions.find((q: { id: string }) => q.id === result.questionId);
+              if (!question) return null;
+
+              return (
+                <div
+                  key={result.questionId}
+                  className={`quiz-results-question ${result.correct ? 'correct' : 'incorrect'}`}
+                >
+                  <div className="quiz-results-question-header">
+                    <span className="quiz-results-question-number">第 {index + 1} 题</span>
+                    <span
+                      className={`quiz-results-question-status ${result.correct ? 'correct' : 'incorrect'}`}
+                    >
+                      {result.correct ? '✅ 正确' : '❌ 错误'}
+                    </span>
+                    <span className="quiz-results-question-score">
+                      {result.score} / {result.maxScore} 分
+                    </span>
+                  </div>
+                  <div className="quiz-results-question-text">{question.text}</div>
+                  <div className="quiz-results-question-answers">
+                    <div className="quiz-results-answer-item">
+                      <span className="quiz-results-answer-label">您的答案：</span>
+                      <span className="quiz-results-answer-value">
+                        {Array.isArray(result.userAnswer)
+                          ? result.userAnswer.join(', ')
+                          : String(result.userAnswer || '未作答')}
+                      </span>
+                    </div>
+                    {!result.correct && (
+                      <div className="quiz-results-answer-item">
+                        <span className="quiz-results-answer-label">正确答案：</span>
+                        <span className="quiz-results-answer-value correct">
+                          {Array.isArray(result.correctAnswer)
+                            ? result.correctAnswer.join(', ')
+                            : String(result.correctAnswer || '')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {question.explanation && (
+                    <div className="quiz-results-question-explanation">
+                      <strong>解析：</strong>
+                      {question.explanation}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+}

@@ -230,3 +230,71 @@ export interface QuizDSL {
   /** 测验数据 */
   quiz: Quiz;
 }
+
+/**
+ * 答案值类型
+ */
+export type AnswerValue = string | string[] | number | boolean;
+
+/**
+ * 问题评分结果
+ */
+export interface QuestionResult {
+  /** 问题 ID */
+  questionId: string;
+  /** 是否正确 */
+  correct: boolean;
+  /** 得分 */
+  score: number;
+  /** 最高分数 */
+  maxScore: number;
+  /** 用户答案 */
+  userAnswer: AnswerValue;
+  /** 正确答案 */
+  correctAnswer: AnswerValue;
+  /** 答题时间（毫秒，可选） */
+  timeSpent?: number;
+}
+
+/**
+ * Result DSL 类型定义
+ * 用于存储测验结果，包含完整的 Quiz DSL、用户答案和评分信息
+ */
+export interface ResultDSL {
+  /** Result DSL 版本号 */
+  version: string;
+  /** 结果元数据 */
+  metadata: {
+    /** 结果 ID（唯一标识） */
+    id: string;
+    /** 关联的 Quiz ID */
+    quizId: string;
+    /** 用户 ID（可选） */
+    userId?: string;
+    /** 开始时间（ISO 8601） */
+    startedAt: string;
+    /** 完成时间（ISO 8601） */
+    completedAt: string;
+    /** 答题时长（毫秒） */
+    duration: number;
+  };
+  /** 完整的 Quiz DSL（原始测验数据） */
+  quiz: QuizDSL;
+  /** 用户答案 key: questionId, value: 用户答案 */
+  answers: Record<string, AnswerValue>;
+  /** 评分结果 */
+  scoring: {
+    /** 总得分 */
+    totalScore: number;
+    /** 最高分数 */
+    maxScore: number;
+    /** 得分百分比 */
+    percentage: number;
+    /** 是否通过 */
+    passed: boolean;
+    /** 通过分数线 */
+    passingScore: number;
+    /** 每题评分详情 */
+    questionResults: QuestionResult[];
+  };
+}

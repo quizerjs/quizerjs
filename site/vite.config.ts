@@ -91,7 +91,7 @@ export default defineConfig({
     UnoCSS(),
     // wsx 插件 - 处理 .wsx 文件
     wsx({
-      debug: process.env.NODE_ENV === 'development', // 开发模式启用调试
+      debug: false, // 开发模式启用调试
       jsxFactory: 'h',
       jsxFragment: 'Fragment',
     }),

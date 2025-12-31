@@ -1,18 +1,14 @@
 import { useState, useEffect } from 'react';
+import { setPlayerTheme } from '@quizerjs/theme/player';
+import { setEditorTheme } from '@quizerjs/theme/editor';
 
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 
-// 动态导入主题 CSS
-const loadThemeCSS = async (isDark: boolean) => {
-  try {
-    if (isDark) {
-      await import('@quizerjs/theme/solarized-dark.css');
-    } else {
-      await import('@quizerjs/theme/solarized-light.css');
-    }
-  } catch (error) {
-    console.warn('无法加载主题 CSS:', error);
-  }
+// 使用 CSS Hook API 设置主题（在 :root 上设置 CSS 变量）
+const applyTheme = (isDark: boolean) => {
+  const themeName = isDark ? 'solarized-dark' : 'solarized-light';
+  setPlayerTheme(themeName);
+  setEditorTheme(themeName);
 };
 
 /**
@@ -42,17 +38,16 @@ const getInitialTheme = (): boolean => {
 export function useTheme() {
   const [isDark, setIsDark] = useState<boolean>(getInitialTheme);
 
-  // 初始化时加载主题 CSS
+  // 初始化时应用主题
   useEffect(() => {
-    loadThemeCSS(isDark);
+    applyTheme(isDark);
   }, []);
 
-  // 监听主题变化并保存到 localStorage，同时加载对应的主题 CSS
+  // 监听主题变化并保存到 localStorage，同时应用主题
   useEffect(() => {
     try {
       localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
-      // 动态加载主题 CSS
-      loadThemeCSS(isDark);
+      applyTheme(isDark);
     } catch (error) {
       console.warn('无法保存主题设置到 localStorage:', error);
     }
@@ -65,7 +60,7 @@ export function useTheme() {
       // 只有在用户没有手动设置主题时才跟随系统
       if (!localStorage.getItem(THEME_STORAGE_KEY)) {
         setIsDark(e.matches);
-        loadThemeCSS(e.matches);
+        applyTheme(e.matches);
       }
     };
     mediaQuery.addEventListener('change', handleSystemThemeChange);
@@ -80,13 +75,13 @@ export function useTheme() {
   };
 
   // 设置主题
-  const setTheme = (dark: boolean) => {
+  const setThemeValue = (dark: boolean) => {
     setIsDark(dark);
   };
 
   return {
     isDark,
     toggleTheme,
-    setTheme,
+    setTheme: setThemeValue,
   };
 }

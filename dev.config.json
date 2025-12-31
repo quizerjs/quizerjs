@@ -1,0 +1,42 @@
+{
+  "projectName": "quizerjs",
+  "packageManager": "pnpm",
+  "demos": [
+    {
+      "name": "Vue",
+      "value": "vue",
+      "description": "Vue 3 演示项目",
+      "package": "@quizerjs/demo-vue"
+    },
+    {
+      "name": "React",
+      "value": "react",
+      "description": "React 18 演示项目",
+      "package": "@quizerjs/demo-react"
+    },
+    {
+      "name": "Svelte",
+      "value": "svelte",
+      "description": "Svelte 4 演示项目",
+      "package": "@quizerjs/demo-svelte"
+    },
+    {
+      "name": "Vanilla",
+      "value": "vanilla",
+      "description": "Vanilla JS 演示项目",
+      "package": "@quizerjs/demo-vanilla"
+    },
+    {
+      "name": "Theme",
+      "value": "theme",
+      "description": "主题系统预览页面",
+      "package": "@quizerjs/theme"
+    },
+    {
+      "name": "Site",
+      "value": "site",
+      "description": "QuizerJS 开源网站",
+      "package": "@quizerjs/site"
+    }
+  ]
+}

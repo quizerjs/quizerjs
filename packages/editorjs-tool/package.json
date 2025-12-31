@@ -2,14 +2,14 @@
   "name": "@quizerjs/editorjs-tool",
   "version": "0.0.3",
   "description": "quizerjs 的 Editor.js 工具插件",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     }
   },

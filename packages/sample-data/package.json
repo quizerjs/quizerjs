@@ -2,6 +2,7 @@
   "name": "@quizerjs/sample-data",
   "version": "0.0.3",
   "description": "QuizerJS Sample Data - Shared test data for demos",
+  "private": true,
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

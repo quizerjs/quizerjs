@@ -6,8 +6,8 @@
 
 import { createLogger } from '@wsxjs/wsx-core';
 import 'uno.css'; // UnoCSS 工具类
-// 导入主题系统（使用预设主题）
-import '@quizerjs/theme/terra-cotta.css'; // 使用 Terra Cotta 赤陶土主题 - 严肃活泼的暖色单系色调
+// 导入主题系统（使用 CSS Hook API）
+import { setEditorTheme, setPlayerTheme } from '@quizerjs/theme';
 import './main.css'; // 全局样式
 // 导入基础组件包（包含 CSS）
 import '@wsxjs/wsx-base-components';
@@ -25,6 +25,12 @@ const logger = createLogger('QuizerJS-Site');
  * 初始化应用
  */
 function initApp() {
+  // 应用主题（使用 CSS Hook API）
+  // 使用 solarized-dark 作为默认主题（严肃活泼的暖色单系色调）
+  setEditorTheme('solarized-dark');
+
+  setPlayerTheme('solarized-dark');
+
   const appContainer = document.getElementById('app');
 
   if (!appContainer) {

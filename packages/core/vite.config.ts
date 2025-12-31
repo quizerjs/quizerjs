@@ -22,6 +22,8 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
     },
+    sourcemap: true, // 生成 source map
+    minify: false, // 不压缩
     rollupOptions: {
       external: ['@wsxjs/wsx-core', '@quizerjs/dsl', 'marked', 'turndown'],
       output: {
