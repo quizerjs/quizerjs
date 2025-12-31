@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@systembug/pangu':
+        specifier: workspace:*
+        version: link:packages/@systembug/pangu
       '@types/inquirer':
         specifier: ^9.0.7
         version: 9.0.9
@@ -120,108 +123,6 @@ importers:
       '@wsxjs/wsx-vite-plugin':
         specifier: ^0.0.18
         version: 0.0.18(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-
-  demos/slidejs-revealjs:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner
-      '@slidejs/runner-revealjs':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner-revealjs
-      '@wsxjs/wsx-core':
-        specifier: ^0.0.17
-        version: 0.0.17(typescript@5.9.3)
-      reveal.js:
-        specifier: ^5.0.0
-        version: 5.2.1
-    devDependencies:
-      '@wsxjs/wsx-vite-plugin':
-        specifier: ^0.0.17
-        version: 0.0.17(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-
-  demos/slidejs-splide:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner
-      '@slidejs/runner-splide':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner-splide
-      '@splidejs/splide':
-        specifier: ^4.1.3
-        version: 4.1.4
-      '@wsxjs/wsx-core':
-        specifier: ^0.0.17
-        version: 0.0.17(typescript@5.9.3)
-    devDependencies:
-      '@wsxjs/wsx-vite-plugin':
-        specifier: ^0.0.17
-        version: 0.0.17(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-
-  demos/slidejs-swiper:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner
-      '@slidejs/runner-swiper':
-        specifier: workspace:*
-        version: link:../../packages/@slidejs/runner-swiper
-      '@wsxjs/wsx-core':
-        specifier: ^0.0.17
-        version: 0.0.17(typescript@5.9.3)
-      swiper:
-        specifier: ^11.0.0
-        version: 11.2.10
-    devDependencies:
-      '@wsxjs/wsx-vite-plugin':
-        specifier: ^0.0.17
-        version: 0.0.17(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -346,191 +247,39 @@ importers:
         specifier: ^5.0.0
         version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
 
-  packages/@slidejs/context:
-    devDependencies:
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.0.0
-        version: 3.9.1(@types/node@25.0.2)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-
-  packages/@slidejs/core:
+  packages/@systembug/pangu:
     dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
+      inquirer:
+        specifier: ^9.2.15
+        version: 9.3.8(@types/node@20.19.27)
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.1
+      ora:
+        specifier: ^8.0.1
+        version: 8.2.0
     devDependencies:
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.0.0
-        version: 3.9.1(@types/node@25.0.2)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@25.0.2)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
-
-  packages/@slidejs/dsl:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      peggy:
-        specifier: ^4.0.0
-        version: 4.2.0
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.0.0
-        version: 3.9.1(@types/node@25.0.2)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@25.0.2)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
-
-  packages/@slidejs/runner:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
+      '@types/inquirer':
+        specifier: ^9.0.7
+        version: 9.0.9
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.27
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.49.0
+        version: 8.49.0(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3))(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^8.49.0
+        version: 8.49.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
+      eslint:
+        specifier: ^9.39.2
+        version: 9.39.2(jiti@1.21.7)
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.7.0
-        version: 3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
-
-  packages/@slidejs/runner-revealjs:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../runner
-      reveal.js:
-        specifier: ^5.0.0
-        version: 5.2.1
-    devDependencies:
-      '@types/node':
-        specifier: ^20.10.0
-        version: 20.19.27
-      '@types/reveal.js':
-        specifier: ^5.0.0
-        version: 5.2.2
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.7.0
-        version: 3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
-
-  packages/@slidejs/runner-splide:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../runner
-      '@splidejs/splide':
-        specifier: ^4.1.3
-        version: 4.1.4
-    devDependencies:
-      '@types/node':
-        specifier: ^20.10.0
-        version: 20.19.27
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.7.0
-        version: 3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
-
-  packages/@slidejs/runner-swiper:
-    dependencies:
-      '@slidejs/context':
-        specifier: workspace:*
-        version: link:../context
-      '@slidejs/core':
-        specifier: workspace:*
-        version: link:../core
-      '@slidejs/dsl':
-        specifier: workspace:*
-        version: link:../dsl
-      '@slidejs/runner':
-        specifier: workspace:*
-        version: link:../runner
-      swiper:
-        specifier: ^11.0.0
-        version: 11.2.10
-    devDependencies:
-      '@types/node':
-        specifier: ^20.10.0
-        version: 20.19.27
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
-      vite-plugin-dts:
-        specifier: ^3.7.0
-        version: 3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))
-      vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
 
   packages/core:
     dependencies:
@@ -1681,10 +1430,6 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@peggyjs/from-mem@1.3.5':
-    resolution: {integrity: sha512-oRyzXE7nirAn+5yYjCdWQHg3EG2XXcYRoYNOK8Quqnmm+9FyK/2YWVunwudlYl++M3xY+gIAdf0vAYS+p0nKfQ==}
-    engines: {node: '>=18'}
-
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
 
@@ -1880,9 +1625,6 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@splidejs/splide@4.1.4':
-    resolution: {integrity: sha512-5I30evTJcAJQXt6vJ26g2xEkG+l1nXcpEw4xpKh0/FWQ8ozmAeTbtniVtVmz2sH1Es3vgfC4SS8B2X4o5JMptA==}
-
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0':
     resolution: {integrity: sha512-9QX28IymvBlSCqsCll5t0kQVxipsfhFFL+L2t3nTWfXnddYwxBuAEtTtlaVQpRz9c37BhJjltSeY4AJSC03SSg==}
     engines: {node: ^18.0.0 || >=20}
@@ -1925,6 +1667,9 @@ packages:
   '@types/inquirer@9.0.9':
     resolution: {integrity: sha512-/mWx5136gts2Z2e5izdoRCo46lPp5TMs9R15GTSsgg/XnZyxDWVqoVU3R9lWnccKpqwsJLvRoxbCjoJtZB7DSw==}
 
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -1966,9 +1711,6 @@ packages:
 
   '@types/react@18.3.27':
     resolution: {integrity: sha512-cisd7gxkzjBKU2GgdYrTdtQx1SORymWyaAFhaxQPK9bYO9ot3Y5OikQRvY0VYQtvwjeQnizCINJAenh/V7MK2w==}
-
-  '@types/reveal.js@5.2.2':
-    resolution: {integrity: sha512-U6wdIeFZPR77zjaZCrFNPzKjjfdFr4Dj0WUAZ+UYgXGjwqYCnjpCngeS0hb+28FLL0QzE9jXBikvB7xxAQi5sg==}
 
   '@types/through@0.0.33':
     resolution: {integrity: sha512-HsJ+z3QuETzP3cswwtzt2vEIiHBk/dCcHGhbmG5X3ecnwFD/lPrMpliGXxSCg03L9AhrdwA4Oz/qfspkDW+xGQ==}
@@ -2310,11 +2052,6 @@ packages:
   '@wsxjs/wsx-base-components@0.0.23':
     resolution: {integrity: sha512-hnjc4617iQY2Zu0XIMnxUIV6m0Re2hJR/Wt838PjpU7m5AIJskazuikgT1n5La+5s0XynjVWZkng1AEoCGeNng==}
 
-  '@wsxjs/wsx-core@0.0.17':
-    resolution: {integrity: sha512-XvvumCmE+nqSBbtMsjCVDqTspwgm0dAZeZkIv0vQHX9kKPnRnLHoD5dYtKyOtqLGzztxK1iu+schYO0qdYx9IQ==}
-    peerDependencies:
-      typescript: '>=4.7.0'
-
   '@wsxjs/wsx-core@0.0.18':
     resolution: {integrity: sha512-eRhA/tPBfKRm8ep2LJxfRpWRH6yLF7VtmcbGL7T37Cr6osLCr6VYVJaA5dRwVrVhTSne/v9M7zuOhX3W+P32Qg==}
     peerDependencies:
@@ -2347,12 +2084,6 @@ packages:
 
   '@wsxjs/wsx-router@0.0.23':
     resolution: {integrity: sha512-LMRhQSuBURa9UftRy4U104J0KrCw7aa9ps4fgUAckiU18kgE11ej4xuruaH+ciFu0qMLXa6pyC5JZ7KlIyn2Xg==}
-
-  '@wsxjs/wsx-vite-plugin@0.0.17':
-    resolution: {integrity: sha512-CKQI8lCoFknKxtyS5Hgwqdyp9a43RfaqFEfgeXKz83mLOfKhXc2UZIrxV+/d/kusM3TdKsAbnk+/ZBE/YJJA4g==}
-    peerDependencies:
-      esbuild: '>=0.25.0'
-      vite: '>=4.0.0'
 
   '@wsxjs/wsx-vite-plugin@0.0.18':
     resolution: {integrity: sha512-DpFCiFaN4PycHEyNRNvydnpWohM+BRn/+okqBJrhFu8ssRNrCrmLUXryso82IF0Cfmn1GiSjuNXl7P2ce6zX8A==}
@@ -2612,10 +2343,6 @@ packages:
 
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
-
-  commander@12.1.0:
-    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
-    engines: {node: '>=18'}
 
   commander@13.1.0:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
@@ -3742,11 +3469,6 @@ packages:
   pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
 
-  peggy@4.2.0:
-    resolution: {integrity: sha512-ZjzyJYY8NqW8JOZr2PbS/J0UH/hnfGALxSDsBUVQg5Y/I+ZaPuGeBJ7EclUX2RvWjhlsi4pnuL1C/K/3u+cDeg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
 
@@ -3951,10 +3673,6 @@ packages:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
-  reveal.js@5.2.1:
-    resolution: {integrity: sha512-r7//6mIM5p34hFiDMvYfXgyjXqGRta+/psd9YtytsgRlrpRzFv4RbH76TXd2qD+7ZPZEbpBDhdRhJaFgfQ7zNQ==}
-    engines: {node: '>=18.0.0'}
-
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
@@ -4028,11 +3746,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.6.3:
-    resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.3:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
@@ -4089,10 +3802,6 @@ packages:
   sorcery@0.11.1:
     resolution: {integrity: sha512-o7npfeJE6wi6J9l0/5LKshFzZ2rMatRiCDwYeDQaOzqdzRJwALhX7mk/A/ecg6wjMu7wdZbmXfD2S/vpOg0bdQ==}
     hasBin: true
-
-  source-map-generator@0.8.0:
-    resolution: {integrity: sha512-psgxdGMwl5MZM9S3FWee4EgsEaIjahYV5AzGnwUvPhWeITz/j6rKpysQHlQ4USdxvINlb8lKfWGIXwfkrgtqkA==}
-    engines: {node: '>= 10'}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -4261,10 +3970,6 @@ packages:
   svelte@4.2.20:
     resolution: {integrity: sha512-eeEgGc2DtiUil5ANdtd8vPwt9AgaMdnuUFnPft9F5oMvU/FHu5IHFic+p1dR/UOB7XU2mX2yHW+NcTch4DCh5Q==}
     engines: {node: '>=16'}
-
-  swiper@11.2.10:
-    resolution: {integrity: sha512-RMeVUUjTQH+6N3ckimK93oxz6Sn5la4aDlgPzB+rBrG/smPdCTicXyhxa+woIpopz+jewEloiEE3lKo1h9w2YQ==}
-    engines: {node: '>= 4.7.0'}
 
   swiper@12.0.3:
     resolution: {integrity: sha512-BHd6U1VPEIksrXlyXjMmRWO0onmdNPaTAFduzqR3pgjvi7KfmUCAm/0cj49u2D7B0zNjMw02TSeXfinC1hDCXg==}
@@ -5461,14 +5166,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor-model@7.28.13(@types/node@25.0.2)':
-    dependencies:
-      '@microsoft/tsdoc': 0.14.2
-      '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 4.0.2(@types/node@25.0.2)
-    transitivePeerDependencies:
-      - '@types/node'
-
   '@microsoft/api-extractor@7.43.0(@types/node@20.19.27)':
     dependencies:
       '@microsoft/api-extractor-model': 7.28.13(@types/node@20.19.27)
@@ -5478,24 +5175,6 @@ snapshots:
       '@rushstack/rig-package': 0.5.2
       '@rushstack/terminal': 0.10.0(@types/node@20.19.27)
       '@rushstack/ts-command-line': 4.19.1(@types/node@20.19.27)
-      lodash: 4.17.21
-      minimatch: 3.0.8
-      resolve: 1.22.11
-      semver: 7.5.4
-      source-map: 0.6.1
-      typescript: 5.4.2
-    transitivePeerDependencies:
-      - '@types/node'
-
-  '@microsoft/api-extractor@7.43.0(@types/node@25.0.2)':
-    dependencies:
-      '@microsoft/api-extractor-model': 7.28.13(@types/node@25.0.2)
-      '@microsoft/tsdoc': 0.14.2
-      '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 4.0.2(@types/node@25.0.2)
-      '@rushstack/rig-package': 0.5.2
-      '@rushstack/terminal': 0.10.0(@types/node@25.0.2)
-      '@rushstack/ts-command-line': 4.19.1(@types/node@25.0.2)
       lodash: 4.17.21
       minimatch: 3.0.8
       resolve: 1.22.11
@@ -5527,10 +5206,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
-
-  '@peggyjs/from-mem@1.3.5':
-    dependencies:
-      semver: 7.6.3
 
   '@pinojs/redact@0.4.0': {}
 
@@ -5623,17 +5298,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.27
 
-  '@rushstack/node-core-library@4.0.2(@types/node@25.0.2)':
-    dependencies:
-      fs-extra: 7.0.1
-      import-lazy: 4.0.0
-      jju: 1.4.0
-      resolve: 1.22.11
-      semver: 7.5.4
-      z-schema: 5.0.5
-    optionalDependencies:
-      '@types/node': 25.0.2
-
   '@rushstack/rig-package@0.5.2':
     dependencies:
       resolve: 1.22.11
@@ -5646,25 +5310,9 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.27
 
-  '@rushstack/terminal@0.10.0(@types/node@25.0.2)':
-    dependencies:
-      '@rushstack/node-core-library': 4.0.2(@types/node@25.0.2)
-      supports-color: 8.1.1
-    optionalDependencies:
-      '@types/node': 25.0.2
-
   '@rushstack/ts-command-line@4.19.1(@types/node@20.19.27)':
     dependencies:
       '@rushstack/terminal': 0.10.0(@types/node@20.19.27)
-      '@types/argparse': 1.0.38
-      argparse: 1.0.10
-      string-argv: 0.3.2
-    transitivePeerDependencies:
-      - '@types/node'
-
-  '@rushstack/ts-command-line@4.19.1(@types/node@25.0.2)':
-    dependencies:
-      '@rushstack/terminal': 0.10.0(@types/node@25.0.2)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -5745,8 +5393,6 @@ snapshots:
   '@shikijs/vscode-textmate@10.0.2': {}
 
   '@sinclair/typebox@0.27.8': {}
-
-  '@splidejs/splide@4.1.4': {}
 
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.20)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6)))(svelte@4.2.20)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))':
     dependencies:
@@ -5830,6 +5476,8 @@ snapshots:
       '@types/through': 0.0.33
       rxjs: 7.8.2
 
+  '@types/js-yaml@4.0.9': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/linkify-it@5.0.0': {}
@@ -5872,8 +5520,6 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
-
-  '@types/reveal.js@5.2.2': {}
 
   '@types/through@0.0.33':
     dependencies:
@@ -6218,7 +5864,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      vitest: 1.6.1(@types/node@25.0.2)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
+      vitest: 1.6.1(@types/node@20.19.27)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6)
 
   '@vitest/utils@1.6.1':
     dependencies:
@@ -6405,10 +6051,6 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@wsxjs/wsx-core@0.0.17(typescript@5.9.3)':
-    dependencies:
-      typescript: 5.9.3
-
   '@wsxjs/wsx-core@0.0.18(typescript@5.9.3)':
     dependencies:
       '@wsxjs/wsx-logger': 0.0.18
@@ -6464,21 +6106,6 @@ snapshots:
       '@wsxjs/wsx-core': 0.0.23(typescript@5.9.3)
       '@wsxjs/wsx-logger': 0.0.23
     transitivePeerDependencies:
-      - typescript
-
-  '@wsxjs/wsx-vite-plugin@0.0.17(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6))':
-    dependencies:
-      '@babel/core': 7.28.5
-      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.28.5)
-      '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.28.5)
-      '@babel/plugin-transform-class-static-block': 7.28.3(@babel/core@7.28.5)
-      '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
-      '@babel/types': 7.28.5
-      '@wsxjs/wsx-core': 0.0.17(typescript@5.9.3)
-      esbuild: 0.27.1
-      vite: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-    transitivePeerDependencies:
-      - supports-color
       - typescript
 
   '@wsxjs/wsx-vite-plugin@0.0.18(esbuild@0.27.1)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6))':
@@ -6784,8 +6411,6 @@ snapshots:
       delayed-stream: 1.0.0
 
   comma-separated-tokens@2.0.3: {}
-
-  commander@12.1.0: {}
 
   commander@13.1.0: {}
 
@@ -7963,12 +7588,6 @@ snapshots:
 
   pathval@1.1.1: {}
 
-  peggy@4.2.0:
-    dependencies:
-      '@peggyjs/from-mem': 1.3.5
-      commander: 12.1.0
-      source-map-generator: 0.8.0
-
   perfect-debounce@1.0.0: {}
 
   periscopic@3.1.0:
@@ -8187,8 +7806,6 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  reveal.js@5.2.1: {}
-
   rfdc@1.4.1: {}
 
   rimraf@2.7.1:
@@ -8278,8 +7895,6 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
-  semver@7.6.3: {}
-
   semver@7.7.3: {}
 
   shebang-command@2.0.0:
@@ -8347,8 +7962,6 @@ snapshots:
       buffer-crc32: 1.0.0
       minimist: 1.2.8
       sander: 0.5.1
-
-  source-map-generator@0.8.0: {}
 
   source-map-js@1.2.1: {}
 
@@ -8506,8 +8119,6 @@ snapshots:
       locate-character: 3.0.0
       magic-string: 0.30.21
       periscopic: 3.1.0
-
-  swiper@11.2.10: {}
 
   swiper@12.0.3: {}
 
@@ -8763,24 +8374,6 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.6.1(@types/node@25.0.2)(sass@1.77.6):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.4.3
-      pathe: 1.1.2
-      picocolors: 1.1.1
-      vite: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
   vite-plugin-dts@3.9.1(@types/node@20.19.27)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@20.19.27)(sass@1.77.6)):
     dependencies:
       '@microsoft/api-extractor': 7.43.0(@types/node@20.19.27)
@@ -8793,23 +8386,6 @@ snapshots:
       vue-tsc: 1.8.27(typescript@5.9.3)
     optionalDependencies:
       vite: 5.4.21(@types/node@20.19.27)(sass@1.77.6)
-    transitivePeerDependencies:
-      - '@types/node'
-      - rollup
-      - supports-color
-
-  vite-plugin-dts@3.9.1(@types/node@25.0.2)(rollup@4.53.3)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.2)(sass@1.77.6)):
-    dependencies:
-      '@microsoft/api-extractor': 7.43.0(@types/node@25.0.2)
-      '@rollup/pluginutils': 5.3.0(rollup@4.53.3)
-      '@vue/language-core': 1.8.27(typescript@5.9.3)
-      debug: 4.4.3
-      kolorist: 1.8.0
-      magic-string: 0.30.21
-      typescript: 5.9.3
-      vue-tsc: 1.8.27(typescript@5.9.3)
-    optionalDependencies:
-      vite: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
@@ -8953,43 +8529,6 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.27
-      '@vitest/ui': 1.6.1(vitest@1.6.1)
-      happy-dom: 20.0.11
-      jsdom: 24.1.3
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@1.6.1(@types/node@25.0.2)(@vitest/ui@1.6.1)(happy-dom@20.0.11)(jsdom@24.1.3)(sass@1.77.6):
-    dependencies:
-      '@vitest/expect': 1.6.1
-      '@vitest/runner': 1.6.1
-      '@vitest/snapshot': 1.6.1
-      '@vitest/spy': 1.6.1
-      '@vitest/utils': 1.6.1
-      acorn-walk: 8.3.4
-      chai: 4.5.0
-      debug: 4.4.3
-      execa: 8.0.1
-      local-pkg: 0.5.1
-      magic-string: 0.30.21
-      pathe: 1.1.2
-      picocolors: 1.1.1
-      std-env: 3.10.0
-      strip-literal: 2.1.1
-      tinybench: 2.9.0
-      tinypool: 0.8.4
-      vite: 5.4.21(@types/node@25.0.2)(sass@1.77.6)
-      vite-node: 1.6.1(@types/node@25.0.2)(sass@1.77.6)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 25.0.2
       '@vitest/ui': 1.6.1(vitest@1.6.1)
       happy-dom: 20.0.11
       jsdom: 24.1.3

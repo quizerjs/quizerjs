@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepare": "husky",
-    "dev": "tsx scripts/dev.ts",
+    "dev": "pangu",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
@@ -67,6 +67,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@systembug/pangu": "workspace:*",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^8.49.0",
