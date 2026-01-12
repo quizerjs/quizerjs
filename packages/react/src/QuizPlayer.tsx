@@ -30,8 +30,8 @@ export interface QuizPlayerProps {
   readOnly?: boolean;
   /** 显示结果（可选，默认 true） */
   showResults?: boolean;
-  /** Swiper 配置选项（可选，传递给 @slidejs/runner-swiper 的配置） */
-  swiperOptions?: QuizPlayerOptions['swiperOptions'];
+  /** Slide 配置选项（可选，传递给 slide runner 的配置） */
+  slideOptions?: QuizPlayerOptions['slideOptions'];
   /** 提交事件：当用户提交测验时触发，返回 Result DSL */
   onSubmit?: (result: ResultDSL) => void;
   /** 答案变更事件：当用户修改答案时触发 */
@@ -75,7 +75,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
       resultDSL,
       readOnly = false,
       showResults = true,
-      swiperOptions,
+      slideOptions,
       onSubmit,
       onAnswerChange,
       onError,
@@ -145,7 +145,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
           resultDSL,
           readOnly,
           showResults,
-          swiperOptions,
+          slideOptions,
           onSubmit: (result: ResultDSL) => {
             if (onSubmitRef.current) {
               onSubmitRef.current(result);

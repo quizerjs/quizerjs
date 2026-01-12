@@ -33,9 +33,11 @@
     "@quizerjs/theme": "workspace:*",
     "@slidejs/context": "^0.1.6",
     "@slidejs/runner": "^0.1.6",
+    "@slidejs/runner-revealjs": "^0.1.6",
     "@slidejs/runner-swiper": "^0.1.6",
     "@slidejs/theme": "^0.1.6",
     "marked": "^11.0.0",
+    "reveal.js": "^5.2.1",
     "swiper": "^12.0.3"
   },
   "peerDependencies": {

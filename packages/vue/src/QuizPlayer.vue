@@ -92,8 +92,8 @@ export interface QuizPlayerProps {
   readOnly?: boolean;
   /** 显示结果（可选，默认 true） */
   showResults?: boolean;
-  /** Swiper 配置选项（可选，传递给 @slidejs/runner-swiper 的配置） */
-  swiperOptions?: QuizPlayerOptions['swiperOptions'];
+  /** Slide 配置选项（可选，传递给 slide runner 的配置） */
+  slideOptions?: QuizPlayerOptions['slideOptions'];
 }
 
 /**
@@ -149,7 +149,7 @@ const initPlayer = async (): Promise<void> => {
       resultDSL: props.resultDSL,
       readOnly: props.readOnly,
       showResults: props.showResults,
-      swiperOptions: props.swiperOptions,
+      slideOptions: props.slideOptions,
       onSubmit: (result: ResultDSL) => emit('submit', result),
       onAnswerChange: (questionId: string, answer: AnswerValue) =>
         emit('answer-change', questionId, answer),

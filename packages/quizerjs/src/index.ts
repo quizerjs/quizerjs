@@ -9,4 +9,5 @@ export type {
   AnswerValue,
   ThemeName,
   ThemeConfig,
+  SlideOptions,
 } from './player/types';

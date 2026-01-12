@@ -6,7 +6,7 @@
 import type { QuizDSL, Question } from '@quizerjs/dsl';
 import { checkAnswer } from '@quizerjs/core';
 import type { Question as CoreQuestion } from '@quizerjs/core';
-import { createSlideRunner } from '@slidejs/runner-swiper';
+import { createSlideRunner } from '@slidejs/runner-revealjs';
 import { setPlayerTheme } from '@quizerjs/theme';
 import type {
   QuizPlayerOptions,
@@ -76,7 +76,7 @@ export class QuizPlayer {
    * 初始化播放器
    */
   async init(): Promise<void> {
-    const { container, quizDSL, slideDSL, swiperOptions } = this.options;
+    const { container, quizDSL, slideDSL, slideOptions } = this.options;
 
     // 验证 quizDSL 是否存在且格式正确
     if (!quizDSL) {
@@ -118,7 +118,7 @@ export class QuizPlayer {
         },
       };
 
-      // 2. 使用 @slidejs/runner-swiper 创建并运行幻灯片
+      // 2. 使用 @slidejs/runner-revealjs 创建并运行幻灯片
       this.runner = (await createSlideRunner(
         finalSlideDSL,
         {
@@ -131,16 +131,15 @@ export class QuizPlayer {
         } as unknown as Parameters<typeof createSlideRunner>[1],
         {
           container: this.containerElement,
-          swiperOptions: {
-            direction: 'horizontal',
-            loop: false,
-            speed: 300,
-            spaceBetween: 30,
-            keyboard: {
-              enabled: true,
-              onlyInViewport: true,
-            },
-            ...swiperOptions,
+          revealOptions: {
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            keyboard: true,
+            touch: true,
+            ...slideOptions,
           },
         }
       )) as unknown as SlideRunner;
