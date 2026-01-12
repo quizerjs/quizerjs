@@ -1,4 +1,3 @@
-import React from 'react';
 import './ThemeToggle.css';
 
 interface ThemeToggleProps {

@@ -1,24 +1,43 @@
 <template>
-  <div class="app" :class="{ 'theme-dark': isDark.value }">
+  <div class="app" :class="{ 'theme-dark': isDark }">
     <AppHeader
       v-model:selected-test-data-id="selectedTestDataId"
       @test-data-change="handleTestDataChange"
     />
 
     <main class="app-main">
-      <Splitpanes v-if="isSplitpanesReady" class="default-theme" key="main-split">
-        <Pane :size="50" :min-size="20" key="editor-pane">
-          <EditorPanel
-            ref="editorPanelRef"
-            :initialDSL="currentTestDSL"
-            @change="handleChange"
-            @save="handleSave"
-          />
-        </Pane>
-        <Pane :size="50" :min-size="20" key="preview-pane">
-          <PreviewSplitpanes :block-data-preview="blockDataPreview" :dsl-preview="dslPreview" />
-        </Pane>
-      </Splitpanes>
+      <PanelGroup v-if="isPanelsReady" direction="vertical" class="main-panel-group">
+        <!-- 顶部：Editor 和 Player -->
+        <Panel :defaultSize="60" :minSize="30" class="top-panel">
+          <PanelGroup direction="horizontal" class="top-panel-group">
+            <Panel :defaultSize="50" :minSize="20" class="panel">
+              <EditorPanel
+                ref="editorPanelRef"
+                :initialDSL="currentTestDSL"
+                @change="handleChange"
+                @save="handleSave"
+              />
+            </Panel>
+            <PanelResizeHandle class="resize-handle" />
+            <Panel :defaultSize="50" :minSize="20" class="panel">
+              <PlayerPanel :dsl-preview="dslPreview" />
+            </Panel>
+          </PanelGroup>
+        </Panel>
+        <PanelResizeHandle class="resize-handle horizontal" />
+        <!-- 底部：Block Data 和 DSL Preview -->
+        <Panel :defaultSize="40" :minSize="20" class="bottom-panel">
+          <PanelGroup direction="horizontal" class="bottom-panel-group">
+            <Panel :defaultSize="50" :minSize="20" class="panel">
+              <DataPanel title="Block Data" :code="blockDataPreview" />
+            </Panel>
+            <PanelResizeHandle class="resize-handle" />
+            <Panel :defaultSize="50" :minSize="20" class="panel">
+              <DataPanel title="DSL Preview" :code="dslPreview" />
+            </Panel>
+          </PanelGroup>
+        </Panel>
+      </PanelGroup>
       <div v-else class="app-main-loading">Loading...</div>
     </main>
   </div>
@@ -28,19 +47,19 @@
 import { ref, computed, onMounted, nextTick, provide } from 'vue';
 import { dslToBlock } from '@quizerjs/core';
 import type { QuizDSL } from '@quizerjs/dsl';
-import { Splitpanes, Pane } from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
+import { Panel, PanelGroup, PanelResizeHandle } from 'vue-resizable-panels';
 import AppHeader from './components/AppHeader.vue';
 import EditorPanel from './components/EditorPanel.vue';
-import PreviewSplitpanes from './components/PreviewSplitpanes.vue';
+import PlayerPanel from './components/PlayerPanel.vue';
+import DataPanel from './components/DataPanel.vue';
 import { sampleDataList, defaultSampleDataId, getSampleDataById } from '@quizerjs/sample-data';
 import { useTheme } from './composables/useTheme';
 
 // 当前选中的测试数据 ID
 const selectedTestDataId = ref<string>(defaultSampleDataId);
 
-// 控制 splitpanes 的渲染，确保 DOM 准备好
-const isSplitpanesReady = ref(false);
+// 控制 panels 的渲染，确保 DOM 准备好
+const isPanelsReady = ref(false);
 
 // 主题管理 - 使用 composable
 const { isDark, toggleTheme } = useTheme();
@@ -49,11 +68,11 @@ const { isDark, toggleTheme } = useTheme();
 provide('isDark', isDark);
 provide('toggleTheme', toggleTheme);
 
-// 等待 DOM 完全渲染后再显示 splitpanes
+// 等待 DOM 完全渲染后再显示 panels
 onMounted(async () => {
   await nextTick();
   setTimeout(() => {
-    isSplitpanesReady.value = true;
+    isPanelsReady.value = true;
   }, 0);
 });
 
@@ -184,22 +203,89 @@ const handleSave = async (dsl: QuizDSL) => {
   transition: background-color 0.3s ease;
 }
 
-/* Splitpanes 样式覆盖 */
-.app-main :deep(.splitpanes) {
+/* vue-resizable-panels 样式覆盖 */
+.app-main :deep(.main-panel-group),
+.app-main :deep(.top-panel-group),
+.app-main :deep(.bottom-panel-group) {
   height: 100%;
   width: 100%;
 }
 
-.app-main :deep(.splitpanes__pane) {
+.app-main :deep(.top-panel),
+.app-main :deep(.bottom-panel) {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-.app-main :deep(.splitpanes__splitter) {
-  background: var(--border-color);
-  transition: background 0.2s;
+.app-main :deep(.panel) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
 }
 
-.app-main :deep(.splitpanes__splitter:hover) {
+/* 分割器样式 - vue-resizable-panels PanelResizeHandle */
+/* vue-resizable-panels 使用 data-panel-group-direction 属性 */
+/* 水平方向的分割器（垂直排列的面板之间） */
+.app-main [data-panel-resize-handle-id][data-panel-group-direction='horizontal'] {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  width: 4px;
+  min-width: 4px;
+  max-width: 4px;
+  background: var(--border-color);
+  cursor: col-resize;
+  transition: background-color 0.2s ease;
+}
+
+.app-main [data-panel-resize-handle-id][data-panel-group-direction='horizontal']:hover {
+  background: var(--accent-color);
+}
+
+/* 垂直方向的分割器（水平排列的面板之间） */
+.app-main [data-panel-resize-handle-id][data-panel-group-direction='vertical'] {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  height: 4px;
+  min-height: 4px;
+  max-height: 4px;
+  background: var(--border-color);
+  cursor: row-resize;
+  transition: background-color 0.2s ease;
+}
+
+.app-main [data-panel-resize-handle-id][data-panel-group-direction='vertical']:hover {
+  background: var(--accent-color);
+}
+
+/* 通过类名选择器（备用方案） */
+.app-main :deep(.resize-handle) {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.2s ease;
+  background: var(--border-color);
+}
+
+.app-main :deep(.resize-handle.horizontal) {
+  height: 4px;
+  min-height: 4px;
+  max-height: 4px;
+  cursor: row-resize;
+}
+
+.app-main :deep(.resize-handle:not(.horizontal)) {
+  width: 4px;
+  min-width: 4px;
+  max-width: 4px;
+  cursor: col-resize;
+}
+
+.app-main :deep(.resize-handle:hover) {
   background: var(--accent-color);
 }
 

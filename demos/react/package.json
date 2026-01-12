@@ -16,9 +16,10 @@
     "@quizerjs/react": "workspace:*",
     "@quizerjs/sample-data": "workspace:*",
     "@quizerjs/theme": "workspace:*",
-    "simple-syntax-highlighter": "^3.1.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-resizable-panels": "^4.3.3",
+    "simple-syntax-highlighter": "^3.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

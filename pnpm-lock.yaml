@@ -98,6 +98,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-resizable-panels:
+        specifier: ^4.3.3
+        version: 4.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       simple-syntax-highlighter:
         specifier: ^3.1.1
         version: 3.1.1(vue@3.5.26(typescript@5.9.3))
@@ -218,12 +221,12 @@ importers:
       simple-syntax-highlighter:
         specifier: ^3.1.1
         version: 3.1.1(vue@3.5.26(typescript@5.9.3))
-      splitpanes:
-        specifier: ^4.0.4
-        version: 4.0.4(vue@3.5.26(typescript@5.9.3))
       vue:
         specifier: ^3.4.0
         version: 3.5.26(typescript@5.9.3)
+      vue-resizable-panels:
+        specifier: ^0.0.1
+        version: 0.0.1
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.0
@@ -3998,6 +4001,12 @@ packages:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
+  react-resizable-panels@4.3.3:
+    resolution: {integrity: sha512-7ZmYcoOiipVwwz8X9O/HiRbm8THM6qnXo7p5dPI6ivzdDoteHo3iXS1pijs8Z4/XU8V1RwhuGgJiZU5G7Zy0KQ==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
@@ -4230,11 +4239,6 @@ packages:
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
-
-  splitpanes@4.0.4:
-    resolution: {integrity: sha512-RbysugZhjbCw5fgplvk3hOXr41stahQDtZhHVkhnnJI6H4wlGDhM2kIpbehy7v92duy9GnMa8zIhHigIV1TWtg==}
-    peerDependencies:
-      vue: ^3.2.0
 
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
@@ -4722,6 +4726,9 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
+
+  vue-resizable-panels@0.0.1:
+    resolution: {integrity: sha512-8al3kvbhZWnE6bS14lrKkJ6tc55N/wFeVIo+A/Ip8ZPBc5BIJYOdQU3pexhp+hj6pfxhV9UNynwJYZzAtvkCSg==}
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
@@ -8577,6 +8584,11 @@ snapshots:
 
   react-refresh@0.17.0: {}
 
+  react-resizable-panels@4.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -8834,10 +8846,6 @@ snapshots:
   speakingurl@14.0.1: {}
 
   split2@4.2.0: {}
-
-  splitpanes@4.0.4(vue@3.5.26(typescript@5.9.3)):
-    dependencies:
-      vue: 3.5.26(typescript@5.9.3)
 
   sprintf-js@1.0.3: {}
 
@@ -9369,6 +9377,8 @@ snapshots:
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
+
+  vue-resizable-panels@0.0.1: {}
 
   vue-template-compiler@2.7.16:
     dependencies:

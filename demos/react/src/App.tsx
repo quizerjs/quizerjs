@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { QuizEditor, type QuizEditorRef } from '@quizerjs/react';
-import JsonViewer from './components/JsonViewer';
+import { type QuizEditorRef } from '@quizerjs/react';
+import { Panel, Group, Separator } from 'react-resizable-panels';
 import ThemeToggle from './components/ThemeToggle';
+import EditorPanel from './components/EditorPanel';
+import PlayerPanel from './components/PlayerPanel';
+import DataPanel from './components/DataPanel';
 import { useTheme } from './hooks/useTheme';
 import { sampleDataList, defaultSampleDataId, getSampleDataById } from '@quizerjs/sample-data';
 import { dslToBlock } from '@quizerjs/core';
@@ -111,38 +114,38 @@ export default function App() {
       </header>
 
       <main className="app-main">
-        <div className="editor-panel">
-          <div className="panel-header">
-            <span className="panel-title">Editor</span>
-          </div>
-          <div className="panel-content">
-            <QuizEditor
-              ref={editorRef}
-              initialDSL={currentSampleDSL}
-              onChange={handleChange}
-              onSave={handleSave}
-            />
-          </div>
-        </div>
-
-        <div className="preview-panel">
-          <div className="preview-section">
-            <div className="section-header">
-              <span className="section-title">Block Data</span>
-            </div>
-            <div className="section-content">
-              <JsonViewer code={blockDataPreview} />
-            </div>
-          </div>
-          <div className="preview-section">
-            <div className="section-header">
-              <span className="section-title">DSL Preview</span>
-            </div>
-            <div className="section-content">
-              <JsonViewer code={dslPreview} />
-            </div>
-          </div>
-        </div>
+        <Group orientation="vertical" className="main-panel-group">
+          {/* 顶部：Editor 和 Player */}
+          <Panel defaultSize={60} minSize={30} className="top-panel">
+            <Group orientation="horizontal" className="top-panel-group">
+              <Panel defaultSize={50} minSize={20} className="panel">
+                <EditorPanel
+                  editorRef={editorRef}
+                  initialDSL={currentSampleDSL}
+                  onChange={handleChange}
+                  onSave={handleSave}
+                />
+              </Panel>
+              <Separator className="resize-handle" />
+              <Panel defaultSize={50} minSize={20} className="panel">
+                <PlayerPanel dslPreview={dslPreview} />
+              </Panel>
+            </Group>
+          </Panel>
+          <Separator className="resize-handle horizontal" />
+          {/* 底部：Block Data 和 DSL Preview */}
+          <Panel defaultSize={40} minSize={20} className="bottom-panel">
+            <Group orientation="horizontal" className="bottom-panel-group">
+              <Panel defaultSize={50} minSize={20} className="panel">
+                <DataPanel title="Block Data" code={blockDataPreview} />
+              </Panel>
+              <Separator className="resize-handle" />
+              <Panel defaultSize={50} minSize={20} className="panel">
+                <DataPanel title="DSL Preview" code={dslPreview} />
+              </Panel>
+            </Group>
+          </Panel>
+        </Group>
       </main>
     </div>
   );

@@ -1526,6 +1526,88 @@ await player.setTheme({
 
 QuizPlayer 的主题系统基于 `@slidejs/theme` 包实现。`setTheme()` 方法内部调用 `@slidejs/theme` 的 `setTheme()` 函数来应用主题配置。
 
+### @quizerjs/theme 包（应用级主题管理）
+
+`@quizerjs/theme` 包提供了统一的主题管理 API，用于在应用级别统一管理 Player 和 Editor 的主题。这个包特别适用于 React、Vue 等框架的集成。
+
+#### 包结构
+
+```
+@quizerjs/theme
+├── player.ts - Player 主题 API（基于 @slidejs/theme）
+├── editor.ts - Editor 主题 API（CSS Hook API）
+└── index.ts - 统一导出
+```
+
+#### 核心 API
+
+**Player 主题 API** (`setPlayerTheme`):
+- 基于 `@slidejs/theme` 实现
+- 支持预设主题名称：`'solarized-dark' | 'solarized-light' | 'dark' | 'light'`
+- 支持自定义 `PlayerThemeConfig` 对象
+- 在 `:root` 上设置 CSS 变量（通过 `@slidejs/theme`）
+
+**Editor 主题 API** (`setEditorTheme`):
+- 独立的 Editor 主题系统
+- 支持相同的预设主题名称
+- 支持自定义 `EditorThemeConfig` 对象
+- 在 `:root` 上设置 QuizerJS CSS 变量（用于编辑器 UI）
+
+#### 使用示例
+
+```typescript
+import { setPlayerTheme, setEditorTheme } from '@quizerjs/theme';
+
+// 统一设置主题（推荐）
+const applyTheme = (isDark: boolean) => {
+  const themeName = isDark ? 'solarized-dark' : 'solarized-light';
+  
+  // Player 主题（用于 QuizPlayer）
+  setPlayerTheme(themeName);
+  
+  // Editor 主题（用于 QuizEditor 和应用级 UI）
+  setEditorTheme(themeName);
+};
+
+// React/Vue 集成示例
+// React Hook
+export function useTheme() {
+  const [isDark, setIsDark] = useState(false);
+  
+  useEffect(() => {
+    applyTheme(isDark);
+  }, [isDark]);
+  
+  return { isDark, toggleTheme: () => setIsDark(!isDark) };
+}
+
+// Vue Composable
+export function useTheme() {
+  const isDark = ref(false);
+  
+  watch(isDark, (newValue) => {
+    applyTheme(newValue);
+  });
+  
+  return { isDark, toggleTheme: () => isDark.value = !isDark.value };
+}
+```
+
+#### 主题预设
+
+`@quizerjs/theme` 包提供了 4 个预设主题，Player 和 Editor 共享相同的主题名称：
+
+1. **`'solarized-dark'`** - Solarized 深色主题（默认）
+2. **`'solarized-light'`** - Solarized 浅色主题
+3. **`'dark'`** - 标准深色主题
+4. **`'light'`** - 标准浅色主题
+
+#### 与 QuizPlayer 的关系
+
+- `QuizPlayer` 内部使用 `@slidejs/theme` 来设置 Player 主题
+- `@quizerjs/theme` 的 `setPlayerTheme` 是对 `@slidejs/theme` 的封装
+- 在应用级别，推荐使用 `@quizerjs/theme` 来统一管理主题，确保 Player 和 Editor 主题一致
+
 ## 使用示例
 
 ### QuizPlayer 使用示例（@quizerjs/quizerjs）
@@ -2061,6 +2143,25 @@ present quiz "my quiz" {
 ```
 
 **注意**：`@quizerjs/player-markdown` 是可选扩展包，需要单独安装。不包含 Slide 相关代码（@slidejs/*, swiper）
+
+### @quizerjs/theme 包（应用级主题管理）
+
+```
+@quizerjs/theme
+├── @slidejs/theme (必需) - Player 主题支持（通过 @slidejs/theme 实现）
+└── (无其他依赖) - Editor 主题通过 CSS Hook API 实现
+```
+
+**功能**：
+- 提供统一的主题管理 API（`setPlayerTheme`, `setEditorTheme`）
+- 支持预设主题名称和自定义主题配置
+- 适用于 React、Vue 等框架的应用级主题管理
+- Player 主题基于 `@slidejs/theme`，Editor 主题通过 CSS 变量实现
+
+**使用场景**：
+- React/Vue/Svelte 等框架的 demo 应用
+- 需要统一管理 Player 和 Editor 主题的应用
+- 需要运行时切换主题的应用
 
 ## 参考
 

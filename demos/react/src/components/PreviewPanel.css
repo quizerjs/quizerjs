@@ -1,0 +1,117 @@
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--quiz-bg-primary, #fff);
+  height: 100%;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.preview-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-bottom: 1px solid var(--quiz-border-color, #e0e0e0);
+  transition: border-color 0.3s ease;
+}
+
+.preview-section:last-child {
+  border-bottom: none;
+}
+
+.player-section {
+  flex: 1.5;
+}
+
+.section-header {
+  background: var(--quiz-bg-secondary, #fafafa);
+  border-bottom: 1px solid var(--quiz-border-color, #e0e0e0);
+  padding: var(--quiz-spacing-sm, 6px) var(--quiz-spacing-md, 12px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.section-title {
+  font-size: var(--quiz-font-size-sm, 12px);
+  font-weight: var(--quiz-font-weight-medium, 500);
+  color: var(--quiz-text-secondary, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.section-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.section-content .quiz-player-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.player-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  color: var(--quiz-text-tertiary, #999);
+  font-size: 14px;
+}
+
+.placeholder-content {
+  text-align: center;
+}
+
+.error-content {
+  max-width: 600px;
+  text-align: left;
+}
+
+.error-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--quiz-error-color, #dc2626);
+  margin-bottom: 0.5rem;
+}
+
+.error-detail {
+  color: var(--quiz-text-primary, #333);
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--quiz-bg-secondary, #fafafa);
+  border-left: 3px solid var(--quiz-error-color, #dc2626);
+  border-radius: 4px;
+}
+
+.debug-info {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--quiz-bg-secondary, #fafafa);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.debug-info ul {
+  margin: 0.5rem 0 0 1.5rem;
+  padding: 0;
+  list-style: disc;
+}
+
+.debug-info li {
+  margin: 0.25rem 0;
+  color: var(--quiz-text-secondary, #666);
+}

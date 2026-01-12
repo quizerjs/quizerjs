@@ -1,0 +1,53 @@
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--quiz-bg-primary, #fff);
+  height: 100%;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.panel-header {
+  background: var(--quiz-bg-secondary, #fafafa);
+  border-bottom: 1px solid var(--quiz-border-color, #e0e0e0);
+  padding: var(--quiz-spacing-sm, 6px) var(--quiz-spacing-md, 12px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.panel-title {
+  font-size: var(--quiz-font-size-sm, 12px);
+  font-weight: var(--quiz-font-weight-medium, 500);
+  color: var(--quiz-text-secondary, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.panel-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-content .quiz-editor {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  padding: var(--quiz-spacing-md, 12px);
+  overflow-y: auto;
+  background: var(--quiz-bg-primary, #fff);
+  color: var(--quiz-text-primary, #333);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}

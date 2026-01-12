@@ -6,4 +6,6 @@
 
 export { QuizEditor } from './QuizEditor';
 export type { QuizEditorProps, QuizEditorRef } from './QuizEditor';
+export { QuizPlayer } from './QuizPlayer';
+export type { QuizPlayerProps, QuizPlayerRef } from './QuizPlayer';
 export type * from './types';
