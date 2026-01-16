@@ -54,7 +54,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@slidejs/theme": "^0.1.6"
+    "@slidejs/theme": "^0.1.8"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

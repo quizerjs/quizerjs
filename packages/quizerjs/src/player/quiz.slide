@@ -24,6 +24,7 @@ present quiz "quiz" {
             name: "wsx-quiz-question"
             attrs {
               question: question
+              quiz-id: quiz.id
             }
           }
           behavior {
@@ -36,12 +37,16 @@ present quiz "quiz" {
       }
     }
 
-    // 结束规则：感谢页
-    rule end "thanks" {
+    // 结束规则：提交页
+    rule end "submit" {
       slide {
-        content text {
-          "感谢您的参与！"
-          "测验已完成"
+        content dynamic {
+          name: "wsx-quiz-submit"
+          attrs {
+            label: "提交答案"
+            progress: true
+            quiz-id: quiz.id
+          }
         }
         behavior {
           transition zoom {

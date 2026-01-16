@@ -369,20 +369,20 @@ importers:
         specifier: workspace:*
         version: link:../theme
       '@slidejs/context':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
       '@slidejs/runner':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
       '@slidejs/runner-revealjs':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
       '@slidejs/runner-swiper':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
       '@slidejs/theme':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
       marked:
         specifier: ^11.0.0
         version: 11.2.0
@@ -523,8 +523,8 @@ importers:
   packages/theme:
     dependencies:
       '@slidejs/theme':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.8
+        version: 0.1.8
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
@@ -1898,26 +1898,26 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@slidejs/context@0.1.6':
-    resolution: {integrity: sha512-XlMaJlusqMSTiJRysISFcSNL9esGKTzhzS7YGiwx+sADL2ie3STUohUhxOLLDRZVNSojjZ7hJ9GftA8INeb57g==}
+  '@slidejs/context@0.1.8':
+    resolution: {integrity: sha512-IgiqehnWWpiL+fWJ7NvsTFUH/TCPZ8inLpH6GT6E/MGPTwHjpw7ycjqCPxF0QspjftyRFr6BaS3jIheJn54itA==}
 
-  '@slidejs/core@0.1.6':
-    resolution: {integrity: sha512-n7Dw5U2p0a3X8ibpR5C4dGPQCufiaI7DsucpCcgwfOiVtyCSHacvSj3bG5SiKIbinGXGDxZ3HsrJljA26kDcbQ==}
+  '@slidejs/core@0.1.8':
+    resolution: {integrity: sha512-zoozM4Zw3hTKrWKT684MCyzvEEzZ/e5CZzx+AQotQUljzxWtNDMUeFzvMXOUXQqdCADrF8WxHRn2hOUpP/5aRg==}
 
-  '@slidejs/dsl@0.1.6':
-    resolution: {integrity: sha512-r3WNhdAuxjGQ8IytGdy/62GNJz8tCOAswUSIcot42HmxKk48wnrHP6hwOIsYFKsY1ujHzT1IYWnVTpi0WMCVRg==}
+  '@slidejs/dsl@0.1.8':
+    resolution: {integrity: sha512-X6ujCesvwA2D5wtcLtBcBED0qvKZkVY8ArJksu49QgCfdXZe7cAN+p6XW2YJhHYwarwB/A4ZEhpa7WPiCV9pdA==}
 
-  '@slidejs/runner-revealjs@0.1.6':
-    resolution: {integrity: sha512-HVbFqhqYlXOy15RcqtPZhpIYB7YlUUITHxPaX4KUU0hryVgRgYZ5TSLp/ZtioFaRzADoJwSwcw6F9vkfmz+ofw==}
+  '@slidejs/runner-revealjs@0.1.8':
+    resolution: {integrity: sha512-tezh/Im7eZIk9pFtHidEN4SVVFxA32k2XhEpnCzNYejAHa6CW/BL3u7GmGCY22ZCsugibCMx6UHvGf2XY0wBsg==}
 
-  '@slidejs/runner-swiper@0.1.6':
-    resolution: {integrity: sha512-vYL8mTd5l80j9nLqtOqhf9BO/ZbdeWDnXxCvqen+ZTJmaTJ1Q6calITcHhu9xNsorme/l1AUYRntg3PhM7lE4w==}
+  '@slidejs/runner-swiper@0.1.8':
+    resolution: {integrity: sha512-h+4O9abbcXyvNSrDeGSrPjFly9qHZyO2dcxNRDpY9XhMoF3BLe/4EismcpzULW2n6Pk9Rk9I417ed+WF3GIkgA==}
 
-  '@slidejs/runner@0.1.6':
-    resolution: {integrity: sha512-KXI+XjpG+fAuabjz2NrxbedaeL6QYKYUQr8bKjVYPSaOrdmNY0KkcW1EstnVvTNku9nOgBYZrMG7jouT9pJUvg==}
+  '@slidejs/runner@0.1.8':
+    resolution: {integrity: sha512-M/xyUVo/X4SizFvq4yyv4goyAMx/S5rS2DbYnBNRkban50t9UOQk+8MkMD88uZJYDfP2FOI1cWnLjVFHJA/wFA==}
 
-  '@slidejs/theme@0.1.6':
-    resolution: {integrity: sha512-udQ3iu5H3W2DZ7oJkQiaLxXaeAZ/jY9l/j4GrWjbyZB5ayc/GE6u9DElGFaSCZA2TOa2PvvZG0mUeFjNeJbsDA==}
+  '@slidejs/theme@0.1.8':
+    resolution: {integrity: sha512-1ef9L4LqAPdCySnAp6WsWoVQ7WGhT4gzx5F5jWnCO2JriPu77WJEDUpUq9S7D7xcy9Vf6pwgIWOuKj1HwgQB3g==}
 
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0':
     resolution: {integrity: sha512-9QX28IymvBlSCqsCll5t0kQVxipsfhFFL+L2t3nTWfXnddYwxBuAEtTtlaVQpRz9c37BhJjltSeY4AJSC03SSg==}
@@ -6595,39 +6595,39 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@slidejs/context@0.1.6': {}
+  '@slidejs/context@0.1.8': {}
 
-  '@slidejs/core@0.1.6':
+  '@slidejs/core@0.1.8':
     dependencies:
-      '@slidejs/context': 0.1.6
+      '@slidejs/context': 0.1.8
 
-  '@slidejs/dsl@0.1.6':
+  '@slidejs/dsl@0.1.8':
     dependencies:
-      '@slidejs/context': 0.1.6
-      '@slidejs/core': 0.1.6
+      '@slidejs/context': 0.1.8
+      '@slidejs/core': 0.1.8
 
-  '@slidejs/runner-revealjs@0.1.6':
+  '@slidejs/runner-revealjs@0.1.8':
     dependencies:
-      '@slidejs/context': 0.1.6
-      '@slidejs/core': 0.1.6
-      '@slidejs/dsl': 0.1.6
-      '@slidejs/runner': 0.1.6
+      '@slidejs/context': 0.1.8
+      '@slidejs/core': 0.1.8
+      '@slidejs/dsl': 0.1.8
+      '@slidejs/runner': 0.1.8
       reveal.js: 5.2.1
 
-  '@slidejs/runner-swiper@0.1.6':
+  '@slidejs/runner-swiper@0.1.8':
     dependencies:
-      '@slidejs/context': 0.1.6
-      '@slidejs/core': 0.1.6
-      '@slidejs/dsl': 0.1.6
-      '@slidejs/runner': 0.1.6
+      '@slidejs/context': 0.1.8
+      '@slidejs/core': 0.1.8
+      '@slidejs/dsl': 0.1.8
+      '@slidejs/runner': 0.1.8
       swiper: 11.2.10
 
-  '@slidejs/runner@0.1.6':
+  '@slidejs/runner@0.1.8':
     dependencies:
-      '@slidejs/context': 0.1.6
-      '@slidejs/core': 0.1.6
+      '@slidejs/context': 0.1.8
+      '@slidejs/core': 0.1.8
 
-  '@slidejs/theme@0.1.6': {}
+  '@slidejs/theme@0.1.8': {}
 
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.20)(vite@5.4.21(@types/node@20.19.27)(sass@1.97.1)))(svelte@4.2.20)(vite@5.4.21(@types/node@20.19.27)(sass@1.97.1))':
     dependencies:

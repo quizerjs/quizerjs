@@ -8,6 +8,7 @@
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import type { Question } from '@quizerjs/dsl';
 import { QuestionTypes } from '@quizerjs/dsl';
+import { getQuizStoreById, quizActions } from '../store';
 import styles from './quiz-question.css?inline';
 
 @autoRegister({ tagName: 'wsx-quiz-question' })
@@ -19,6 +20,9 @@ export class QuizQuestion extends LightComponent {
   @state private showResult = false;
   @state private isCorrect: boolean | null = null;
   @state private correctAnswer: any = null;
+  @state private quizId: string | null = null;
+
+  private store: ReturnType<typeof getQuizStoreById> | null = null;
 
   constructor() {
     super({
@@ -28,7 +32,7 @@ export class QuizQuestion extends LightComponent {
   }
 
   static get observedAttributes() {
-    return ['question', 'answer', 'disabled', 'show-result', 'is-correct', 'correct-answer'];
+    return ['question', 'answer', 'disabled', 'show-result', 'is-correct', 'correct-answer', 'quiz-id'];
   }
 
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
@@ -36,6 +40,13 @@ export class QuizQuestion extends LightComponent {
       case 'question':
         try {
           this.question = newValue ? JSON.parse(newValue) : null;
+          // 当问题设置后，尝试从 store 获取当前答案
+          if (this.question && this.store) {
+            const storeAnswer = this.store.getAnswer(this.question.id);
+            if (storeAnswer !== undefined) {
+              this.answer = storeAnswer;
+            }
+          }
         } catch {
           this.question = null;
         }
@@ -63,15 +74,37 @@ export class QuizQuestion extends LightComponent {
           this.correctAnswer = null;
         }
         break;
+      case 'quiz-id':
+        this.quizId = newValue || null;
+        // 当 quizId 设置后，查找对应的 store
+        if (this.quizId) {
+          this.store = getQuizStoreById(this.quizId);
+        }
+        break;
+    }
+  }
+
+  onConnected() {
+    // 如果已有 quizId，通过 quizId 查找 store
+    if (this.quizId) {
+      this.store = getQuizStoreById(this.quizId);
     }
   }
 
   /**
    * 设置答案并触发事件
+   * 通过 QuizStore dispatch action 更新状态
    */
   private setAnswer(value: any): void {
     if (this.disabled || !this.question) return;
     this.answer = value;
+
+    // 通过 QuizStore dispatch action 更新状态（如果 store 可用）
+    if (this.store) {
+      this.store.dispatch(quizActions.setAnswer(this.question.id, value));
+    }
+
+    // 保留现有的事件触发（向后兼容）
     this.dispatchEvent(
       new CustomEvent('answer-change', {
         detail: { questionId: this.question.id, answer: value },

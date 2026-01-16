@@ -21,10 +21,11 @@
 
 ### 草案中
 
-- [RFC 0010: Slide DSL 规范](./0010-slide-dsl.md) - 通用幻灯片演示领域特定语言设计
-- [RFC 0011: Slide Runner 与 reveal.js 集成](./0011-slide-runner.md) - 可扩展的幻灯片执行引擎与 reveal.js 适配器
-- [RFC 0012: Slide DSL 增强功能与性能优化](./0012-slide-dsl-enhancements.md) - 条件逻辑、变量定义、模块化、性能优化和安全性增强
-- [RFC 0013: Slide DSL 语言服务器与开发工具](./0013-slide-dsl-language-server.md) - LSP 服务器、VSCode 扩展与 CLI 工具
+- [RFC 0006: 播放器核心组件设计](./0006-player-core.md) - QuizPlayer 的详细 API 设计（包含提交按钮与结果展示设计）
+- [RFC 0010: Slide DSL 中的结果处理设计](./0010-result-handling-in-slides.md) - 在 Slide DSL 中处理测验结果展示的机制
+- RFC 0011: Slide Runner 与 reveal.js 集成（计划中）
+- RFC 0012: Slide DSL 增强功能与性能优化（计划中）
+- RFC 0013: Slide DSL 语言服务器与开发工具（计划中）
 - RFC 0014: Vue 集成设计（计划中）
 - RFC 0015: 插件系统设计（计划中）
 

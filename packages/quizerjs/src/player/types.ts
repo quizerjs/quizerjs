@@ -4,13 +4,28 @@
 
 import type { QuizDSL } from '@quizerjs/dsl';
 import type { ResultDSL, QuestionResult, AnswerValue } from '@quizerjs/dsl';
-import type { RevealOptions } from '@slidejs/runner-revealjs';
-
 // 重新导出 DSL 包中的类型，保持向后兼容
 export type { ResultDSL, QuestionResult, AnswerValue };
 
-// 重新导出 RevealOptions 作为 SlideOptions，隐藏实现细节
-export type { RevealOptions as SlideOptions };
+// Swiper 配置选项类型（从 @slidejs/runner-swiper 或自定义）
+export interface SwiperRunnerOptions {
+  direction?: 'horizontal' | 'vertical';
+  loop?: boolean;
+  speed?: number;
+  spaceBetween?: number;
+  slidesPerView?: number | 'auto';
+  navigation?: boolean | object;
+  pagination?: boolean | object | { clickable?: boolean };
+  keyboard?: {
+    enabled?: boolean;
+    onlyInViewport?: boolean;
+  };
+  touch?: boolean;
+  [key: string]: unknown;
+}
+
+// 重新导出 SwiperRunnerOptions 作为 SlideOptions，隐藏实现细节
+export type { SwiperRunnerOptions as SlideOptions };
 
 /**
  * Swiper 配置选项（简化版，实际使用 Swiper 的类型）
@@ -123,9 +138,9 @@ export interface QuizPlayerOptions {
 
   /**
    * Slide 配置选项（可选）
-   * 传递给 slide runner 的配置（当前使用 Reveal.js）
+   * 传递给 slide runner 的配置（当前使用 Swiper）
    */
-  slideOptions?: RevealOptions;
+  slideOptions?: SwiperRunnerOptions;
 
   /**
    * 主题设置（可选，默认 'solarized-dark'）

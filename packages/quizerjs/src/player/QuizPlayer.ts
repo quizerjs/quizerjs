@@ -1,12 +1,19 @@
 /**
  * QuizPlayer - 基于 Slide 的测验播放器
- * 使用 Slide DSL 和 Swiper 渲染交互式幻灯片
+ * 使用 Slide DSL 和 Swiper runner 渲染交互式幻灯片
  */
 
 import type { QuizDSL, Question } from '@quizerjs/dsl';
-import { checkAnswer } from '@quizerjs/core';
+import {
+  checkAnswer,
+  createQuizStore,
+  quizActions,
+  registerQuizStore,
+  unregisterQuizStore,
+} from '@quizerjs/core';
 import type { Question as CoreQuestion } from '@quizerjs/core';
-import { createSlideRunner } from '@slidejs/runner-revealjs';
+import type { QuizStore } from '@quizerjs/core';
+import { createSlideRunner } from '@slidejs/runner-swiper';
 import { setPlayerTheme } from '@quizerjs/theme';
 import type {
   QuizPlayerOptions,
@@ -54,10 +61,14 @@ export class QuizPlayer {
   private options: QuizPlayerOptions;
   private containerElement: HTMLElement | null = null;
   private answerChangeListener: ((event: Event) => void) | null = null;
+  private store: QuizStore;
 
   constructor(options: QuizPlayerOptions) {
     this.options = options;
     this.quizDSL = options.quizDSL;
+
+    // 初始化 QuizStore（每个 QuizPlayer 实例创建自己的 store）
+    this.store = createQuizStore();
 
     // 状态恢复优先级：resultDSL > initialAnswers
     // resultDSL 包含完整的恢复信息（包括时间等），优先级更高
@@ -102,7 +113,7 @@ export class QuizPlayer {
       throw new Error('Container element not found');
     }
 
-    // 使用 @slidejs/runner-swiper 创建并运行幻灯片（已静态导入）
+    // 使用 @slidejs/runner-swiper 创建并运行幻灯片
     try {
       // 1. 创建 SlideContext，将 Quiz DSL 作为数据源
       // 对于 quiz 类型，quiz 对象应该在顶层可访问（Slide DSL 模板中可以直接使用 quiz.title 等）
@@ -118,7 +129,7 @@ export class QuizPlayer {
         },
       };
 
-      // 2. 使用 @slidejs/runner-revealjs 创建并运行幻灯片
+      // 2. 使用 @slidejs/runner-swiper 创建并运行幻灯片
       this.runner = (await createSlideRunner(
         finalSlideDSL,
         {
@@ -131,26 +142,24 @@ export class QuizPlayer {
         } as unknown as Parameters<typeof createSlideRunner>[1],
         {
           container: this.containerElement,
-          revealOptions: {
-            hash: true,
-            controls: true,
-            progress: true,
-            center: true,
-            transition: 'slide',
-            keyboard: true,
-            touch: true,
-            ...slideOptions,
-          },
+          swiperOptions: { ...slideOptions },
         }
       )) as unknown as SlideRunner;
 
       // 3. 启动演示（导航到第一张幻灯片）
       this.runner.play();
 
-      // 4. 设置答案监听器
+      // 4. 注册 QuizStore（使用 quizId 作为标识符）
+      registerQuizStore(quizDSL.quiz.id, this.store);
+
+      // 5. 初始化 QuizStore 状态
+      const totalQuestions = this.getAllQuestions().length;
+      this.store.dispatch(quizActions.initQuiz(quizDSL.quiz.id, totalQuestions));
+
+      // 6. 设置答案监听器
       this.setupAnswerListeners();
 
-      // 5. 应用主题（默认使用 solarized-dark）
+      // 6. 应用主题（默认使用 solarized-dark）
       const theme = this.options.theme || 'solarized-dark';
       this.setTheme(theme);
 
@@ -258,6 +267,14 @@ export class QuizPlayer {
   }
 
   /**
+   * 获取 QuizStore 实例
+   * 允许组件访问 store 实例
+   */
+  getStore(): QuizStore {
+    return this.store;
+  }
+
+  /**
    * 设置答案
    */
   setAnswer(questionId: string, answer: AnswerValue): void {
@@ -265,6 +282,11 @@ export class QuizPlayer {
       return;
     }
     this.answers[questionId] = answer;
+
+    // 通过 QuizStore dispatch action 更新状态
+    this.store.dispatch(quizActions.setAnswer(questionId, answer));
+
+    // 保留现有的回调（向后兼容）
     this.options.onAnswerChange?.(questionId, answer);
   }
 
@@ -280,65 +302,79 @@ export class QuizPlayer {
    * 返回 Result DSL
    */
   submit(): ResultDSL {
-    const completedAt = new Date();
-    const duration = completedAt.getTime() - this.startTime;
+    // 开始提交：Dispatch SUBMIT_START action
+    this.store.dispatch(quizActions.startSubmit());
 
-    // 收集所有问题
-    const allQuestions = this.getAllQuestions();
+    try {
+      const completedAt = new Date();
+      const duration = completedAt.getTime() - this.startTime;
 
-    // 计算分数
-    const questionResults: QuestionResult[] = allQuestions.map(question => {
-      const userAnswer = this.answers[question.id];
-      const correct = this.isAnswerCorrect(question, userAnswer);
-      const score = correct ? question.points || 0 : 0;
+      // 收集所有问题
+      const allQuestions = this.getAllQuestions();
 
-      return {
-        questionId: question.id,
-        correct,
-        score,
-        maxScore: question.points || 0,
-        userAnswer,
-        correctAnswer: this.getCorrectAnswer(question),
+      // 计算分数
+      const questionResults: QuestionResult[] = allQuestions.map(question => {
+        const userAnswer = this.answers[question.id];
+        const correct = this.isAnswerCorrect(question, userAnswer);
+        const score = correct ? question.points || 0 : 0;
+
+        return {
+          questionId: question.id,
+          correct,
+          score,
+          maxScore: question.points || 0,
+          userAnswer,
+          correctAnswer: this.getCorrectAnswer(question),
+        };
+      });
+
+      const totalScore = questionResults.reduce((sum, r) => sum + r.score, 0);
+      const maxScore = questionResults.reduce((sum, r) => sum + r.maxScore, 0);
+      const passingScore = this.quizDSL.quiz.settings?.passingScore || 0;
+      const passed = totalScore >= passingScore;
+      const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+
+      // 生成 Result DSL
+      const resultDSL: ResultDSL = {
+        version: '1.0.0',
+        metadata: {
+          id: `result-${Date.now()}`,
+          quizId: this.quizDSL.quiz.id,
+          startedAt: new Date(this.startTime).toISOString(),
+          completedAt: completedAt.toISOString(),
+          duration,
+        },
+        quiz: { ...this.quizDSL }, // 完整 Quiz DSL 副本
+        answers: { ...this.answers },
+        scoring: {
+          totalScore,
+          maxScore,
+          percentage,
+          passed,
+          passingScore,
+          questionResults,
+        },
       };
-    });
 
-    const totalScore = questionResults.reduce((sum, r) => sum + r.score, 0);
-    const maxScore = questionResults.reduce((sum, r) => sum + r.maxScore, 0);
-    const passingScore = this.quizDSL.quiz.settings?.passingScore || 0;
-    const passed = totalScore >= passingScore;
-    const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+      // 提交成功：Dispatch SUBMIT_SUCCESS action
+      this.store.dispatch(quizActions.submitSuccess(resultDSL));
 
-    // 生成 Result DSL
-    const resultDSL: ResultDSL = {
-      version: '1.0.0',
-      metadata: {
-        id: `result-${Date.now()}`,
-        quizId: this.quizDSL.quiz.id,
-        startedAt: new Date(this.startTime).toISOString(),
-        completedAt: completedAt.toISOString(),
-        duration,
-      },
-      quiz: { ...this.quizDSL }, // 完整 Quiz DSL 副本
-      answers: { ...this.answers },
-      scoring: {
-        totalScore,
-        maxScore,
-        percentage,
-        passed,
-        passingScore,
-        questionResults,
-      },
-    };
+      // 触发提交回调
+      this.options.onSubmit?.(resultDSL);
 
-    // 触发提交回调
-    this.options.onSubmit?.(resultDSL);
+      // 如果启用结果显示，渲染结果
+      if (this.options.showResults !== false) {
+        this.renderResults(resultDSL);
+      }
 
-    // 如果启用结果显示，渲染结果
-    if (this.options.showResults !== false) {
-      this.renderResults(resultDSL);
+      return resultDSL;
+    } catch (error) {
+      // 提交失败：Dispatch SUBMIT_FAILURE action
+      this.store.dispatch(
+        quizActions.submitFailure(error instanceof Error ? error : new Error(String(error)))
+      );
+      throw error;
     }
-
-    return resultDSL;
   }
 
   /**
@@ -448,6 +484,11 @@ export class QuizPlayer {
    * 销毁播放器实例
    */
   async destroy(): Promise<void> {
+    // 取消注册 QuizStore（使用 quizId）
+    if (this.quizDSL?.quiz?.id) {
+      unregisterQuizStore(this.quizDSL.quiz.id);
+    }
+
     // 移除事件监听器，防止内存泄漏
     if (this.answerChangeListener) {
       document.removeEventListener('answer-change', this.answerChangeListener);

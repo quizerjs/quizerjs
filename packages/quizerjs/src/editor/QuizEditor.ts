@@ -143,7 +143,33 @@ export class QuizEditor {
 
     this.currentDSL = dsl;
     const editorData = dslToBlock(dsl);
-    await this.editor.render(editorData);
+
+    try {
+      // 检查编辑器是否有内容
+      const currentData = await this.editor.save();
+      const hasBlocks = currentData.blocks && currentData.blocks.length > 0;
+
+      if (hasBlocks) {
+        // 如果有内容，先清空再渲染，避免 render() 时出现 "Can't find a Block to remove" 错误
+        await this.editor.clear();
+      }
+      // 渲染新数据
+      await this.editor.render(editorData);
+    } catch (error) {
+      // 如果出错，尝试直接 render（可能编辑器已经为空）
+      // 如果仍然失败，记录错误并重新初始化
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Editor.js load 警告:', errorMessage);
+
+      try {
+        await this.editor.render(editorData);
+      } catch (renderError) {
+        console.error('Editor.js render 失败，尝试重新初始化:', renderError);
+        // 重新初始化编辑器作为最后手段
+        await this.reinitializeEditor(editorData);
+      }
+    }
+
     this.isDirtyFlag = false;
   }
 
@@ -215,8 +241,70 @@ export class QuizEditor {
    */
   async destroy(): Promise<void> {
     if (this.editor) {
-      await this.editor.destroy();
+      try {
+        await this.editor.destroy();
+      } catch (error) {
+        // 忽略销毁错误
+        console.warn('Editor.js destroy 警告:', error);
+      }
       this.editor = null;
     }
+  }
+
+  /**
+   * 重新初始化编辑器（用于错误恢复）
+   */
+  private async reinitializeEditor(editorData: EditorJSOutput): Promise<void> {
+    const container = this.container;
+    const readOnly = this.options.readOnly ?? false;
+
+    // 销毁旧编辑器
+    if (this.editor) {
+      try {
+        await this.editor.destroy();
+      } catch {
+        // 忽略销毁错误
+      }
+    }
+
+    // 创建新编辑器
+    this.editor = new EditorJS({
+      holder: container,
+      tools: {
+        paragraph: Paragraph,
+        header: {
+          class: Header as unknown as ToolConstructable,
+          config: {
+            levels: [1, 2, 3, 4],
+            defaultLevel: 2,
+          },
+        },
+        'quiz-single-choice': {
+          class: SingleChoiceTool,
+          inlineToolbar: true,
+        },
+        'quiz-multiple-choice': {
+          class: MultipleChoiceTool,
+          inlineToolbar: true,
+        },
+        'quiz-text-input': {
+          class: TextInputTool,
+          inlineToolbar: true,
+        },
+        'quiz-true-false': {
+          class: TrueFalseTool,
+          inlineToolbar: true,
+        },
+      },
+      data: editorData,
+      readOnly,
+      onChange: async () => {
+        this.isDirtyFlag = true;
+        const savedDSL = await this.save();
+        this.options.onChange?.(savedDSL);
+      },
+    });
+
+    await this.editor.isReady;
   }
 }
