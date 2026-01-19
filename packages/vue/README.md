@@ -54,11 +54,7 @@ function handleSave(dsl: QuizDSL) {
 
 ```vue
 <template>
-  <QuizPlayer
-    :quiz-dsl="quizDSL"
-    @submit="handleSubmit"
-    @answer-change="handleAnswerChange"
-  />
+  <QuizPlayer :quiz-dsl="quizDSL" @submit="handleSubmit" @answer-change="handleAnswerChange" />
 </template>
 
 <script setup lang="ts">
@@ -105,19 +101,15 @@ function handleAnswerChange(questionId: string, answer: AnswerValue) {
       <button @click="mode = 'editor'">编辑</button>
       <button @click="handlePlay">播放</button>
     </div>
-    
+
     <QuizEditor
       v-if="mode === 'editor'"
       ref="editorRef"
       :initial-dsl="quizDSL"
       @change="handleEditorChange"
     />
-    
-    <QuizPlayer
-      v-if="mode === 'player' && playDSL"
-      :quiz="playDSL"
-      @submit="handlePlayerSubmit"
-    />
+
+    <QuizPlayer v-if="mode === 'player' && playDSL" :quiz="playDSL" @submit="handlePlayerSubmit" />
   </div>
 </template>
 
@@ -243,7 +235,7 @@ const { dsl, answers, submitted, score, setAnswer, submit } = useQuiz({
 - `getCurrentScore()`: 获取当前分数
 - `isComplete()`: 检查是否已回答所有问题
 - `reset()`: 重置答案
-- `getResultDSL()`: 获取 Result DSL（不提交）
+- `getResultSource()`: 获取 Result DSL（不提交）
 - `getRunner()`: 获取 SlideRunner 实例
 
 ## 相关

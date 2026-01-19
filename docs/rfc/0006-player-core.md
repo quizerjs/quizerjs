@@ -9,6 +9,7 @@
 本文档详细设计播放器组件架构。**Player 的核心职责是播放 Quiz DSL、收集用户答案、计算分数、生成结果并提交**。
 
 **关键设计理念**：
+
 - **Editor 设计 Quiz**：使用 `@quizerjs/editor` 创建和编辑 Quiz DSL
 - **核心播放器**：`@quizerjs/quizerjs` 包中的 `QuizPlayer` 始终是 Slide 播放器（使用 Slide DSL）
 - **扩展播放器**：`@quizerjs/player-markdown` 包提供 `MarkdownPlayer` 支持
@@ -39,6 +40,7 @@
 #### 1. @quizerjs/quizerjs（核心包）
 
 **QuizPlayer（幻灯片播放器）**：
+
 - **位置**：`@quizerjs/quizerjs` 包中的 `QuizPlayer` 类
 - **职责**：始终是 Slide 播放器，使用 Slide DSL 渲染为交互式幻灯片
 - **特点**：
@@ -50,6 +52,7 @@
 #### 2. @quizerjs/player-markdown（扩展包）
 
 **MarkdownPlayer（Markdown 播放器）**：
+
 - **位置**：`@quizerjs/player-markdown` 包中的 `MarkdownPlayer` 类
 - **职责**：将 Quiz DSL 渲染为 Markdown 文档格式
 - **特点**：
@@ -61,6 +64,7 @@
 ### 设计优势
 
 **为什么采用核心包 + 扩展包架构**：
+
 1. **核心包专注**：`@quizerjs/quizerjs` 专注于 Slide 播放器，保持核心功能简洁
 2. **按需安装**：需要 Markdown 播放器时才安装 `@quizerjs/player-markdown`
 3. **避免强制依赖**：核心包不依赖 Markdown 相关代码
@@ -91,6 +95,7 @@ Quiz DSL
 ### 共享功能
 
 两个播放器共享以下核心功能（通过 `@quizerjs/core` 包的工具函数实现）：
+
 - **答案收集**：统一的答案收集机制
 - **分数计算**：使用相同的评分逻辑
 - **结果生成**：生成相同格式的 Result DSL
@@ -375,15 +380,15 @@ interface QuizPlayerOptions {
 
   /**
    * 主题设置（可选，默认 'solarized-dark'）
-   * 
+   *
    * 支持两种方式：
    * 1. 预设主题名称（字符串）：'solarized-dark' | 'solarized-light' | 'dark' | 'light'
    * 2. 自定义主题配置对象：部分或完整的 ThemeConfig 对象
-   * 
+   *
    * @example
    * // 使用预设主题
    * theme: 'solarized-dark'
-   * 
+   *
    * @example
    * // 使用自定义主题配置
    * theme: {
@@ -447,7 +452,7 @@ class QuizPlayer {
    * 获取 Result DSL（不提交）
    * 用于保存当前答题状态
    */
-  getResultDSL(): ResultDSL;
+  getResultSource(): ResultDSL;
 
   /**
    * 从 Result DSL 恢复状态
@@ -461,17 +466,17 @@ class QuizPlayer {
 
   /**
    * 设置主题
-   * 
+   *
    * 支持两种方式：
    * 1. 预设主题名称（字符串）：快速使用内置主题
    * 2. 自定义主题配置对象：完全自定义或部分覆盖预设主题
-   * 
+   *
    * @param theme 主题名称（'solarized-dark' | 'solarized-light' | 'dark' | 'light'）或自定义主题配置对象
-   * 
+   *
    * @example
    * // 使用预设主题
    * await player.setTheme('solarized-dark');
-   * 
+   *
    * @example
    * // 使用自定义主题配置
    * await player.setTheme({
@@ -605,7 +610,7 @@ class MarkdownPlayer {
    * 获取 Result DSL（不提交）
    * 用于保存当前答题状态
    */
-  getResultDSL(): ResultDSL;
+  getResultSource(): ResultDSL;
 
   /**
    * 从 Result DSL 恢复状态
@@ -613,7 +618,6 @@ class MarkdownPlayer {
   restoreFromResultDSL(resultDSL: ResultDSL): void;
 }
 ```
-
 
 ### 实现细节
 
@@ -635,7 +639,7 @@ class QuizPlayer {
   constructor(options: QuizPlayerOptions) {
     this.options = options;
     this.quizDSL = options.quizDSL;
-    
+
     // 从 Result DSL 恢复状态（如果提供）
     if (options.resultDSL) {
       this.restoreFromResultDSL(options.resultDSL);
@@ -649,9 +653,7 @@ class QuizPlayer {
 
     // 获取容器元素
     const containerElement =
-      typeof container === 'string'
-        ? document.querySelector(container)
-        : container;
+      typeof container === 'string' ? document.querySelector(container) : container;
 
     if (!containerElement) {
       throw new Error('Container element not found');
@@ -659,9 +661,7 @@ class QuizPlayer {
 
     // 获取容器元素
     const containerElement =
-      typeof container === 'string'
-        ? document.querySelector(container)
-        : container;
+      typeof container === 'string' ? document.querySelector(container) : container;
 
     if (!containerElement) {
       throw new Error('Container element not found');
@@ -792,7 +792,7 @@ class QuizPlayer {
     return resultDSL;
   }
 
-  getResultDSL(): ResultDSL {
+  getResultSource(): ResultDSL {
     const now = Date.now();
     const duration = now - this.startTime;
 
@@ -843,10 +843,10 @@ class QuizPlayer {
   restoreFromResultDSL(resultDSL: ResultDSL): void {
     // 恢复 Quiz DSL
     this.quizDSL = resultDSL.quiz;
-    
+
     // 恢复答案
     this.answers = { ...resultDSL.answers };
-    
+
     // 恢复开始时间（如果有）
     if (resultDSL.metadata.startedAt) {
       this.startTime = new Date(resultDSL.metadata.startedAt).getTime();
@@ -862,9 +862,7 @@ class QuizPlayer {
   }
 
   isComplete(): boolean {
-    return this.quizDSL.quiz.questions.every(
-      question => question.id in this.answers
-    );
+    return this.quizDSL.quiz.questions.every(question => question.id in this.answers);
   }
 
   reset(): void {
@@ -918,7 +916,7 @@ class MarkdownPlayer {
   constructor(options: MarkdownPlayerOptions) {
     this.options = options;
     this.quizDSL = options.quizDSL;
-    
+
     // 从 Result DSL 恢复状态（如果提供）
     if (options.resultDSL) {
       this.restoreFromResultDSL(options.resultDSL);
@@ -932,9 +930,7 @@ class MarkdownPlayer {
 
     // 获取容器元素
     this.containerElement =
-      typeof container === 'string'
-        ? document.querySelector(container)
-        : container;
+      typeof container === 'string' ? document.querySelector(container) : container;
 
     if (!this.containerElement) {
       throw new Error('Container element not found');
@@ -984,7 +980,7 @@ class MarkdownPlayer {
     // ...
   }
 
-  getResultDSL(): ResultDSL {
+  getResultSource(): ResultDSL {
     // 与 SlidePlayer 相同的实现
     // ...
   }
@@ -1076,14 +1072,14 @@ Result DSL 的生成和使用示例：
 const player = new MarkdownPlayer({
   container: '#player',
   quizDSL: myQuizDSL,
-  onSubmit: (resultDSL) => {
+  onSubmit: resultDSL => {
     // 保存 Result DSL 到服务器
     fetch('/api/results', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(resultDSL),
     });
-    
+
     // 或者保存到本地存储
     localStorage.setItem(`result-${resultDSL.metadata.id}`, JSON.stringify(resultDSL));
   },
@@ -1104,11 +1100,11 @@ await player2.init();
 // 3. 从 Result DSL 重新生成报告
 function generateReport(resultDSL: ResultDSL): string {
   const { quiz, scoring, answers } = resultDSL;
-  
+
   let report = `# ${quiz.quiz.title}\n\n`;
   report += `得分: ${scoring.totalScore} / ${scoring.maxScore} (${scoring.percentage.toFixed(1)}%)\n\n`;
   report += `状态: ${scoring.passed ? '通过' : '未通过'}\n\n`;
-  
+
   report += `## 答题详情\n\n`;
   quiz.quiz.questions.forEach((question, index) => {
     const result = scoring.questionResults.find(r => r.questionId === question.id);
@@ -1118,18 +1114,18 @@ function generateReport(resultDSL: ResultDSL): string {
     report += `正确答案: ${result?.correctAnswer}\n\n`;
     report += `得分: ${result?.score} / ${result?.maxScore}\n\n`;
   });
-  
+
   return report;
 }
 
 // 4. 从 Result DSL 分析答题情况
 function analyzeResults(resultDSL: ResultDSL) {
   const { scoring } = resultDSL;
-  
+
   const correctCount = scoring.questionResults.filter(r => r.correct).length;
   const totalCount = scoring.questionResults.length;
   const accuracy = (correctCount / totalCount) * 100;
-  
+
   return {
     accuracy,
     correctCount,
@@ -1175,13 +1171,16 @@ function analyzeResults(resultDSL: ResultDSL) {
     this.setupAnswerListeners();
 
     this.startTime = Date.now();
-  }
 
-  /**
-   * 将 Quiz DSL 转换为 Markdown 格式
-   */
+}
+
+/\*\*
+
+- 将 Quiz DSL 转换为 Markdown 格式
+  \*/
   private quizDSLToMarkdown(quizDSL: QuizDSL): string {
-    let markdown = '';
+  let markdown = '';
+
 
     // 标题
     markdown += `# ${quizDSL.quiz.title}\n\n`;
@@ -1206,18 +1205,21 @@ function analyzeResults(resultDSL: ResultDSL) {
     });
 
     return markdown;
-  }
 
-  /**
-   * 在 Markdown 渲染后的 HTML 中嵌入答题组件
-   */
+}
+
+/\*\*
+
+- 在 Markdown 渲染后的 HTML 中嵌入答题组件
+  \*/
   private embedQuizBlocks(container: HTMLElement, quizDSL: QuizDSL): void {
-    // 查找所有占位符注释
-    const walker = document.createTreeWalker(
-      container,
-      NodeFilter.SHOW_COMMENT,
-      null
-    );
+  // 查找所有占位符注释
+  const walker = document.createTreeWalker(
+  container,
+  NodeFilter.SHOW_COMMENT,
+  null
+  );
+
 
     const placeholders: Array<{ node: Comment; questionId: string }> = [];
     let node: Node | null;
@@ -1247,26 +1249,29 @@ function analyzeResults(resultDSL: ResultDSL) {
       // 替换占位符注释
       node.parentNode?.replaceChild(quizBlock, node);
     });
-  }
 
-  /**
-   * 设置答案监听器
-   */
-  private setupAnswerListeners(): void {
-    document.addEventListener('answer-change', (event: CustomEvent) => {
-      const { questionId, answer } = event.detail;
-      this.setAnswer(questionId, answer);
-    });
-  }
-
-  async destroy(): Promise<void> {
-    if (this.containerElement) {
-      this.containerElement.innerHTML = '';
-      this.containerElement = null;
-    }
-  }
 }
-```
+
+/\*\*
+
+- 设置答案监听器
+  \*/
+  private setupAnswerListeners(): void {
+  document.addEventListener('answer-change', (event: CustomEvent) => {
+  const { questionId, answer } = event.detail;
+  this.setAnswer(questionId, answer);
+  });
+  }
+
+async destroy(): Promise<void> {
+if (this.containerElement) {
+this.containerElement.innerHTML = '';
+this.containerElement = null;
+}
+}
+}
+
+````
 
 
 ## 提交按钮与答案收集 UI 设计
@@ -1324,8 +1329,8 @@ function analyzeResults(resultDSL: ResultDSL) {
 
 ### wsx-quiz-submit 组件设计
 
-**组件名称**: `wsx-quiz-submit`  
-**位置**: `@quizerjs/core` 包  
+**组件名称**: `wsx-quiz-submit`
+**位置**: `@quizerjs/core` 包
 **职责**: 在最后一个 slide 中显示提交按钮
 
 **属性**:
@@ -1346,15 +1351,17 @@ interface QuizSubmitAttributes {
    */
   'class'?: string;
 }
-```
+````
 
 **行为**:
+
 - 显示提交按钮
 - 可选显示答题进度（例如："已作答 3/5 题"）
 - 点击按钮时触发 `quiz-submit` 事件
 - 支持禁用状态（如果已提交）
 
 **事件**:
+
 - `quiz-submit`: 当用户点击提交按钮时触发
   ```typescript
   {
@@ -1438,11 +1445,13 @@ interface QuizSubmitAttributes {
 ### QuizPlayer 集成
 
 **答案收集监听**:
+
 - QuizPlayer 在 `init()` 时设置 `answer-change` 事件监听器
 - 当 `wsx-quiz-question` 组件触发 `answer-change` 事件时，自动调用 `setAnswer()`
 - 实时更新内部 `answers` 对象
 
 **提交按钮监听**:
+
 - QuizPlayer 在 `init()` 时设置 `quiz-submit` 事件监听器
 - 当 `wsx-quiz-submit` 组件触发 `quiz-submit` 事件时，调用 `submit()` 方法
 - 生成 Result DSL 并触发 `onSubmit` 回调
@@ -1538,36 +1547,42 @@ interface QuizSubmitAttributes {
 ### 设计检查清单
 
 **可见性检查**:
+
 - [ ] 提交按钮在所有状态下都清晰可见
 - [ ] 答题进度信息易于理解
 - [ ] 已作答/未作答状态有明显区分
 - [ ] 所有交互元素都有清晰的视觉指示
 
 **反馈检查**:
+
 - [ ] 每个操作都有即时反馈（< 200ms）
 - [ ] 答案选择有明确的视觉反馈
 - [ ] 提交过程有加载状态提示
 - [ ] 结果展示有清晰的视觉层次
 
 **约束检查**:
+
 - [ ] 防止重复提交（提交后按钮禁用）
 - [ ] 防止未完成提交（显示提示）
 - [ ] 防止意外操作（重要操作需要确认）
 - [ ] 限制输入范围（如多选题选项数量）
 
 **映射检查**:
+
 - [ ] 按钮功能与标签一致
 - [ ] 导航控件与功能对应
 - [ ] 状态指示与实际情况匹配
 - [ ] 错误消息与问题对应
 
 **一致性检查**:
+
 - [ ] 设计语言与整体系统一致
 - [ ] 交互模式保持一致
 - [ ] 颜色和字体使用一致
 - [ ] 动画和过渡效果一致
 
 **可访问性检查**:
+
 - [ ] 支持键盘导航
 - [ ] 支持屏幕阅读器
 - [ ] 颜色对比度符合 WCAG 标准
@@ -1575,6 +1590,7 @@ interface QuizSubmitAttributes {
 - [ ] 语义化 HTML 结构
 
 **响应式检查**:
+
 - [ ] 移动端布局优化
 - [ ] 触摸目标大小合适（≥ 44×44px）
 - [ ] 桌面端布局合理
@@ -1782,18 +1798,18 @@ QuizPlayer 内置了 4 个预设主题：
 
 ```typescript
 interface ThemeConfig {
-  backgroundColor?: string;        // 背景色
-  textColor?: string;             // 文本色
-  linkColor?: string;             // 链接色
-  navigationColor?: string;       // 导航按钮颜色
-  paginationColor?: string;       // 分页指示器颜色
+  backgroundColor?: string; // 背景色
+  textColor?: string; // 文本色
+  linkColor?: string; // 链接色
+  navigationColor?: string; // 导航按钮颜色
+  paginationColor?: string; // 分页指示器颜色
   paginationActiveColor?: string; // 活动分页指示器颜色
-  scrollbarBg?: string;           // 滚动条背景色
-  scrollbarDragBg?: string;       // 滚动条拖拽背景色
-  arrowColor?: string;            // 箭头颜色
-  progressBarColor?: string;      // 进度条颜色
-  headingColor?: string;          // 标题颜色
-  codeBackground?: string;        // 代码块背景色
+  scrollbarBg?: string; // 滚动条背景色
+  scrollbarDragBg?: string; // 滚动条拖拽背景色
+  arrowColor?: string; // 箭头颜色
+  progressBarColor?: string; // 进度条颜色
+  headingColor?: string; // 标题颜色
+  codeBackground?: string; // 代码块背景色
   [key: string]: string | undefined; // 允许扩展自定义属性
 }
 ```
@@ -1809,7 +1825,7 @@ interface ThemeConfig {
 const player = new QuizPlayer({
   container: '#quiz-container',
   quizDSL: myQuiz,
-  theme: 'solarized-dark' // 或 'solarized-light', 'dark', 'light'
+  theme: 'solarized-dark', // 或 'solarized-light', 'dark', 'light'
 });
 
 // 使用自定义主题配置
@@ -1821,13 +1837,13 @@ const player2 = new QuizPlayer({
     textColor: '#839496',
     linkColor: '#268bd2',
     // 可以只设置部分属性，其他使用默认值
-  }
+  },
 });
 
 // 不指定主题，使用默认的 'solarized-dark'
 const player3 = new QuizPlayer({
   container: '#quiz-container',
-  quizDSL: myQuiz
+  quizDSL: myQuiz,
   // theme 未指定，自动使用 'solarized-dark'
 });
 ```
@@ -1842,7 +1858,7 @@ await player.setTheme('solarized-light');
 await player.setTheme({
   backgroundColor: '#ffffff',
   textColor: '#000000',
-  linkColor: '#0066cc'
+  linkColor: '#0066cc',
 });
 ```
 
@@ -1878,12 +1894,14 @@ QuizPlayer 的主题系统基于 `@slidejs/theme` 包实现。`setTheme()` 方�
 #### 核心 API
 
 **Player 主题 API** (`setPlayerTheme`):
+
 - 基于 `@slidejs/theme` 实现
 - 支持预设主题名称：`'solarized-dark' | 'solarized-light' | 'dark' | 'light'`
 - 支持自定义 `PlayerThemeConfig` 对象
 - 在 `:root` 上设置 CSS 变量（通过 `@slidejs/theme`）
 
 **Editor 主题 API** (`setEditorTheme`):
+
 - 独立的 Editor 主题系统
 - 支持相同的预设主题名称
 - 支持自定义 `EditorThemeConfig` 对象
@@ -1897,10 +1915,10 @@ import { setPlayerTheme, setEditorTheme } from '@quizerjs/theme';
 // 统一设置主题（推荐）
 const applyTheme = (isDark: boolean) => {
   const themeName = isDark ? 'solarized-dark' : 'solarized-light';
-  
+
   // Player 主题（用于 QuizPlayer）
   setPlayerTheme(themeName);
-  
+
   // Editor 主题（用于 QuizEditor 和应用级 UI）
   setEditorTheme(themeName);
 };
@@ -1909,23 +1927,23 @@ const applyTheme = (isDark: boolean) => {
 // React Hook
 export function useTheme() {
   const [isDark, setIsDark] = useState(false);
-  
+
   useEffect(() => {
     applyTheme(isDark);
   }, [isDark]);
-  
+
   return { isDark, toggleTheme: () => setIsDark(!isDark) };
 }
 
 // Vue Composable
 export function useTheme() {
   const isDark = ref(false);
-  
-  watch(isDark, (newValue) => {
+
+  watch(isDark, newValue => {
     applyTheme(newValue);
   });
-  
-  return { isDark, toggleTheme: () => isDark.value = !isDark.value };
+
+  return { isDark, toggleTheme: () => (isDark.value = !isDark.value) };
 }
 ```
 
@@ -2158,9 +2176,7 @@ await player.init();
 
 ```typescript
 // 从存储中读取 Result DSL
-const savedResultDSL: ResultDSL = JSON.parse(
-  localStorage.getItem('result-xxx') || '{}'
-);
+const savedResultDSL: ResultDSL = JSON.parse(localStorage.getItem('result-xxx') || '{}');
 
 // 使用 Result DSL 恢复状态（只读模式，用于查看结果）
 const player = new MarkdownPlayer({
@@ -2182,6 +2198,7 @@ Slide DSL 是一个独立的领域特定语言，用于定义如何将 Quiz DSL 
 ### 根声明：`present type name`
 
 **语法**:
+
 ```javascript
 present quiz "my quiz" {
   rules {
@@ -2191,6 +2208,7 @@ present quiz "my quiz" {
 ```
 
 **类型说明**:
+
 - `present`: 关键字，表示这是一个演示文稿定义
 - `type`: 支持的类型标识符
   - `quiz`: **当前支持的类型**，表示要为 Quiz DSL 数据生成 slides
@@ -2198,11 +2216,13 @@ present quiz "my quiz" {
 - `name`: 演示文稿名称（字符串，用引号包裹），会映射到 JSON 的 `quizId` 字段
 
 **语义**:
+
 - 当指定 `present quiz` 时，表示要为 Quiz DSL 数据生成幻灯片
 - 编译器会根据 `quiz` 类型，提供相应的数据上下文（如 `quiz.questions`、`quiz.sections` 等）
 - `name` 参数用于标识这个演示文稿，在编译后的 JSON 中作为 `quizId`
 
 **示例**:
+
 ```javascript
 // 为 Quiz DSL 生成幻灯片
 present quiz "math-quiz" {
@@ -2229,6 +2249,7 @@ Slide DSL 支持三种规则类型：
 ### 内容类型
 
 **1. 动态内容（WSX 组件）**:
+
 ```javascript
 content dynamic {
   name "wsx-quiz-question"
@@ -2241,6 +2262,7 @@ content dynamic {
 ```
 
 **2. 文本内容（直接文本）**:
+
 ```javascript
 content text {
   "欢迎参加测验"
@@ -2251,6 +2273,7 @@ content text {
 ### 行为配置（Behavior）
 
 **语法**:
+
 ```javascript
 behavior {
   transition [type] {
@@ -2261,18 +2284,20 @@ behavior {
 ```
 
 **Transition 配置**:
+
 - `transition`: 过渡动画类型（如 `slide`、`zoom`、`fade`、`cube` 等）
 - Transition 块中可以包含参数配置，用于自定义过渡效果
 - 参数示例：`speed`、`direction`、`easing` 等（具体参数取决于 reveal.js 的实现）
 
 **示例**:
+
 ```javascript
 behavior {
   transition slide {
     speed "fast"        // 过渡速度
     direction "horizontal"  // 过渡方向
   }
-  
+
   transition zoom {
     duration 500        // 持续时间（毫秒）
   }
@@ -2303,7 +2328,7 @@ present quiz "my quiz" {
         }
       }
     }
-    
+
     // 内容规则：问题 slides（从数据生成）
     rule content "questions" {
       for section in quiz.sections {
@@ -2327,7 +2352,7 @@ present quiz "my quiz" {
         }
       }
     }
-    
+
     // 结束规则：提交页（必需）
     rule end "submit" {
       slide {
@@ -2408,6 +2433,7 @@ present quiz "my quiz" {
 **状态**: 核心功能已完成（约 98%），剩余单元测试和集成测试
 
 **已完成项**:
+
 - ✅ QuizPlayer 类核心实现
 - ✅ 答案收集和评分逻辑
 - ✅ Result DSL 生成
@@ -2423,6 +2449,7 @@ present quiz "my quiz" {
   - ✅ 主题预设映射（`THEME_PRESETS`）
 
 **待完成项**:
+
 - 📋 单元测试和集成测试
 
 ### 阶段 5: MarkdownPlayer 实现（@quizerjs/player-markdown）
@@ -2469,6 +2496,7 @@ present quiz "my quiz" {
 ```
 
 **注意**：
+
 - `@quizerjs/quizerjs` 包中的 `QuizPlayer` 始终是 Slide 播放器，不包含 Markdown 相关代码
 - **ResultDSL、QuestionResult、AnswerValue 类型定义在 `@quizerjs/dsl` 包中**，所有包都应该从 DSL 包导入这些类型
 - `@slidejs/theme` 是必需依赖，用于主题支持功能
@@ -2482,7 +2510,7 @@ present quiz "my quiz" {
 └── marked (必需) - Markdown 解析器
 ```
 
-**注意**：`@quizerjs/player-markdown` 是可选扩展包，需要单独安装。不包含 Slide 相关代码（@slidejs/*, swiper）
+**注意**：`@quizerjs/player-markdown` 是可选扩展包，需要单独安装。不包含 Slide 相关代码（@slidejs/\*, swiper）
 
 ### @quizerjs/theme 包（应用级主题管理）
 
@@ -2493,12 +2521,14 @@ present quiz "my quiz" {
 ```
 
 **功能**：
+
 - 提供统一的主题管理 API（`setPlayerTheme`, `setEditorTheme`）
 - 支持预设主题名称和自定义主题配置
 - 适用于 React、Vue 等框架的应用级主题管理
 - Player 主题基于 `@slidejs/theme`，Editor 主题通过 CSS 变量实现
 
 **使用场景**：
+
 - React/Vue/Svelte 等框架的 demo 应用
 - 需要统一管理 Player 和 Editor 主题的应用
 - 需要运行时切换主题的应用
@@ -2512,4 +2542,3 @@ present quiz "my quiz" {
 - [marked.js 文档](https://marked.js.org/)
 - [Swiper.js 文档](https://swiperjs.com/)
 - [@slidejs 文档](../packages/@slidejs/README.md)
-

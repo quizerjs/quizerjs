@@ -279,6 +279,7 @@ Svelte 集成包，提供 Svelte 组件包装器。
 - **API 参考**: [docs/api/](./docs/api/)
 - **使用示例**: [docs/examples/](./docs/examples/)
 - **RFC 文档**: [docs/rfc/](./docs/rfc/) - 技术规范和架构设计
+- **实施状态**: [docs/IMPLEMENTATION_STATUS.md](./docs/IMPLEMENTATION_STATUS.md) - 项目实施进度和状态报告
 
 ## 开发
 

@@ -14,20 +14,22 @@
 - [RFC 0008: 主题系统设计](./completed/0008-theming-system.md) - WSX 组件主题定制和样式系统设计 ✅
 - [RFC 0009: quizerjs.io 开源网站设计](./completed/0009-quizerjs-io-website.md) - quizerjs.io 开源网站架构设计 ✅
 
-### 已发布
+### 实施中
 
-- [RFC 0002: 架构设计](./0002-architecture-design.md) - 整体架构和包结构设计
-- [RFC 0006: 播放器核心组件设计](./0006-player-core.md) - QuizPlayer 的详细 API 设计
+- [RFC 0002: 架构设计](./0002-architecture-design.md) - 整体架构和包结构设计 (90% 完成)
+- [RFC 0006: 播放器核心组件设计](./0006-player-core.md) - QuizPlayer 的详细 API 设计 (80% 完成)
+- [RFC 0010: QuizPlayer 核心工作流程设计](./0010-result-handling-in-slides.md) - 开始测验 → 收集答案 → 提交结果的完整工作流程 (75% 完成)
 
 ### 草案中
 
-- [RFC 0006: 播放器核心组件设计](./0006-player-core.md) - QuizPlayer 的详细 API 设计（包含提交按钮与结果展示设计）
-- [RFC 0010: Slide DSL 中的结果处理设计](./0010-result-handling-in-slides.md) - 在 Slide DSL 中处理测验结果展示的机制
-- RFC 0011: Slide Runner 与 reveal.js 集成（计划中）
-- RFC 0012: Slide DSL 增强功能与性能优化（计划中）
-- RFC 0013: Slide DSL 语言服务器与开发工具（计划中）
-- RFC 0014: Vue 集成设计（计划中）
+- RFC 0014: Vue 集成设计（计划中）- Vue QuizPlayer 组件已实现，待文档化
 - RFC 0015: 插件系统设计（计划中）
+
+### 已废弃
+
+- RFC 0011: Slide Runner 与 reveal.js 集成（已合并到 RFC 0010）
+- RFC 0012: Slide DSL 增强功能与性能优化（已合并到 RFC 0010）
+- RFC 0013: Slide DSL 语言服务器与开发工具（延后实施）
 
 ## RFC 流程
 
