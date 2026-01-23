@@ -80,14 +80,14 @@ import type { QuizDSL } from '@quizerjs/dsl';
  * @see {@link https://github.com/quizerjs/quizerjs/blob/main/docs/rfc/0006-player-core.md RFC 0006}
  */
 export interface QuizPlayerProps {
-  /** Quiz 数据（必需） */
-  quiz: QuizDSL;
-  /** Slide DSL 源代码（可选，如果不提供则使用默认 Slide DSL） */
-  slideDSL?: string;
+  /** Quiz 数据 */
+  quizSource: QuizDSL;
+  /** Slide 源代码（可选，如果不提供则使用默认 Slide 模板） */
+  slideSource?: string;
   /** 初始答案（可选，用于恢复之前的答题状态） */
   initialAnswers?: Record<string, AnswerValue>;
-  /** 从 Result DSL 恢复（可选，如果提供将从 Result DSL 恢复答题状态） */
-  resultDSL?: ResultDSL;
+  /** 从 Result 恢复（可选，如果提供将从 Result 恢复答题状态） */
+  resultSource?: ResultDSL;
   /** 只读模式（可选，默认 false，用于显示结果） */
   readOnly?: boolean;
   /** 显示结果（可选，默认 true） */
@@ -103,8 +103,14 @@ export interface QuizPlayerProps {
 export interface QuizPlayerEmits {
   /** 提交事件：当用户提交测验时触发，返回 Result DSL */
   (e: 'submit', result: ResultDSL): void;
+  /** Start event: triggered when the quiz starts */
+  (e: 'start'): void;
   /** 答案变更事件：当用户修改答案时触发 */
   (e: 'answer-change', questionId: string, answer: AnswerValue): void;
+  /** Complete event: triggered when all questions are answered */
+  (e: 'complete'): void;
+  /** Reset event: triggered when the quiz is reset */
+  (e: 'reset'): void;
   /** 错误事件：当播放器初始化或运行出错时触发 */
   (e: 'error', error: Error): void;
 }
@@ -126,11 +132,16 @@ const error = ref<string | null>(null);
 let player: QuizPlayer | null = null;
 
 /**
- * 检查是否有有效的 quiz 数据
+ * 检查是否有有效的 quizDSL 数据
  * 用于决定是显示播放器还是默认视图
  */
 const hasValidQuiz = computed(() => {
-  return !!(props.quiz && props.quiz.quiz && props.quiz.quiz.id && props.quiz.quiz.title);
+  return !!(
+    props.quizSource &&
+    props.quizSource.quiz &&
+    props.quizSource.quiz.id &&
+    props.quizSource.quiz.title
+  );
 });
 
 /**
@@ -143,16 +154,19 @@ const initPlayer = async (): Promise<void> => {
     error.value = null;
     const options: QuizPlayerOptions = {
       container: playerContainer.value,
-      quizDSL: props.quiz,
-      slideDSL: props.slideDSL,
+      quizSource: props.quizSource,
+      slideSource: props.slideSource,
       initialAnswers: props.initialAnswers,
-      resultDSL: props.resultDSL,
+      resultSource: props.resultSource,
       readOnly: props.readOnly,
       showResults: props.showResults,
       slideOptions: props.slideOptions,
       onSubmit: (result: ResultDSL) => emit('submit', result),
+      onStart: () => emit('start'),
       onAnswerChange: (questionId: string, answer: AnswerValue) =>
         emit('answer-change', questionId, answer),
+      onComplete: () => emit('complete'),
+      onReset: () => emit('reset'),
     };
     player = new QuizPlayer(options);
     await player.init();
@@ -163,9 +177,9 @@ const initPlayer = async (): Promise<void> => {
   }
 };
 
-// 监听 quiz 变化，重新初始化播放器
+// 监听 quizSource 变化，重新初始化播放器
 watch(
-  () => props.quiz,
+  () => props.quizSource,
   async () => {
     if (player) {
       await player.destroy();
@@ -254,11 +268,11 @@ const reset = (): void => {
 };
 
 /**
- * 获取 Result DSL（不提交）
+ * 获取 Result Source（不提交）
  */
-const getResultDSL = (): ResultDSL | null => {
+const getResultSource = (): ResultDSL | null => {
   if (!player) return null;
-  return player.getResultDSL();
+  return player.getResultSource();
 };
 
 /**
@@ -267,7 +281,7 @@ const getResultDSL = (): ResultDSL | null => {
  * 这些方法直接代理到核心 QuizPlayer 实例
  */
 const exposedMethods = {
-  /** 提交测验，返回 Result DSL */
+  /** 提交测验，返回 Result Source */
   submit,
   /** 获取当前答案 */
   getAnswers,
@@ -279,8 +293,8 @@ const exposedMethods = {
   isComplete,
   /** 重置答案 */
   reset,
-  /** 获取 Result DSL（不提交），用于保存当前答题状态 */
-  getResultDSL,
+  /** 获取 Result Source（不提交），用于保存当前答题状态 */
+  getResultSource,
   /** 获取 SlideRunner 实例（用于高级控制） */
   getRunner: () => {
     if (!player) return null;
@@ -297,7 +311,7 @@ const exposedMethods = {
   getCurrentScore: () => number;
   isComplete: () => boolean;
   reset: () => void;
-  getResultDSL: () => ResultDSL | null;
+  getResultSource: () => ResultDSL | null;
   getRunner: () => unknown;
 };
 

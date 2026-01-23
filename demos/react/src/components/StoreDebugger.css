@@ -1,0 +1,101 @@
+
+.store-debugger {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-color);
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+}
+
+.store-debugger.loading {
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.debugger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.debugger-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.debugger-badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.badge.warn {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color, #f59e0b);
+  border-color: var(--warning-color, #f59e0b);
+}
+
+.badge.success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success-color, #10b981);
+  border-color: var(--success-color, #10b981);
+}
+
+.badge.info {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--info-color, #3b82f6);
+  border-color: var(--info-color, #3b82f6);
+}
+
+.debugger-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.debugger-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--border-color);
+}
+
+.debugger-section:last-child {
+  border-right: none;
+}
+
+.debugger-section h4 {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* Override JsonViewer styles if needed within debugger */
+.store-debugger .json-viewer {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+  font-size: 0.85rem;
+}

@@ -24,7 +24,7 @@ const getInitialTheme = (): boolean => {
 };
 
 /**
- * 应用主题（使用新的主题 API）
+ * 应用主题
  */
 const applyTheme = (isDark: boolean) => {
   const themeName = isDark ? 'solarized-dark' : 'solarized-light';
@@ -54,7 +54,7 @@ export function useTheme() {
       // 只有在用户没有手动设置主题时才跟随系统
       if (!localStorage.getItem(THEME_STORAGE_KEY)) {
         setIsDark(e.matches);
-        applyTheme(e.matches);
+        // applyTheme(e.matches); // Removed to avoid double call
       }
     };
     mediaQuery.addEventListener('change', handleSystemThemeChange);
@@ -70,7 +70,6 @@ export function useTheme() {
 
     try {
       localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
-      // 应用主题
       applyTheme(isDark);
     } catch (error) {
       console.warn('无法保存主题设置到 localStorage:', error);

@@ -376,64 +376,80 @@ if (e.target === this.element) return;
 
 这种设计确保了整个系统中只有一份权威的答案数据，提高了系统的可靠性。
 
+### 3. QuizSubmit 状态不一致修复 (State Mismatch Fix)
+
+**问题**：`QuizSubmit` 组件显示的“已完成”问题数量与 `QuizStore` 中的实际答题数不一致（例如实际回答 4 题，UI 显示 3 题）。
+
+**根本原因**：这是一个初始化时的 **竞态条件 (Race Condition)**。
+
+1. `QuizPlayer` 初始化流程中，先调用 `createSlideRunner` 创建 UI（包括挂载 `wsx-quiz-submit` 组件）。
+2. `wsx-quiz-submit` 组件在 `connectedCallback` 中立即尝试通过 `getQuizStoreById` 获取 Store 并订阅。
+3. 但此时 `registerQuizStore` 尚未被调用（在创建 UI 之后才调用），导致组件首次订阅失败。
+4. 虽然组件有 `quiz-id` 属性监听，但在某些情况下未能正确触发重新连接。
+
+**修正**：
+
+1. **重构初始化顺序**：调整 `QuizPlayer.ts` 的 `init()` 方法，确保在创建 SlideRunner 之前先完成 Store 的注册和初始化。
+2. **增强组件健壮性**：`QuizSubmit.wsx` 在 `quiz-id` 属性变更时强制重新订阅，并增加了详细的调试日志接口。
+
+此修复通过 Browser Subagent 进行了端到端验证，确认解决了状态同步问题。
+
 ## 实施进度
 
 ### 已完成 ✅
 
-1. **QuizPlayer 核心实现**
-   - ✅ 生命周期方法 (`init`, `start`, `reset`, `destroy`)
-   - ✅ 答案管理 (`setAnswer`, `getAnswer`, `getAnswers`, `clearAnswer`)
-   - ✅ 状态查询 (`getProgress`, `isComplete`, `isSubmitted`)
-   - ✅ 提交功能 (`submit`)
-   - ✅ Reveal.js 集成用于 Slide 展示
+1.  **QuizPlayer 核心实现**
+    - ✅ 生命周期方法 (`init`, `start`, `reset`, `destroy`)
+    - ✅ 答案管理 (`setAnswer`, `getAnswer`, `getAnswers`, `clearAnswer`)
+    - ✅ 状态查询 (`getProgress`, `isComplete`, `isSubmitted`)
+    - ✅ 提交功能 (`submit`)
+    - ✅ Reveal.js 集成用于 Slide 展示
 
-2. **QuizStore 状态管理**
-   - ✅ 核心状态管理类实现
-   - ✅ 答案收集和进度跟踪
-   - ✅ 提交状态管理
-   - ✅ Store 不对外暴露
+2.  **QuizStore 状态管理**
+    - ✅ 核心状态管理类实现
+    - ✅ 答案收集和进度跟踪
+    - ✅ 提交状态管理
+    - ✅ Store 不对外暴露
 
-3. **UI 组件**
-   - ✅ `quiz-submit.wsx` - 提交按钮组件
-   - ✅ `quiz-results.wsx` - 结果展示组件
-   - ✅ 组件状态约束遵循 WSX 框架要求
+3.  **UI 组件**
+    - ✅ `quiz-submit.wsx` - 提交按钮组件
+    - ✅ `quiz-results.wsx` - 结果展示组件
+    - ✅ 组件状态约束遵循 WSX 框架要求
 
-4. **框架集成**
-   - ✅ React QuizPlayer 组件 (90%)
-   - ✅ Vue QuizPlayer 组件 (85%)
-   - ✅ 事件传递机制 (`onAnswerChange`, `onSubmit`)
+4.  **框架集成**
+    - ✅ React QuizPlayer 组件 (90%)
+    - ✅ Vue QuizPlayer 组件 (85%)
+    - ✅ 事件传递机制 (`onAnswerChange`, `onSubmit`)
+
+5.  **事件回调机制优化**
+    - ✅ 实现 `onStart` 事件
+    - ✅ 实现 `onComplete` 事件（检测所有问题完成）
+    - ✅ 实现 `onReset` 事件
+    - ✅ 事件触发时机测试
+
+6.  **测试覆盖**
+    - ✅ QuizPlayer 单元测试
+    - ✅ QuizStore 单元测试
+    - ✅ 事件触发时机测试
 
 ### 进行中 🔄
 
-1. **事件回调机制优化**
-   - ⏳ 实现 `onStart` 事件
-   - ⏳ 实现 `onComplete` 事件（检测所有问题完成）
-   - ⏳ 实现 `onReset` 事件
-   - 🔄 事件触发时机测试
-
-2. **测试覆盖**
-   - ⏳ QuizPlayer 单元测试
-   - ⏳ QuizStore 单元测试
-   - ⏳ 事件触发时机测试
+1.  **框架集成完善**
+    - ⏳ Svelte QuizPlayer 组件实现
+    - ⏳ 完善 React/Vue 组件的错误处理
 
 ### 待办 ⏳
 
-1. **框架集成完善**
-   - ⏳ Svelte QuizPlayer 组件实现
-   - ⏳ 完善 React/Vue 组件的错误处理
-
-2. **文档和示例**
-   - ⏳ 完善 API 文档
-   - ⏳ 添加更多使用示例
-   - ⏳ 创建最佳实践指南
+1.  **文档和示例**
+    - ⏳ 完善 API 文档
+    - ⏳ 添加更多使用示例
+    - ⏳ 创建最佳实践指南
 
 ## 已知问题
 
-1. **事件系统未完整实现**: `onStart`, `onComplete`, `onReset` 事件尚未实现
-2. **测试覆盖不足**: 核心功能缺少单元测试
-3. **错误处理待增强**: 边界情况和异常处理需要完善
+(无 - 核心功能已验证)
 
 ---
 
-**状态**: 实施中 (Implementing) - 75% 完成
-**最后更新**: 2025-01-18
+**状态**: 已完成 (Completed) - 核心功能 100% 完成
+**最后更新**: 2025-01-21

@@ -3,7 +3,7 @@
  */
 
 export { QuizPlayer } from './QuizPlayer.js';
-export { getDefaultSlideDSL } from './defaultSlideDSL.js';
+export { getDefaultSlideSource } from './defaultSlideSource.js';
 export type {
   QuizPlayerOptions,
   ResultDSL,

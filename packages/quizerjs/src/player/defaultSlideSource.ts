@@ -1,3 +1,5 @@
+export const getDefaultSlideSource = (): string => {
+  return `
 present quiz "quiz" {
   rules {
     // 开始规则：介绍页
@@ -57,3 +59,5 @@ present quiz "quiz" {
     }
   }
 }
+`;
+};

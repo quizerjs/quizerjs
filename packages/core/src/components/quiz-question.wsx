@@ -10,17 +10,18 @@ import type { Question } from '@quizerjs/dsl';
 import { QuestionTypes } from '@quizerjs/dsl';
 import { getQuizStoreById, quizActions } from '../store';
 import styles from './quiz-question.css?inline';
+import './quiz-question-title.wsx';
 
 @autoRegister({ tagName: 'wsx-quiz-question' })
 export class QuizQuestion extends LightComponent {
   // 响应式状态
-  @state private question: Question | null = null;
-  @state private answer: any = null;
+  @state private question: Question | Record<string, never> = {};
+  @state private answer: any = '';
   @state private disabled = false;
   @state private showResult = false;
-  @state private isCorrect: boolean | null = null;
-  @state private correctAnswer: any = null;
-  @state private quizId: string | null = null;
+  @state private isCorrect: boolean = false;
+  @state private correctAnswer: any = '';
+  @state private quizId: string = '';
 
   private store: ReturnType<typeof getQuizStoreById> | null = null;
 
@@ -32,30 +33,39 @@ export class QuizQuestion extends LightComponent {
   }
 
   static get observedAttributes() {
-    return ['question', 'answer', 'disabled', 'show-result', 'is-correct', 'correct-answer', 'quiz-id'];
+    return [
+      'question',
+      'answer',
+      'disabled',
+      'show-result',
+      'is-correct',
+      'correct-answer',
+      'quiz-id',
+    ];
   }
 
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'question':
         try {
-          this.question = newValue ? JSON.parse(newValue) : null;
+          this.question = newValue ? JSON.parse(newValue) : {};
           // 当问题设置后，尝试从 store 获取当前答案
-          if (this.question && this.store) {
-            const storeAnswer = this.store.getAnswer(this.question.id);
+          if (this.question && 'id' in this.question && this.store) {
+            const q = this.question as Question;
+            const storeAnswer = this.store.getAnswer(q.id);
             if (storeAnswer !== undefined) {
               this.answer = storeAnswer;
             }
           }
         } catch {
-          this.question = null;
+          this.question = {};
         }
         break;
       case 'answer':
         try {
-          this.answer = newValue ? JSON.parse(newValue) : null;
+          this.answer = newValue ? JSON.parse(newValue) : '';
         } catch {
-          this.answer = null;
+          this.answer = '';
         }
         break;
       case 'disabled':
@@ -65,17 +75,17 @@ export class QuizQuestion extends LightComponent {
         this.showResult = newValue === 'true';
         break;
       case 'is-correct':
-        this.isCorrect = newValue === 'true' ? true : newValue === 'false' ? false : null;
+        this.isCorrect = newValue === 'true';
         break;
       case 'correct-answer':
         try {
-          this.correctAnswer = newValue ? JSON.parse(newValue) : null;
+          this.correctAnswer = newValue ? JSON.parse(newValue) : '';
         } catch {
-          this.correctAnswer = null;
+          this.correctAnswer = '';
         }
         break;
       case 'quiz-id':
-        this.quizId = newValue || null;
+        this.quizId = newValue || '';
         // 当 quizId 设置后，查找对应的 store
         if (this.quizId) {
           this.store = getQuizStoreById(this.quizId);
@@ -96,18 +106,19 @@ export class QuizQuestion extends LightComponent {
    * 通过 QuizStore dispatch action 更新状态
    */
   private setAnswer(value: any): void {
-    if (this.disabled || !this.question) return;
+    const q = this.question as Question;
+    if (this.disabled || !q || !q.id) return;
     this.answer = value;
 
     // 通过 QuizStore dispatch action 更新状态（如果 store 可用）
     if (this.store) {
-      this.store.dispatch(quizActions.setAnswer(this.question.id, value));
+      this.store.dispatch(quizActions.setAnswer(q.id, value));
     }
 
     // 保留现有的事件触发（向后兼容）
     this.dispatchEvent(
       new CustomEvent('answer-change', {
-        detail: { questionId: this.question.id, answer: value },
+        detail: { questionId: q.id, answer: value },
         bubbles: true,
       })
     );
@@ -150,11 +161,12 @@ export class QuizQuestion extends LightComponent {
    * 检查选项是否为正确答案
    */
   private isOptionCorrect(optionId: string): boolean {
-    if (!this.showResult || !this.question) return false;
-    if (this.question.type === QuestionTypes.SINGLE_CHOICE) {
+    const q = this.question as Question;
+    if (!this.showResult || !q || !q.id) return false;
+    if (q.type === QuestionTypes.SINGLE_CHOICE) {
       return this.correctAnswer === optionId;
     }
-    if (this.question.type === QuestionTypes.MULTIPLE_CHOICE) {
+    if (q.type === QuestionTypes.MULTIPLE_CHOICE) {
       return Array.isArray(this.correctAnswer) && this.correctAnswer.includes(optionId);
     }
     return false;
@@ -164,17 +176,19 @@ export class QuizQuestion extends LightComponent {
    * 检查选项是否被选中
    */
   private isOptionSelected(optionId: string): boolean {
-    if (this.question?.type === QuestionTypes.SINGLE_CHOICE) {
+    const q = this.question as Question;
+    if (q?.type === QuestionTypes.SINGLE_CHOICE) {
       return this.answer === optionId;
     }
-    if (this.question?.type === QuestionTypes.MULTIPLE_CHOICE) {
+    if (q?.type === QuestionTypes.MULTIPLE_CHOICE) {
       return Array.isArray(this.answer) && this.answer.includes(optionId);
     }
     return false;
   }
 
   render() {
-    if (!this.question) {
+    const q = this.question as Question;
+    if (!q || !q.id) {
       return (
         <div className="quiz-question-loading">
           <p>加载中...</p>
@@ -187,17 +201,16 @@ export class QuizQuestion extends LightComponent {
     return (
       <div className="quiz-question">
         {/* 问题标题 */}
-        <h3 className="quiz-question-title">
-          {this.question.text}
-          {this.question.points && (
-            <span className="quiz-question-points">({this.question.points} 分)</span>
-          )}
-        </h3>
+        <wsx-quiz-question-title
+          ref={(el: any) => {
+            if (el) el.questionProp = q;
+          }}
+        />
 
         {/* 单选题 */}
-        {this.question.type === QuestionTypes.SINGLE_CHOICE && this.question.options && (
+        {q.type === QuestionTypes.SINGLE_CHOICE && q.options && (
           <div className="quiz-question-options">
-            {this.question.options.map(option => {
+            {q.options.map(option => {
               const isSelected = this.isOptionSelected(option.id);
               const isCorrect = this.isOptionCorrect(option.id);
               const showResult = this.showResult && isCorrect;
@@ -223,9 +236,9 @@ export class QuizQuestion extends LightComponent {
         )}
 
         {/* 多选题 */}
-        {this.question.type === QuestionTypes.MULTIPLE_CHOICE && this.question.options && (
+        {q.type === QuestionTypes.MULTIPLE_CHOICE && q.options && (
           <div className="quiz-question-options">
-            {this.question.options.map(option => {
+            {q.options.map(option => {
               const isSelected = this.isOptionSelected(option.id);
               const isCorrect = this.isOptionCorrect(option.id);
               const showResult = this.showResult && isCorrect;
@@ -251,7 +264,7 @@ export class QuizQuestion extends LightComponent {
         )}
 
         {/* 文本输入 */}
-        {this.question.type === QuestionTypes.TEXT_INPUT && (
+        {q.type === QuestionTypes.TEXT_INPUT && (
           <div className="quiz-question-text-input-wrapper">
             <input
               type="text"
@@ -275,14 +288,14 @@ export class QuizQuestion extends LightComponent {
         )}
 
         {/* 判断题 */}
-        {this.question.type === QuestionTypes.TRUE_FALSE && (
+        {q.type === QuestionTypes.TRUE_FALSE && (
           <div className="quiz-question-options">
             <label
               className={`quiz-question-option ${this.answer === true ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
             >
               <input
                 type="radio"
-                name={this.question.id}
+                name={q.id}
                 checked={this.answer === true}
                 disabled={isDisabled}
                 onChange={() => this.handleTrueFalse(true)}
@@ -294,7 +307,7 @@ export class QuizQuestion extends LightComponent {
             >
               <input
                 type="radio"
-                name={this.question.id}
+                name={q.id}
                 checked={this.answer === false}
                 disabled={isDisabled}
                 onChange={() => this.handleTrueFalse(false)}
@@ -314,10 +327,10 @@ export class QuizQuestion extends LightComponent {
         )}
 
         {/* 答案解析 */}
-        {this.showResult && this.question.explanation && (
+        {this.showResult && q.explanation && (
           <div className="quiz-question-explanation">
             <strong>解析：</strong>
-            {this.question.explanation}
+            {q.explanation}
           </div>
         )}
       </div>

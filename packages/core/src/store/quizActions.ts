@@ -52,9 +52,9 @@ export const quizActions = {
   /**
    * 提交成功
    */
-  submitSuccess: (resultDSL: ResultDSL): QuizAction => ({
+  submitSuccess: (resultSource: ResultDSL): QuizAction => ({
     type: 'SUBMIT_SUCCESS',
-    payload: { resultDSL },
+    payload: { resultSource },
   }),
 
   /**
@@ -68,8 +68,8 @@ export const quizActions = {
   /**
    * 设置 Result DSL
    */
-  setResult: (resultDSL: ResultDSL): QuizAction => ({
+  setResult: (resultSource: ResultDSL): QuizAction => ({
     type: 'RESULT_SET',
-    payload: { resultDSL },
+    payload: { resultSource },
   }),
 };

@@ -1,0 +1,32 @@
+/** @jsxImportSource @wsxjs/wsx-core */
+import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
+import type { Question } from '@quizerjs/dsl';
+import styles from './quiz-question.css?inline';
+
+@autoRegister({ tagName: 'wsx-quiz-question-title' })
+export class QuizQuestionTitle extends LightComponent {
+  @state question: Question | Record<string, never> = {};
+
+  set questionProp(q: Question) {
+    this.question = q || {};
+  }
+
+  constructor() {
+    super({
+      styles,
+      styleName: 'quiz-question-title',
+    });
+  }
+
+  render() {
+    const q = this.question as Question;
+    if (!q || !q.text) return null;
+
+    return (
+      <h3 className="quiz-question-title">
+        {q.text}
+        {q.points && <span className="quiz-question-points">({q.points} 分)</span>}
+      </h3>
+    );
+  }
+}

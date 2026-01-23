@@ -10,7 +10,7 @@ import styles from './quiz-results.css?inline';
 
 @autoRegister({ tagName: 'wsx-quiz-results' })
 export class QuizResults extends LightComponent {
-  @state private resultDSL: ResultDSL | null = null;
+  @state private resultSource: ResultDSL | Record<string, never> = {};
 
   constructor() {
     super({
@@ -20,15 +20,15 @@ export class QuizResults extends LightComponent {
   }
 
   static get observedAttributes() {
-    return ['result-dsl'];
+    return ['result-source'];
   }
 
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
-    if (name === 'result-dsl') {
+    if (name === 'result-source') {
       try {
-        this.resultDSL = newValue ? JSON.parse(newValue) : null;
+        this.resultSource = newValue ? JSON.parse(newValue) : {};
       } catch {
-        this.resultDSL = null;
+        this.resultSource = {};
       }
     }
   }
@@ -48,7 +48,8 @@ export class QuizResults extends LightComponent {
   }
 
   render() {
-    if (!this.resultDSL) {
+    const resultSource = this.resultSource as ResultDSL;
+    if (!resultSource || !resultSource.scoring) {
       return (
         <div className="quiz-results-loading">
           <p>加载中...</p>
@@ -56,7 +57,7 @@ export class QuizResults extends LightComponent {
       );
     }
 
-    const { scoring, metadata, quiz } = this.resultDSL;
+    const { scoring, metadata, quiz } = this.resultSource;
     const { totalScore, maxScore, percentage, passed, passingScore, questionResults } = scoring;
 
     return (

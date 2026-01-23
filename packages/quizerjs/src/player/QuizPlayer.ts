@@ -23,7 +23,7 @@ import type {
   ThemeName,
   ThemeConfig,
 } from './types.js';
-import { getDefaultSlideDSL } from './defaultSlideDSL.js';
+import { getDefaultSlideSource } from './defaultSlideSource.js';
 
 // @slidejs/runner-swiper 已静态导入（必需依赖）
 type SlideContext = {
@@ -55,53 +55,44 @@ type SlideRunner = {
  */
 export class QuizPlayer {
   private runner: SlideRunner | null = null;
-  private answers: Record<string, AnswerValue> = {};
   private startTime: number = Date.now();
-  private quizDSL: QuizDSL;
+  private quizSource: QuizDSL;
   private options: QuizPlayerOptions;
   private containerElement: HTMLElement | null = null;
   private answerChangeListener: ((event: Event) => void) | null = null;
   private store: QuizStore;
+  private hasCompleted: boolean = false;
 
   constructor(options: QuizPlayerOptions) {
     this.options = options;
-    this.quizDSL = options.quizDSL;
+    this.quizSource = options.quizSource;
 
     // 初始化 QuizStore（每个 QuizPlayer 实例创建自己的 store）
     this.store = createQuizStore();
 
     // 状态恢复优先级：resultDSL > initialAnswers
-    // resultDSL 包含完整的恢复信息（包括时间等），优先级更高
-    if (options.resultDSL) {
-      this.restoreFromResultDSL(options.resultDSL);
-      // 如果同时提供了 initialAnswers，使用 initialAnswers 覆盖（允许部分恢复）
-      if (options.initialAnswers) {
-        this.answers = { ...this.answers, ...options.initialAnswers };
-      }
-    } else if (options.initialAnswers) {
-      this.answers = { ...options.initialAnswers };
-    }
+    // 将在 init() 中处理，因为需要先初始化 QuizStore 状态 (QUIZ_INIT)
   }
 
   /**
    * 初始化播放器
    */
   async init(): Promise<void> {
-    const { container, quizDSL, slideDSL, slideOptions } = this.options;
+    const { container, quizSource, slideSource, slideOptions } = this.options;
 
-    // 验证 quizDSL 是否存在且格式正确
-    if (!quizDSL) {
-      throw new Error('QuizDSL is required but not provided');
+    // 验证 quizSource 是否存在且格式正确
+    if (!quizSource) {
+      throw new Error('QuizSource is required but not provided');
     }
-    if (!quizDSL.quiz) {
-      throw new Error('QuizDSL.quiz is required but not provided');
+    if (!quizSource.quiz) {
+      throw new Error('QuizSource.quiz is required but not provided');
     }
-    if (!quizDSL.quiz.id) {
-      throw new Error('QuizDSL.quiz.id is required but not provided');
+    if (!quizSource.quiz.id) {
+      throw new Error('QuizSource.quiz.id is required but not provided');
     }
 
-    // 如果没有提供 slideDSL，使用默认的 quiz.slide 文件
-    const finalSlideDSL = slideDSL || getDefaultSlideDSL();
+    // 如果没有提供 slideSource，使用默认的 quiz.slide 文件
+    const finalSlideSource = slideSource || getDefaultSlideSource();
 
     // 获取容器元素
     this.containerElement =
@@ -115,28 +106,37 @@ export class QuizPlayer {
 
     // 使用 @slidejs/runner-swiper 创建并运行幻灯片
     try {
-      // 1. 创建 SlideContext，将 Quiz DSL 作为数据源
-      // 对于 quiz 类型，quiz 对象应该在顶层可访问（Slide DSL 模板中可以直接使用 quiz.title 等）
+      // 1. 创建 SlideContext，将 Quiz 作为数据源
+      // 对于 quiz 类型，quiz 对象应该在顶层可访问（Slide 模板中可以直接使用 quiz.title 等）
       const context: SlideContext = {
         sourceType: 'quiz',
-        sourceId: quizDSL.quiz.id,
-        items: this.transformQuizDSLToContextItems(quizDSL),
+        sourceId: quizSource.quiz.id,
+        items: this.transformQuizSourceToContextItems(quizSource),
         quiz: {
-          id: quizDSL.quiz.id,
-          title: quizDSL.quiz.title,
-          description: quizDSL.quiz.description,
+          id: quizSource.quiz.id,
+          title: quizSource.quiz.title,
+          description: quizSource.quiz.description,
           questions: this.getAllQuestions(),
         },
       };
 
-      // 2. 使用 @slidejs/runner-swiper 创建并运行幻灯片
+      // 4. 注册并初始化 QuizStore（使用 quizId 作为标识符）
+      // 必须在 runner 启动前完成，以便组件能立即找到 store
+      registerQuizStore(quizSource.quiz.id, this.store);
+      const totalQuestions = this.getAllQuestions().length;
+      console.log(
+        `[QuizPlayer] Initializing store with ${totalQuestions} questions for quiz: ${quizSource.quiz.id}`
+      );
+      this.store.dispatch(quizActions.initQuiz(quizSource.quiz.id, totalQuestions));
+
+      // 5. 使用 @slidejs/runner-swiper 创建并运行幻灯片
       this.runner = (await createSlideRunner(
-        finalSlideDSL,
+        finalSlideSource,
         {
           ...context,
           items: context.items as unknown[],
           metadata: {
-            title: quizDSL.quiz.title || 'Quiz',
+            title: quizSource.quiz.title || 'Quiz',
             createdAt: new Date().toISOString(),
           },
         } as unknown as Parameters<typeof createSlideRunner>[1],
@@ -146,24 +146,34 @@ export class QuizPlayer {
         }
       )) as unknown as SlideRunner;
 
-      // 3. 启动演示（导航到第一张幻灯片）
+      // 5. 恢复状态 (必须在 initQuiz 之后执行，以确保进度计算正确)
+      if (this.options.resultSource) {
+        this.restoreFromResultSource(this.options.resultSource);
+        if (this.options.initialAnswers) {
+          Object.entries(this.options.initialAnswers).forEach(([qid, ans]) => {
+            this.setAnswer(qid, ans);
+          });
+        }
+      } else if (this.options.initialAnswers) {
+        Object.entries(this.options.initialAnswers).forEach(([qid, ans]) => {
+          this.setAnswer(qid, ans);
+        });
+      }
+
+      // 6. 启动演示（导航到第一张幻灯片）
       this.runner.play();
 
-      // 4. 注册 QuizStore（使用 quizId 作为标识符）
-      registerQuizStore(quizDSL.quiz.id, this.store);
-
-      // 5. 初始化 QuizStore 状态
-      const totalQuestions = this.getAllQuestions().length;
-      this.store.dispatch(quizActions.initQuiz(quizDSL.quiz.id, totalQuestions));
-
-      // 6. 设置答案监听器
+      // 7. 设置答案监听器
       this.setupAnswerListeners();
 
-      // 6. 应用主题（默认使用 solarized-dark）
+      // 8. 应用主题（默认使用 solarized-dark）
       const theme = this.options.theme || 'solarized-dark';
       this.setTheme(theme);
 
       this.startTime = Date.now();
+
+      // Trigger onStart callback
+      this.options.onStart?.();
     } catch (error) {
       // 提供更详细的错误信息
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -171,6 +181,19 @@ export class QuizPlayer {
         `Failed to initialize QuizPlayer: ${errorMessage}. Please check your configuration and ensure all required dependencies are installed.`
       );
     }
+  }
+
+  /**
+   * 开始测验
+   */
+  start(): void {
+    if (!this.runner) {
+      throw new Error('Player not initialized. Call init() first.');
+    }
+
+    this.startTime = Date.now();
+    this.runner.play();
+    this.options.onStart?.();
   }
 
   /**
@@ -208,32 +231,32 @@ export class QuizPlayer {
    */
   private getAllQuestions(): Question[] {
     const allQuestions: Question[] = [];
-    if (this.quizDSL.quiz.sections) {
-      this.quizDSL.quiz.sections.forEach(section => {
+    if (this.quizSource.quiz.sections) {
+      this.quizSource.quiz.sections.forEach(section => {
         if (section.questions) {
           allQuestions.push(...section.questions);
         }
       });
-    } else if (this.quizDSL.quiz.questions) {
-      allQuestions.push(...this.quizDSL.quiz.questions);
+    } else if (this.quizSource.quiz.questions) {
+      allQuestions.push(...this.quizSource.quiz.questions);
     }
     return allQuestions;
   }
 
   /**
-   * 将 Quiz DSL 转换为 SlideContext 的 items
+   * 将 Quiz Source 转换为 SlideContext 的 items
    */
-  private transformQuizDSLToContextItems(quizDSL: QuizDSL): unknown[] {
+  private transformQuizSourceToContextItems(quizSource: QuizDSL): unknown[] {
     // 收集所有问题（支持 sections 和直接 questions）
     const allQuestions: Question[] = [];
-    if (quizDSL.quiz.sections) {
-      quizDSL.quiz.sections.forEach(section => {
+    if (quizSource.quiz.sections) {
+      quizSource.quiz.sections.forEach(section => {
         if (section.questions) {
           allQuestions.push(...section.questions);
         }
       });
-    } else if (quizDSL.quiz.questions) {
-      allQuestions.push(...quizDSL.quiz.questions);
+    } else if (quizSource.quiz.questions) {
+      allQuestions.push(...quizSource.quiz.questions);
     }
 
     return allQuestions.map(question => {
@@ -281,25 +304,30 @@ export class QuizPlayer {
     if (this.options.readOnly) {
       return;
     }
-    this.answers[questionId] = answer;
+    // const wasComplete = this.store.isComplete(); // 如果需要 onComplete 事件可以在这里做判断
 
     // 通过 QuizStore dispatch action 更新状态
     this.store.dispatch(quizActions.setAnswer(questionId, answer));
 
     // 保留现有的回调（向后兼容）
     this.options.onAnswerChange?.(questionId, answer);
+
+    // 检查是否完成并触发 onComplete
+    if (this.isComplete()) {
+      this.options.onComplete?.();
+    }
   }
 
   /**
    * 获取当前答案
    */
   getAnswers(): Record<string, AnswerValue> {
-    return { ...this.answers };
+    return this.store.getAnswers();
   }
 
   /**
    * 提交测验
-   * 返回 Result DSL
+   * 返回 Result Source
    */
   submit(): ResultDSL {
     // 开始提交：Dispatch SUBMIT_START action
@@ -311,10 +339,11 @@ export class QuizPlayer {
 
       // 收集所有问题
       const allQuestions = this.getAllQuestions();
+      const currentAnswers = this.store.getAnswers();
 
       // 计算分数
       const questionResults: QuestionResult[] = allQuestions.map(question => {
-        const userAnswer = this.answers[question.id];
+        const userAnswer = currentAnswers[question.id];
         const correct = this.isAnswerCorrect(question, userAnswer);
         const score = correct ? question.points || 0 : 0;
 
@@ -330,22 +359,22 @@ export class QuizPlayer {
 
       const totalScore = questionResults.reduce((sum, r) => sum + r.score, 0);
       const maxScore = questionResults.reduce((sum, r) => sum + r.maxScore, 0);
-      const passingScore = this.quizDSL.quiz.settings?.passingScore || 0;
+      const passingScore = this.quizSource.quiz.settings?.passingScore || 0;
       const passed = totalScore >= passingScore;
       const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
 
-      // 生成 Result DSL
-      const resultDSL: ResultDSL = {
+      // 生成 Result Source
+      const resultSource: ResultDSL = {
         version: '1.0.0',
         metadata: {
           id: `result-${Date.now()}`,
-          quizId: this.quizDSL.quiz.id,
+          quizId: this.quizSource.quiz.id,
           startedAt: new Date(this.startTime).toISOString(),
           completedAt: completedAt.toISOString(),
           duration,
         },
-        quiz: { ...this.quizDSL }, // 完整 Quiz DSL 副本
-        answers: { ...this.answers },
+        quiz: { ...this.quizSource }, // 完整 Quiz Source 副本
+        answers: currentAnswers,
         scoring: {
           totalScore,
           maxScore,
@@ -357,17 +386,17 @@ export class QuizPlayer {
       };
 
       // 提交成功：Dispatch SUBMIT_SUCCESS action
-      this.store.dispatch(quizActions.submitSuccess(resultDSL));
+      this.store.dispatch(quizActions.submitSuccess(resultSource));
 
       // 触发提交回调
-      this.options.onSubmit?.(resultDSL);
+      this.options.onSubmit?.(resultSource);
 
       // 如果启用结果显示，渲染结果
       if (this.options.showResults !== false) {
-        this.renderResults(resultDSL);
+        this.renderResults(resultSource);
       }
 
-      return resultDSL;
+      return resultSource;
     } catch (error) {
       // 提交失败：Dispatch SUBMIT_FAILURE action
       this.store.dispatch(
@@ -378,19 +407,20 @@ export class QuizPlayer {
   }
 
   /**
-   * 获取 Result DSL（不提交）
+   * 获取 Result Source（不提交）
    * 用于保存当前答题状态
    */
-  getResultDSL(): ResultDSL {
+  getResultSource(): ResultDSL {
     const now = Date.now();
     const duration = now - this.startTime;
 
     // 收集所有问题
     const allQuestions = this.getAllQuestions();
+    const currentAnswers = this.store.getAnswers();
 
     // 计算当前分数
     const questionResults: QuestionResult[] = allQuestions.map(question => {
-      const userAnswer = this.answers[question.id];
+      const userAnswer = currentAnswers[question.id];
       const correct = this.isAnswerCorrect(question, userAnswer);
       const score = correct ? question.points || 0 : 0;
 
@@ -406,7 +436,7 @@ export class QuizPlayer {
 
     const totalScore = questionResults.reduce((sum, r) => sum + r.score, 0);
     const maxScore = questionResults.reduce((sum, r) => sum + r.maxScore, 0);
-    const passingScore = this.quizDSL.quiz.settings?.passingScore || 0;
+    const passingScore = this.quizSource.quiz.settings?.passingScore || 0;
     const passed = totalScore >= passingScore;
     const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
 
@@ -414,13 +444,13 @@ export class QuizPlayer {
       version: '1.0.0',
       metadata: {
         id: `result-${Date.now()}`,
-        quizId: this.quizDSL.quiz.id,
+        quizId: this.quizSource.quiz.id,
         startedAt: new Date(this.startTime).toISOString(),
         completedAt: new Date(now).toISOString(),
         duration,
       },
-      quiz: { ...this.quizDSL },
-      answers: { ...this.answers },
+      quiz: { ...this.quizSource },
+      answers: currentAnswers,
       scoring: {
         totalScore,
         maxScore,
@@ -433,18 +463,20 @@ export class QuizPlayer {
   }
 
   /**
-   * 从 Result DSL 恢复状态
+   * 从 Result Source 恢复状态
    */
-  restoreFromResultDSL(resultDSL: ResultDSL): void {
-    // 恢复 Quiz DSL
-    this.quizDSL = resultDSL.quiz;
+  restoreFromResultSource(resultSource: ResultDSL): void {
+    // 恢复 Quiz Source
+    this.quizSource = resultSource.quiz;
 
     // 恢复答案
-    this.answers = { ...resultDSL.answers };
+    Object.entries(resultSource.answers).forEach(([qid, ans]) => {
+      this.store.dispatch(quizActions.setAnswer(qid, ans));
+    });
 
     // 恢复开始时间（如果有）
-    if (resultDSL.metadata.startedAt) {
-      this.startTime = new Date(resultDSL.metadata.startedAt).getTime();
+    if (resultSource.metadata.startedAt) {
+      this.startTime = new Date(resultSource.metadata.startedAt).getTime();
     }
   }
 
@@ -454,9 +486,10 @@ export class QuizPlayer {
   getCurrentScore(): number {
     // 收集所有问题
     const allQuestions = this.getAllQuestions();
+    const currentAnswers = this.store.getAnswers();
 
     return allQuestions.reduce((sum, question) => {
-      const userAnswer = this.answers[question.id];
+      const userAnswer = currentAnswers[question.id];
       const correct = this.isAnswerCorrect(question, userAnswer);
       return sum + (correct ? question.points || 0 : 0);
     }, 0);
@@ -466,18 +499,16 @@ export class QuizPlayer {
    * 检查是否已回答所有问题
    */
   isComplete(): boolean {
-    // 收集所有问题
-    const allQuestions = this.getAllQuestions();
-
-    return allQuestions.every(question => question.id in this.answers);
+    return this.store.isComplete();
   }
 
   /**
    * 重置答案
    */
   reset(): void {
-    this.answers = {};
+    this.store.dispatch(quizActions.resetAnswers());
     this.startTime = Date.now();
+    this.options.onReset?.();
   }
 
   /**
@@ -485,8 +516,8 @@ export class QuizPlayer {
    */
   async destroy(): Promise<void> {
     // 取消注册 QuizStore（使用 quizId）
-    if (this.quizDSL?.quiz?.id) {
-      unregisterQuizStore(this.quizDSL.quiz.id);
+    if (this.quizSource?.quiz?.id) {
+      unregisterQuizStore(this.quizSource.quiz.id);
     }
 
     // 移除事件监听器，防止内存泄漏
@@ -610,6 +641,11 @@ export class QuizPlayer {
   private setupAnswerListeners(): void {
     // 保存监听器引用，以便后续清理
     this.answerChangeListener = (event: Event) => {
+      // Prevent infinite loop: ignore events dispatched by the player container itself
+      if (this.containerElement && event.target === this.containerElement) {
+        return;
+      }
+
       const customEvent = event as CustomEvent<{ questionId: string; answer: AnswerValue }>;
       const { questionId, answer } = customEvent.detail;
       this.setAnswer(questionId, answer);
@@ -620,7 +656,7 @@ export class QuizPlayer {
   /**
    * 渲染结果界面
    */
-  private renderResults(resultDSL: ResultDSL): void {
+  private renderResults(resultSource: ResultDSL): void {
     if (!this.containerElement) {
       console.warn('Container element not found, cannot render results');
       return;
@@ -688,9 +724,8 @@ export class QuizPlayer {
       resultsContainer.remove();
     };
 
-    // 创建结果组件
     const resultsElement = document.createElement('wsx-quiz-results');
-    resultsElement.setAttribute('result-dsl', JSON.stringify(resultDSL));
+    resultsElement.setAttribute('result-source', JSON.stringify(resultSource));
     resultsElement.style.cssText = 'display: block;';
 
     // 组装结构

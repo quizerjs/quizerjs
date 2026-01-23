@@ -119,9 +119,14 @@ export class QuizQuestionHeader extends LightComponent {
           className={className}
           ref={el => {
             this.editableElement = el;
+            // Use setTimeout to ensure DOM is ready and bypass race conditions
+            setTimeout(() => {
+              if (el && this.text) {
+                el.innerHTML = this.text;
+              }
+            }, 0);
             this.setupEditableElement();
           }}
-          innerHTML={this.text}
           contentEditable={!isReadonly}
         />
       </div>

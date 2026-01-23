@@ -6,11 +6,13 @@
     <div class="panel-content">
       <QuizPlayer
         v-if="currentDSL && isValidDSL"
-        :key="dslKey"
-        :quiz="currentDSL!"
+        :quiz-source="currentDSL!"
         :show-results="true"
         @submit="handlePlayerSubmit"
+        @start="handleStart"
         @answer-change="handleAnswerChange"
+        @complete="handleComplete"
+        @reset="handleReset"
         @error="handlePlayerError"
       />
       <div v-else class="player-placeholder">
@@ -143,26 +145,6 @@ const isValidDSL = computed(() => {
   return valid;
 });
 
-// 使用 key 强制重新渲染播放器当 DSL 变化时
-const dslKey = ref(0);
-watch(
-  () => props.dslPreview,
-  newPreview => {
-    console.log('📝 DSL Preview 变化:', {
-      length: newPreview?.length || 0,
-      preview: newPreview?.substring(0, 100) || '',
-    });
-    if (isValidDSL.value && currentDSL.value) {
-      console.log('🔄 更新播放器 key, DSL:', {
-        id: currentDSL.value.quiz?.id,
-        title: currentDSL.value.quiz?.title,
-      });
-      dslKey.value += 1;
-    }
-  },
-  { immediate: false }
-);
-
 // 处理播放器提交
 const handlePlayerSubmit = (result: ResultDSL) => {
   console.log('测验提交:', result);
@@ -176,6 +158,21 @@ const handleAnswerChange = (questionId: string, answer: AnswerValue) => {
 // 处理播放器错误
 const handlePlayerError = (error: Error) => {
   console.error('播放器错误:', error);
+};
+
+// 处理开始事件
+const handleStart = () => {
+  console.log('测验开始');
+};
+
+// 处理完成事件
+const handleComplete = () => {
+  console.log('测验完成（所有题目已回答）');
+};
+
+// 处理重置事件
+const handleReset = () => {
+  console.log('测验重置');
 };
 </script>
 

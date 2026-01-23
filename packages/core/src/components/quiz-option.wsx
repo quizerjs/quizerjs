@@ -216,12 +216,23 @@ export class QuizOption extends LightComponent {
               }
               // 保存引用
               this.textElement = el;
-              // 初始化内容：如果元素为空或内容与 initialText 不同，则设置
-              const currentContent = el.innerHTML.trim();
-              const textToSet = initialText || '';
-              if (!currentContent || currentContent !== textToSet) {
-                el.innerHTML = textToSet;
-              }
+
+              // 使用 setTimeout 确保 DOM 准备就绪，解决渲染竞争条件
+              setTimeout(() => {
+                if (el && this.text) {
+                  // Only update if empty or different, but force update on init if matching text
+                  // Actually, just force set it if we have text
+                  const currentContent = el.innerHTML.trim();
+                  if (!currentContent && this.text) {
+                    el.innerHTML = this.text;
+                  } else if (currentContent !== this.text) {
+                    // Check if active element to avoid cursor jump?
+                    // In init/ref, element shouldn't be active yet usually.
+                    el.innerHTML = this.text;
+                  }
+                }
+              }, 0);
+
               // 设置事件监听器
               this.setupTextElement();
             }

@@ -19,7 +19,7 @@ export interface QuizState {
   };
 
   // Result DSL（提交后）
-  resultDSL: ResultDSL | null;
+  resultSource: ResultDSL | null;
 
   // 提交状态
   isSubmitting: boolean;
@@ -39,9 +39,9 @@ export type QuizAction =
   | { type: 'ANSWER_CLEAR'; payload: { questionId: string } }
   | { type: 'ANSWERS_RESET'; payload?: void }
   | { type: 'SUBMIT_START'; payload?: void }
-  | { type: 'SUBMIT_SUCCESS'; payload: { resultDSL: ResultDSL } }
+  | { type: 'SUBMIT_SUCCESS'; payload: { resultSource: ResultDSL } }
   | { type: 'SUBMIT_FAILURE'; payload: { error: Error } }
-  | { type: 'RESULT_SET'; payload: { resultDSL: ResultDSL } };
+  | { type: 'RESULT_SET'; payload: { resultSource: ResultDSL } };
 
 /**
  * 初始状态
@@ -49,7 +49,7 @@ export type QuizAction =
 const initialState: QuizState = {
   answers: {},
   progress: { answered: 0, total: 0 },
-  resultDSL: null,
+  resultSource: null,
   isSubmitting: false,
   isSubmitted: false,
   quizId: null,
@@ -89,6 +89,9 @@ export class QuizStore {
   dispatch(action: QuizAction): void {
     const prevState = this.state;
     this.state = this.reducer(this.state, action);
+
+    // 只有在开发环境或调试时可以开启
+    console.log(`[QuizStore] Action: ${action.type}`, action.payload);
 
     // 如果状态发生变化，通知所有订阅者
     if (prevState !== this.state) {
@@ -170,7 +173,7 @@ export class QuizStore {
           ...state,
           answers: {},
           progress: { ...state.progress, answered: 0 },
-          resultDSL: null,
+          resultSource: null,
           isSubmitted: false,
           startTime: Date.now(),
         };
@@ -179,12 +182,12 @@ export class QuizStore {
         return { ...state, isSubmitting: true };
 
       case 'SUBMIT_SUCCESS': {
-        const { resultDSL } = action.payload;
+        const { resultSource } = action.payload;
         return {
           ...state,
           isSubmitting: false,
           isSubmitted: true,
-          resultDSL,
+          resultSource,
         };
       }
 
@@ -192,8 +195,8 @@ export class QuizStore {
         return { ...state, isSubmitting: false };
 
       case 'RESULT_SET': {
-        const { resultDSL } = action.payload;
-        return { ...state, resultDSL };
+        const { resultSource } = action.payload;
+        return { ...state, resultSource };
       }
 
       default:
@@ -227,15 +230,17 @@ export class QuizStore {
   /**
    * 获取 Result DSL
    */
-  getResultDSL(): ResultDSL | null {
-    return this.state.resultDSL;
+  getResultSource(): ResultDSL | null {
+    return this.state.resultSource;
   }
 
   /**
    * 是否已回答所有问题
+   * 条件：total > 0 且 answered === total
    */
   isComplete(): boolean {
-    return this.state.progress.answered >= this.state.progress.total;
+    const { answered, total } = this.state.progress;
+    return total > 0 && answered === total;
   }
 
   /**

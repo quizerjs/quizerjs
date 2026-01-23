@@ -9,8 +9,20 @@
  * @see {@link https://github.com/quizerjs/quizerjs/blob/main/docs/rfc/0006-player-core.md RFC 0006}
  */
 
-import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { QuizPlayer as QuizPlayerClass, type QuizPlayerOptions, type ResultDSL, type AnswerValue } from '@quizerjs/quizerjs';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useMemo,
+} from 'react';
+import {
+  QuizPlayer as QuizPlayerClass,
+  type QuizPlayerOptions,
+  type ResultDSL,
+  type AnswerValue,
+} from '@quizerjs/quizerjs';
 import type { QuizDSL } from '@quizerjs/dsl';
 import './QuizPlayer.css';
 
@@ -18,24 +30,30 @@ import './QuizPlayer.css';
  * QuizPlayer 组件的 Props
  */
 export interface QuizPlayerProps {
-  /** Quiz 数据（必需） */
-  quiz: QuizDSL;
-  /** Slide DSL 源代码（可选，如果不提供则使用默认 Slide DSL） */
-  slideDSL?: string;
+  /** Quiz 数据 */
+  quizSource: QuizDSL;
+  /** Slide 源代码（可选，如果不提供则使用默认 Slide 模板） */
+  slideSource?: string;
   /** 初始答案（可选，用于恢复之前的答题状态） */
   initialAnswers?: Record<string, AnswerValue>;
-  /** 从 Result DSL 恢复（可选，如果提供将从 Result DSL 恢复答题状态） */
-  resultDSL?: ResultDSL;
+  /** 从 Result 恢复（可选，如果提供将从 Result 恢复答题状态） */
+  resultSource?: ResultDSL;
   /** 只读模式（可选，默认 false，用于显示结果） */
   readOnly?: boolean;
   /** 显示结果（可选，默认 true） */
   showResults?: boolean;
   /** Slide 配置选项（可选，传递给 slide runner 的配置） */
   slideOptions?: QuizPlayerOptions['slideOptions'];
-  /** 提交事件：当用户提交测验时触发，返回 Result DSL */
+  /** 提交事件：当用户提交测验时触发，返回 Result Source */
   onSubmit?: (result: ResultDSL) => void;
   /** 答案变更事件：当用户修改答案时触发 */
   onAnswerChange?: (questionId: string, answer: AnswerValue) => void;
+  /** 开始事件：当测验开始时触发 */
+  onStart?: () => void;
+  /** 完成事件：当所有必答题都已回答时触发 */
+  onComplete?: () => void;
+  /** 重置事件：当用户重置测验时触发 */
+  onReset?: () => void;
   /** 错误事件：当播放器初始化或运行出错时触发 */
   onError?: (error: Error) => void;
 }
@@ -45,7 +63,7 @@ export interface QuizPlayerProps {
  * 遵循 RFC 0006：暴露 QuizPlayer 类的所有公共方法
  */
 export interface QuizPlayerRef {
-  /** 提交测验，返回 Result DSL */
+  /** 提交测验，返回 Result Source */
   submit: () => ResultDSL | null;
   /** 获取当前答案 */
   getAnswers: () => Record<string, AnswerValue>;
@@ -57,8 +75,8 @@ export interface QuizPlayerRef {
   isComplete: () => boolean;
   /** 重置答案 */
   reset: () => void;
-  /** 获取 Result DSL（不提交），用于保存当前答题状态 */
-  getResultDSL: () => ResultDSL | null;
+  /** 获取 Result Source（不提交），用于保存当前答题状态 */
+  getResultSource: () => ResultDSL | null;
   /** 获取 SlideRunner 实例（用于高级控制） */
   getRunner: () => unknown;
 }
@@ -69,15 +87,18 @@ export interface QuizPlayerRef {
 export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
   (
     {
-      quiz,
-      slideDSL,
+      quizSource,
+      slideSource,
       initialAnswers,
-      resultDSL,
+      resultSource,
       readOnly = false,
       showResults = true,
       slideOptions,
       onSubmit,
       onAnswerChange,
+      onStart,
+      onComplete,
+      onReset,
       onError,
     },
     ref
@@ -87,41 +108,47 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
     const [error, setError] = useState<string | null>(null);
     const isInitializingRef = useRef(false);
     const lastQuizIdRef = useRef<string | null>(null);
-    
+
     // 使用 ref 存储回调，避免 useEffect 重复执行
     const onSubmitRef = useRef(onSubmit);
     const onAnswerChangeRef = useRef(onAnswerChange);
+    const onStartRef = useRef(onStart);
+    const onCompleteRef = useRef(onComplete);
+    const onResetRef = useRef(onReset);
     const onErrorRef = useRef(onError);
 
     // 更新回调 ref
     useEffect(() => {
       onSubmitRef.current = onSubmit;
       onAnswerChangeRef.current = onAnswerChange;
+      onStartRef.current = onStart;
+      onCompleteRef.current = onComplete;
+      onResetRef.current = onReset;
       onErrorRef.current = onError;
-    }, [onSubmit, onAnswerChange, onError]);
+    }, [onSubmit, onAnswerChange, onStart, onComplete, onReset, onError]);
 
     /**
-     * 检查是否有有效的 quiz 数据
+     * 检查是否有有效的 quizSource 数据
      * 用于决定是显示播放器还是默认视图
      */
     const hasValidQuiz = useMemo(() => {
-      return !!(quiz && quiz.quiz && quiz.quiz.id && quiz.quiz.title);
-    }, [quiz]);
+      return !!(quizSource && quizSource.quiz && quizSource.quiz.id && quizSource.quiz.title);
+    }, [quizSource]);
 
     /**
      * 初始化播放器
      */
     const initPlayer = async (): Promise<void> => {
       if (!playerContainerRef.current || !hasValidQuiz) return;
-      
+
       // 防止重复初始化
       if (isInitializingRef.current) {
         console.log('⏸️ 播放器正在初始化，跳过重复调用');
         return;
       }
 
-      // 检查 quiz ID 是否变化
-      const currentQuizId = quiz?.quiz?.id || null;
+      // 检查 quizSource ID 是否变化
+      const currentQuizId = quizSource?.quiz?.id || null;
       if (currentQuizId === lastQuizIdRef.current && playerRef.current) {
         console.log('⏸️ Quiz ID 未变化，跳过重新初始化');
         return;
@@ -130,19 +157,19 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
       try {
         isInitializingRef.current = true;
         setError(null);
-        
+
         // 如果已有播放器实例，先销毁
         if (playerRef.current) {
           await playerRef.current.destroy();
           playerRef.current = null;
         }
-        
+
         const options: QuizPlayerOptions = {
           container: playerContainerRef.current,
-          quizDSL: quiz,
-          slideDSL,
+          quizSource: quizSource,
+          slideSource,
           initialAnswers,
-          resultDSL,
+          resultSource,
           readOnly,
           showResults,
           slideOptions,
@@ -156,9 +183,20 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
               onAnswerChangeRef.current(questionId, answer);
             }
           },
+          onStart: () => {
+            if (onStartRef.current) onStartRef.current();
+          },
+          onComplete: () => {
+            if (onCompleteRef.current) onCompleteRef.current();
+          },
+          onReset: () => {
+            if (onResetRef.current) onResetRef.current();
+          },
         };
         playerRef.current = new QuizPlayerClass(options);
         await playerRef.current.init();
+        // 显式调用 start()
+        playerRef.current.start();
         lastQuizIdRef.current = currentQuizId;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
@@ -182,12 +220,17 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
       initPlayer();
     };
 
-    // 监听 quiz 变化，重新初始化播放器
+    // 监听 quizSource 变化，重新初始化播放器
     useEffect(() => {
-      // 检查 quiz 是否有效
-      const isValid = !!(quiz && quiz.quiz && quiz.quiz.id && quiz.quiz.title);
-      
-      // 如果 quiz 无效，清理播放器
+      // 检查 quizSource 是否有效
+      const isValid = !!(
+        quizSource &&
+        quizSource.quiz &&
+        quizSource.quiz.id &&
+        quizSource.quiz.title
+      );
+
+      // 如果 quizSource 无效，清理播放器
       if (!isValid) {
         if (playerRef.current) {
           playerRef.current.destroy();
@@ -202,7 +245,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
         initPlayer();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [quiz]);
+    }, [quizSource]);
 
     // 组件卸载时清理
     useEffect(() => {
@@ -216,6 +259,12 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
 
     // 暴露方法供父组件调用
     useImperativeHandle(ref, () => ({
+      /** 开始测验 */
+      start: () => {
+        if (playerRef.current) {
+          playerRef.current.start();
+        }
+      },
       /** 提交测验，返回 Result DSL */
       submit: () => {
         if (!playerRef.current) return null;
@@ -248,10 +297,10 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
           playerRef.current.reset();
         }
       },
-      /** 获取 Result DSL（不提交），用于保存当前答题状态 */
-      getResultDSL: () => {
+      /** 获取 Result Source（不提交），用于保存当前答题状态 */
+      getResultSource: () => {
         if (!playerRef.current) return null;
-        return playerRef.current.getResultDSL();
+        return playerRef.current.getResultSource();
       },
       /** 获取 SlideRunner 实例（用于高级控制） */
       getRunner: () => {
@@ -331,9 +380,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
           </div>
         )}
         {/* 播放器容器：始终存在，使用条件渲染控制显示 */}
-        {hasValidQuiz && !error && (
-          <div ref={playerContainerRef} className="quiz-player" />
-        )}
+        {hasValidQuiz && !error && <div ref={playerContainerRef} className="quiz-player" />}
       </div>
     );
   }

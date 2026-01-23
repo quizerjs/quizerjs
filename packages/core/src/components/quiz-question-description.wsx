@@ -119,9 +119,13 @@ export class QuizQuestionDescription extends LightComponent {
           className={className}
           ref={el => {
             this.editableElement = el;
+            setTimeout(() => {
+              if (el && this.text) {
+                el.innerHTML = this.text;
+              }
+            }, 0);
             this.setupEditableElement();
           }}
-          innerHTML={this.text}
           contentEditable={!isReadonly}
         />
       </div>

@@ -143,6 +143,18 @@ export default function PlayerPanel({ dslPreview }: PlayerPanelProps) {
     console.error('播放器错误:', error);
   };
 
+  const handleStart = () => {
+    console.log('🏁 测验开始 (onStart)');
+  };
+
+  const handleComplete = () => {
+    console.log('✅ 测验完成 (onComplete)');
+  };
+
+  const handleReset = () => {
+    console.log('🔄 测验重置 (onReset)');
+  };
+
   return (
     <div className="player-panel">
       <div className="panel-header">
@@ -152,27 +164,30 @@ export default function PlayerPanel({ dslPreview }: PlayerPanelProps) {
         {currentDSL && isValidDSL ? (
           <QuizPlayer
             key={dslKey}
-            quiz={currentDSL}
+            quizSource={currentDSL}
             showResults={true}
             onSubmit={handlePlayerSubmit}
             onAnswerChange={handleAnswerChange}
+            onStart={handleStart}
+            onComplete={handleComplete}
+            onReset={handleReset}
             onError={handlePlayerError}
           />
         ) : (
-          <div className="player-placeholder">
+          <div className="empty-state">
             {!dslPreview || dslPreview.trim() === '' ? (
-              <div className="placeholder-content">
+              <div className="waiting-message">
                 <p>等待 DSL 数据...</p>
               </div>
             ) : (
-              <div className="error-content">
+              <div className="error-message-container">
                 <p className="error-title">❌ DSL 数据格式无效</p>
-                {dslError && <p className="error-detail">{dslError}</p>}
+                {dslError && <p className="error-details">{dslError}</p>}
                 <div className="debug-info">
-                  <p>
+                  <p className="debug-title">
                     <strong>调试信息:</strong>
                   </p>
-                  <ul>
+                  <ul className="debug-list">
                     <li>currentDSL: {currentDSL ? '存在' : 'null'}</li>
                     <li>isValidDSL: {isValidDSL ? 'true' : 'false'}</li>
                     {currentDSL && (

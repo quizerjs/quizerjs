@@ -90,16 +90,17 @@ export interface QuizPlayerOptions {
   container: HTMLElement | string;
 
   /**
-   * Quiz DSL 数据（必需）
+   * Quiz 数据（必需）
+   * 可以是 QuizDSL 对象
    */
-  quizDSL: QuizDSL;
+  quizSource: QuizDSL;
 
   /**
-   * Slide DSL 源代码（可选）
-   * 定义如何将 Quiz DSL 转换为幻灯片
-   * 如果不提供，将使用默认的 Slide DSL 模板
+   * Slide 源代码（可选）
+   * 定义如何将 Quiz 转换为幻灯片
+   * 如果不提供，将使用默认的 Slide 模板
    */
-  slideDSL?: string;
+  slideSource?: string;
 
   /**
    * 初始答案（可选）
@@ -108,10 +109,10 @@ export interface QuizPlayerOptions {
   initialAnswers?: Record<string, AnswerValue>;
 
   /**
-   * 从 Result DSL 恢复（可选）
-   * 如果提供，将从 Result DSL 恢复答题状态
+   * 从 Result 恢复（可选）
+   * 如果提供，将从 Result 恢复答题状态
    */
-  resultDSL?: ResultDSL;
+  resultSource?: ResultDSL;
 
   /**
    * 提交回调（可选）
@@ -120,10 +121,28 @@ export interface QuizPlayerOptions {
   onSubmit?: (result: ResultDSL) => void;
 
   /**
+   * Start callback (optional)
+   * Triggered when the player is successfully initialized and starts
+   */
+  onStart?: () => void;
+
+  /**
    * 答案变更回调（可选）
    * 当用户修改答案时触发
    */
   onAnswerChange?: (questionId: string, answer: AnswerValue) => void;
+
+  /**
+   * Complete callback (optional)
+   * Triggered when all questions are answered
+   */
+  onComplete?: () => void;
+
+  /**
+   * Reset callback (optional)
+   * Triggered when the quiz is reset
+   */
+  onReset?: () => void;
 
   /**
    * 只读模式（可选，默认 false）
