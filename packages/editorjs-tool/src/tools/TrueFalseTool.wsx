@@ -117,10 +117,20 @@ export default class TrueFalseTool implements BlockTool {
 
   save(): TrueFalseData {
     if (this.questionHeaderComponent?.getText) {
-      this.data.question.text = this.questionHeaderComponent.getText();
+      const text = this.questionHeaderComponent.getText();
+      if (text !== undefined && text !== null && (text.trim() !== '' || !this.data.question.text)) {
+        this.data.question.text = text;
+      }
     }
     if (this.questionDescriptionComponent?.getText) {
-      this.data.question.description = this.questionDescriptionComponent.getText();
+      const description = this.questionDescriptionComponent.getText();
+      if (
+        description !== undefined &&
+        description !== null &&
+        (description.trim() !== '' || !this.data.question.description)
+      ) {
+        this.data.question.description = description;
+      }
     }
     if (this.trueFalseSelect) {
       this.data.question.correctAnswer = this.trueFalseSelect.value === 'true';

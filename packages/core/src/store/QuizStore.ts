@@ -313,8 +313,8 @@ export function getQuizStoreFromElement(element: HTMLElement | null): QuizStore 
   // 向上查找容器元素（查找有 __quizStore 属性的元素）
   let current: HTMLElement | null = element;
   while (current && current !== document.body) {
-    if ((current as any).__quizStore) {
-      return (current as any).__quizStore;
+    if ('__quizStore' in current) {
+      return (current as HTMLElement & { __quizStore: QuizStore }).__quizStore;
     }
     current = current.parentElement;
   }

@@ -51,13 +51,12 @@ export class QuizOption extends LightComponent {
         this.optionId = newValue || '';
         break;
       case 'text':
-        // 更新 text 状态（用于初始渲染），但不触发重新渲染
+        // 更新 text 状态
         this.text = newValue || '';
-        // 如果 textElement 已存在且没有焦点，更新 DOM
+        // 关键：在 onAttributeChanged 中更新 DOM，因为此时 newValue 是正确的值
+        // ref 回调可能在 onAttributeChanged 之前执行，导致使用旧的 this.text 值
         if (this.textElement && document.activeElement !== this.textElement) {
-          if (this.textElement.innerHTML !== newValue) {
-            this.textElement.innerHTML = newValue || '';
-          }
+          this.textElement.innerHTML = newValue || '';
         }
         break;
       case 'selected':
@@ -77,10 +76,8 @@ export class QuizOption extends LightComponent {
 
   onConnected() {
     this.setupTextElement();
-    // 如果 text 属性存在但 textElement 还没有内容，设置初始文本
-    if (this.textElement && this.text && !this.textElement.innerHTML) {
-      this.textElement.innerHTML = this.text;
-    }
+    // 初始文本由 onAttributeChanged('text', ...) 设置
+    // 不在这里重复设置，避免时序问题
   }
 
   onDisconnected() {
@@ -183,8 +180,7 @@ export class QuizOption extends LightComponent {
     const isSelected = this.selected;
     const currentType = this.type;
     const inputType = currentType === QuestionTypes.SINGLE_CHOICE ? 'radio' : 'checkbox';
-    // 只在初始渲染时使用 text 状态，之后由 contentEditable 维护
-    // 使用 optionid 作为 key 的一部分，确保组件在选项变化时正确更新
+    // Sử optionid 作为 key 的一部分，确保组件在选项变化时正确更新
     const initialText = this.text;
 
     const classNames = ['quiz-option'];
@@ -206,7 +202,6 @@ export class QuizOption extends LightComponent {
         />
         <div
           className="quiz-option-text"
-          innerHTML={initialText}
           contentEditable={!isReadonly}
           ref={el => {
             if (el && el !== this.textElement) {
@@ -217,21 +212,9 @@ export class QuizOption extends LightComponent {
               // 保存引用
               this.textElement = el;
 
-              // 使用 setTimeout 确保 DOM 准备就绪，解决渲染竞争条件
-              setTimeout(() => {
-                if (el && this.text) {
-                  // Only update if empty or different, but force update on init if matching text
-                  // Actually, just force set it if we have text
-                  const currentContent = el.innerHTML.trim();
-                  if (!currentContent && this.text) {
-                    el.innerHTML = this.text;
-                  } else if (currentContent !== this.text) {
-                    // Check if active element to avoid cursor jump?
-                    // In init/ref, element shouldn't be active yet usually.
-                    el.innerHTML = this.text;
-                  }
-                }
-              }, 0);
+              // 不在这里设置 innerHTML！
+              // DOM 内容由 onAttributeChanged('text', ...) 统一管理
+              // ref 回调可能在 onAttributeChanged 之前执行，此时 this.text 可能是旧值
 
               // 设置事件监听器
               this.setupTextElement();

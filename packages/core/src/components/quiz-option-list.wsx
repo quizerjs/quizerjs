@@ -95,20 +95,16 @@ export class QuizOptionList extends LightComponent {
   }
 
   private handleAddOption = () => {
-    console.log('[quiz-option-list] handleAddOption called', {
-      readonly: this.readonly,
-      currentItems: this.items.length,
-    });
+    console.log('[quiz-option-list] handleAddOption called');
 
     const isReadonly = this.readonly;
     if (isReadonly) {
-      console.log('[quiz-option-list] handleAddOption: readonly, returning');
       return;
     }
 
     // 先合并 items 和 valuesMap（使用追踪的文本值），确保数据一致性
     const mergedItems = this.mergeItemsAndValues();
-    console.log('[quiz-option-list] handleAddOption: mergedItems', mergedItems.length);
+    console.log('[quiz-option-list] mergedItems:', JSON.stringify(mergedItems));
 
     const newOption: Option = {
       id: this.generateOptionId(),
@@ -118,15 +114,12 @@ export class QuizOptionList extends LightComponent {
 
     // 创建新数组引用，确保 @state 能检测到变化
     const newItems = [...mergedItems, newOption];
-    console.log('[quiz-option-list] handleAddOption: after push', newItems.length);
 
     // 更新响应式状态，触发渲染
     this.items = newItems;
-    console.log('[quiz-option-list] handleAddOption: items updated', this.items.length);
 
     // 派发 optionschange 事件，通知 Editor.js 有变化
     this.dispatchOptionsChange();
-    console.log('[quiz-option-list] handleAddOption: event dispatched');
   };
 
   private handleOptionSelect = (e: CustomEvent) => {
@@ -222,10 +215,15 @@ export class QuizOptionList extends LightComponent {
     this.removeEventListener('select', this.handleOptionSelect as EventListener);
     this.removeEventListener('textchange', this.handleOptionTextChange as EventListener);
     this.removeEventListener('delete', this.handleOptionDelete as EventListener);
+    // 监听 blur 事件 (通过 focusout 捕获冒泡)
+    this.removeEventListener('focusout', this.handleBlur as EventListener);
+
     // 监听子组件事件
     this.addEventListener('select', this.handleOptionSelect as EventListener);
     this.addEventListener('textchange', this.handleOptionTextChange as EventListener);
     this.addEventListener('delete', this.handleOptionDelete as EventListener);
+    // 监听 focusout 事件以处理失焦保存
+    this.addEventListener('focusout', this.handleBlur as EventListener);
   }
 
   onDisconnected() {
@@ -237,7 +235,25 @@ export class QuizOptionList extends LightComponent {
     this.removeEventListener('select', this.handleOptionSelect as EventListener);
     this.removeEventListener('textchange', this.handleOptionTextChange as EventListener);
     this.removeEventListener('delete', this.handleOptionDelete as EventListener);
+    this.removeEventListener('focusout', this.handleBlur as EventListener);
   }
+
+  private handleBlur = (e: FocusEvent) => {
+    // 当焦点离开选项列表或其子元素时触发
+    // 使用 setTimeout 确保在焦点切换完成后执行，并检查新焦点是否仍在组件内
+    setTimeout(() => {
+      const newActiveElement = document.activeElement;
+      // 如果新焦点不在当前组件内，说明是真的失焦（这就是我们想保存的时候）
+      // 或者如果只是在组件内部切换焦点（比如从一个选项到另一个），也可以选择保存，
+      // 但为了性能，我们主要关心"完成编辑"的时刻。
+      // 不过，为了最安全的数据同步，只要有 focusout 就同步一次也是可以的，
+      // 因为 valuesMap 已经是最新的了。
+
+      // 简单起见，且为了确保"打字后点击添加选项"也能保存前一个选项的文本：
+      // 这里的 blur 主要是为了触发 save/dispatchChange
+      this.dispatchOptionsChange();
+    }, 0);
+  };
 
   render() {
     const isReadonly = this.readonly;
@@ -283,6 +299,9 @@ export class QuizOptionList extends LightComponent {
                 selected={option.isCorrect ? 'true' : 'false'}
                 type={currentType}
                 readonly={isReadonly ? 'true' : 'false'}
+                ontextchange={(e: CustomEvent) => this.handleOptionTextChange(e)}
+                onselect={(e: CustomEvent) => this.handleOptionSelect(e)}
+                ondelete={(e: CustomEvent) => this.handleOptionDelete(e)}
               />
             ))
           )}

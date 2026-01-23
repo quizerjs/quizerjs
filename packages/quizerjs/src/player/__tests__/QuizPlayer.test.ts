@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { QuizPlayer } from '../QuizPlayer';
 import { QuizDSL } from '@quizerjs/dsl';
-import { quizActions, getQuizStoreById, resetQuizStore } from '@quizerjs/core';
+import { getQuizStoreById, resetQuizStore } from '@quizerjs/core';
 
 // Mock @slidejs/runner-swiper since we don't want real DOM/Swiper interactions
 vi.mock('@slidejs/runner-swiper', () => ({

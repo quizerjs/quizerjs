@@ -1,28 +1,25 @@
 <svelte:options accessors={true} />
 
-<script lang="ts">
+<script>
   import { onMount, onDestroy } from 'svelte';
   import { QuizEditor } from '@quizerjs/quizerjs';
-  import type { QuizEditorOptions } from '@quizerjs/quizerjs';
-  import type { QuizDSL } from '@quizerjs/dsl';
-  import type { QuizEditorRef } from './types';
 
-  export let initialDSL: QuizDSL | undefined = undefined;
-  export let readOnly: boolean = false;
-  export let onChange: ((dsl: QuizDSL) => void) | undefined = undefined;
-  export let onSave: ((dsl: QuizDSL) => void) | undefined = undefined;
+  export let initialDSL = undefined;
+  export let readOnly = false;
+  export let onChange = undefined;
+  export let onSave = undefined;
 
-  let editorContainer: HTMLDivElement;
-  let editorInstance: QuizEditor | null = null;
+  let editorContainer;
+  let editorInstance = null;
 
   // 导出 ref 给父组件使用（通过 bind:this 访问）
-  export let editorRef: QuizEditorRef | null = null;
+  export let editorRef = null;
 
   onMount(async () => {
     if (!editorContainer) return;
 
     try {
-      const options: QuizEditorOptions = {
+      const options = {
         container: editorContainer,
         initialDSL,
         readOnly,
@@ -55,7 +52,7 @@
           }
           return dsl;
         },
-        load: async (dsl: QuizDSL) => {
+        load: async (dsl) => {
           if (editorInstance) {
             await editorInstance.load(dsl);
           }

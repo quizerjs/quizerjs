@@ -76,6 +76,7 @@ export default class TextInputTool implements BlockTool {
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
           ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.text = e.detail.text;
             question.text = e.detail.text;
             this.block.dispatchChange();
           }}
@@ -87,6 +88,7 @@ export default class TextInputTool implements BlockTool {
           text={question.description || ''}
           readonly={this.readOnly ? 'true' : 'false'}
           ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.description = e.detail.text;
             question.description = e.detail.text;
             this.block.dispatchChange();
           }}
@@ -103,6 +105,7 @@ export default class TextInputTool implements BlockTool {
             value={correctAnswer}
             disabled={this.readOnly}
             oninput={(e: Event) => {
+              this.data.question.correctAnswer = (e.target as HTMLInputElement).value;
               question.correctAnswer = (e.target as HTMLInputElement).value;
               this.block.dispatchChange();
             }}
@@ -120,10 +123,20 @@ export default class TextInputTool implements BlockTool {
 
   save(): TextInputData {
     if (this.questionHeaderComponent?.getText) {
-      this.data.question.text = this.questionHeaderComponent.getText();
+      const text = this.questionHeaderComponent.getText();
+      if (text !== undefined && text !== null && (text.trim() !== '' || !this.data.question.text)) {
+        this.data.question.text = text;
+      }
     }
     if (this.questionDescriptionComponent?.getText) {
-      this.data.question.description = this.questionDescriptionComponent.getText();
+      const description = this.questionDescriptionComponent.getText();
+      if (
+        description !== undefined &&
+        description !== null &&
+        (description.trim() !== '' || !this.data.question.description)
+      ) {
+        this.data.question.description = description;
+      }
     }
     if (this.correctAnswerInput) {
       this.data.question.correctAnswer = this.correctAnswerInput.value;
@@ -154,7 +167,8 @@ export default class TextInputTool implements BlockTool {
     }
 
     // 验证正确答案：不能为空或只有空白字符
-    const correctAnswer = typeof question.correctAnswer === 'string' ? question.correctAnswer.trim() : '';
+    const correctAnswer =
+      typeof question.correctAnswer === 'string' ? question.correctAnswer.trim() : '';
     if (!correctAnswer || correctAnswer.length === 0) {
       return false;
     }

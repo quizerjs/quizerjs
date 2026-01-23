@@ -80,6 +80,7 @@ export default class MultipleChoiceTool implements BlockTool {
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
           ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.text = e.detail.text;
             question.text = e.detail.text;
             this.block.dispatchChange();
           }}
@@ -91,6 +92,7 @@ export default class MultipleChoiceTool implements BlockTool {
           text={question.description || ''}
           readonly={this.readOnly ? 'true' : 'false'}
           ontextchange={(e: CustomEvent<{ text: string }>) => {
+            this.data.question.description = e.detail.text;
             question.description = e.detail.text;
             this.block.dispatchChange();
           }}
@@ -102,9 +104,12 @@ export default class MultipleChoiceTool implements BlockTool {
           options={JSON.stringify(question.options || [])}
           type={QuestionTypes.MULTIPLE_CHOICE}
           readonly={this.readOnly ? 'true' : 'false'}
-          onoptionschange={() => {
+          onoptionschange={(e: CustomEvent<{ options: Option[] }>) => {
+            // Update internal data immediately
+            if (e.detail?.options) {
+              this.data.question.options = e.detail.options;
+            }
             // 符合 Editor.js 最佳实践：通知 Editor.js 有变化
-            // 不更新 this.data（总是从 option-list 读取值）
             // 不更新属性（避免触发 quiz-option-list 重新渲染）
             // quiz-option-list 内部已处理所有渲染，只通知 Editor.js 有变化
             this.block.dispatchChange();
@@ -121,13 +126,26 @@ export default class MultipleChoiceTool implements BlockTool {
 
   save(): MultipleChoiceData {
     if (this.questionHeaderComponent?.getText) {
-      this.data.question.text = this.questionHeaderComponent.getText();
+      const text = this.questionHeaderComponent.getText();
+      if (text !== undefined && text !== null && (text.trim() !== '' || !this.data.question.text)) {
+        this.data.question.text = text;
+      }
     }
     if (this.questionDescriptionComponent?.getText) {
-      this.data.question.description = this.questionDescriptionComponent.getText();
+      const description = this.questionDescriptionComponent.getText();
+      if (
+        description !== undefined &&
+        description !== null &&
+        (description.trim() !== '' || !this.data.question.description)
+      ) {
+        this.data.question.description = description;
+      }
     }
     if (this.optionListComponent?.getOptions) {
-      this.data.question.options = this.optionListComponent.getOptions();
+      const options = this.optionListComponent.getOptions();
+      if (options !== undefined && options !== null) {
+        this.data.question.options = options;
+      }
     }
     logger.info('Saving multiple choice question data', this.data);
     return this.data;
