@@ -8,7 +8,7 @@ import type {
   BlockAPI,
   API,
 } from '@editorjs/editorjs';
-import { QuestionTypes } from '@quizerjs/dsl';
+import { QuestionTypes, type Option } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
@@ -29,7 +29,7 @@ import type {
 export default class SingleChoiceTool implements BlockTool {
   private data: SingleChoiceData;
   private readOnly: boolean;
-  private wrapper: HTMLElement;
+  private wrapper!: HTMLElement;
   private block: BlockAPI;
   private api: API;
   private questionHeaderComponent: QuizQuestionHeaderComponent | null = null;
@@ -67,8 +67,8 @@ export default class SingleChoiceTool implements BlockTool {
     } as SingleChoiceData;
     this.readOnly = options?.readOnly || false;
     // 在测试环境中，block 和 api 可能为 undefined，需要提供默认值
-    this.block = options?.block || ({} as BlockAPI);
-    this.api = options?.api || ({} as API);
+    this.block = (options?.block || { dispatchChange: () => {} }) as BlockAPI;
+    this.api = (options?.api || {}) as API;
   }
 
   render(): HTMLElement {

@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
+import type { BlockAPI, API } from '@editorjs/editorjs';
 import TrueFalseTool from '../TrueFalseTool.wsx';
 import { QuestionTypes } from '@quizerjs/dsl';
 import { createTrueFalseData } from './fixtures';
@@ -23,7 +24,10 @@ describe('TrueFalseTool', () => {
 
   describe('构造函数', () => {
     it('应该使用默认数据创建实例', () => {
-      const tool = new TrueFalseTool({});
+      const tool = new TrueFalseTool({
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       expect(tool).toBeInstanceOf(TrueFalseTool);
       const toolData = tool['data'] as TrueFalseData;
       expect(toolData.question.type).toBe(QuestionTypes.TRUE_FALSE);
@@ -33,7 +37,11 @@ describe('TrueFalseTool', () => {
 
     it('应该使用提供的数据创建实例', () => {
       const data = createTrueFalseData();
-      const tool = new TrueFalseTool({ data });
+      const tool = new TrueFalseTool({
+        data,
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       const toolData = tool['data'] as TrueFalseData;
       expect(toolData.question.text).toBe('测试判断题');
       expect(toolData.question.correctAnswer).toBe(true);
@@ -42,13 +50,19 @@ describe('TrueFalseTool', () => {
 
   describe('render', () => {
     it('应该返回 HTMLElement', () => {
-      const tool = new TrueFalseTool({});
+      const tool = new TrueFalseTool({
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       const element = tool.render();
       expect(element).toBeInstanceOf(HTMLElement);
     });
 
     it('应该包含所有必需的组件', () => {
-      const tool = new TrueFalseTool({});
+      const tool = new TrueFalseTool({
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       const element = tool.render() as HTMLElement;
       expect(element.querySelector('quiz-question-header')).toBeTruthy();
       expect(element.querySelector('quiz-question-description')).toBeTruthy();
@@ -56,7 +70,10 @@ describe('TrueFalseTool', () => {
     });
 
     it('应该包含正确和错误选项', () => {
-      const tool = new TrueFalseTool({});
+      const tool = new TrueFalseTool({
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       const element = tool.render() as HTMLElement;
       const select = element.querySelector('select') as HTMLSelectElement;
       expect(select).toBeTruthy();
@@ -69,7 +86,11 @@ describe('TrueFalseTool', () => {
   describe('save', () => {
     it('应该返回更新的数据', () => {
       const data = createTrueFalseData();
-      const tool = new TrueFalseTool({ data });
+      const tool = new TrueFalseTool({
+        data,
+        block: { dispatchChange: vi.fn(), id: 'test-block' } as unknown as BlockAPI,
+        api: {} as unknown as API,
+      });
       tool.render();
 
       const headerComponent = { getText: vi.fn(() => '更新的标题') };

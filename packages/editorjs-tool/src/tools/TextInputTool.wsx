@@ -25,7 +25,7 @@ import type { QuizQuestionHeaderComponent, QuizQuestionDescriptionComponent } fr
 export default class TextInputTool implements BlockTool {
   private data: TextInputData;
   private readOnly: boolean;
-  private wrapper: HTMLElement;
+  private wrapper!: HTMLElement;
   private block: BlockAPI;
   private api: API;
   private questionHeaderComponent: QuizQuestionHeaderComponent | null = null;
@@ -62,8 +62,8 @@ export default class TextInputTool implements BlockTool {
     } as TextInputData;
     this.readOnly = options?.readOnly || false;
     // 在测试环境中，block 和 api 可能为 undefined，需要提供默认值
-    this.block = options?.block || ({} as BlockAPI);
-    this.api = options?.api || ({} as API);
+    this.block = (options?.block || { dispatchChange: () => {} }) as BlockAPI;
+    this.api = (options?.api || {}) as API;
   }
 
   render(): HTMLElement {

@@ -19,7 +19,7 @@ import type { QuizQuestionHeaderComponent, QuizQuestionDescriptionComponent } fr
 export default class TrueFalseTool implements BlockTool {
   private data: TrueFalseData;
   private readOnly: boolean;
-  private wrapper: HTMLElement;
+  private wrapper!: HTMLElement;
   private block: BlockAPI;
   private api: API;
   private questionHeaderComponent: QuizQuestionHeaderComponent | null = null;
@@ -56,8 +56,9 @@ export default class TrueFalseTool implements BlockTool {
       },
     } as TrueFalseData;
     this.readOnly = options?.readOnly || false;
-    this.block = options!.block;
-    this.api = options!.api;
+    // 在测试环境中，block 和 api 可能为 undefined，需要提供默认值
+    this.block = (options?.block || { dispatchChange: () => {} }) as BlockAPI;
+    this.api = (options?.api || {}) as API;
   }
 
   render(): HTMLElement {
@@ -70,8 +71,9 @@ export default class TrueFalseTool implements BlockTool {
         <quiz-question-header
           text={question.text || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent<{ text: string }>) => {
-            question.text = e.detail.text;
+          ontextchange={(e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            question.text = detail.text;
             this.block.dispatchChange();
           }}
           ref={(component: QuizQuestionHeaderComponent) => {
@@ -81,8 +83,9 @@ export default class TrueFalseTool implements BlockTool {
         <quiz-question-description
           text={question.description || ''}
           readonly={this.readOnly ? 'true' : 'false'}
-          ontextchange={(e: CustomEvent<{ text: string }>) => {
-            question.description = e.detail.text;
+          ontextchange={(e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            question.description = detail.text;
             this.block.dispatchChange();
           }}
           ref={(component: QuizQuestionDescriptionComponent) => {

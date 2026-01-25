@@ -1,0 +1,120 @@
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [package.json]
+
+    package.json:13:6:
+      13 │       "types": "./dist/index.d.ts"
+         ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:11:6:
+      11 │       "import": "./dist/index.mjs",
+         ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:12:6:
+      12 │       "require": "./dist/index.cjs",
+         ╵       ~~~~~~~~~
+
+
+ RUN  v3.2.4 /Volumes/ORICO/ws/prj/quizerjs/quizerjs/packages/editorjs-tool
+
+ ❯ src/tools/__tests__/TrueFalseTool.test.ts (13 tests | 4 failed) 8ms
+   ✓ TrueFalseTool > 静态属性 > 应该有正确的 toolbox 配置 1ms
+   ✓ TrueFalseTool > 静态属性 > 应该支持只读模式 0ms
+   ✓ TrueFalseTool > 构造函数 > 应该使用默认数据创建实例 0ms
+   ✓ TrueFalseTool > 构造函数 > 应该使用提供的数据创建实例 0ms
+   × TrueFalseTool > render > 应该返回 HTMLElement 5ms
+     → Right-hand side of 'instanceof' is not an object
+   × TrueFalseTool > render > 应该包含所有必需的组件 0ms
+     → Right-hand side of 'instanceof' is not an object
+   × TrueFalseTool > render > 应该包含正确和错误选项 0ms
+     → Right-hand side of 'instanceof' is not an object
+   × TrueFalseTool > save > 应该返回更新的数据 0ms
+     → Right-hand side of 'instanceof' is not an object
+   ✓ TrueFalseTool > validate > 应该验证有效数据 0ms
+   ✓ TrueFalseTool > validate > 应该拒绝空问题文本 0ms
+   ✓ TrueFalseTool > validate > 应该拒绝 undefined 的正确答案 0ms
+   ✓ TrueFalseTool > validate > 应该接受 true 作为正确答案 0ms
+   ✓ TrueFalseTool > validate > 应该接受 false 作为正确答案 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/tools/__tests__/TrueFalseTool.test.ts > TrueFalseTool > render > 应该返回 HTMLElement
+TypeError: Right-hand side of 'instanceof' is not an object
+ ❯ applySingleProp ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:585:26
+ ❯ ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:611:5
+ ❯ applyPropsToElement ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:610:25
+ ❯ createElementWithPropsAndChildren ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:633:3
+ ❯ h ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:1222:19
+ ❯ TrueFalseTool.render src/tools/TrueFalseTool.wsx:78:334
+     83|           text={question.description || ''}
+     84|           readonly={this.readOnly ? 'true' : 'false'}
+     85|           ontextchange={(e: CustomEvent<{ text: string }>) => {
+       |                                        ^
+     86|             question.description = e.detail.text;
+     87|             this.block.dispatchChange();
+ ❯ src/tools/__tests__/TrueFalseTool.test.ts:46:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/tools/__tests__/TrueFalseTool.test.ts > TrueFalseTool > render > 应该包含所有必需的组件
+TypeError: Right-hand side of 'instanceof' is not an object
+ ❯ applySingleProp ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:585:26
+ ❯ ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:611:5
+ ❯ applyPropsToElement ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:610:25
+ ❯ createElementWithPropsAndChildren ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:633:3
+ ❯ h ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:1222:19
+ ❯ TrueFalseTool.render src/tools/TrueFalseTool.wsx:78:334
+     83|           text={question.description || ''}
+     84|           readonly={this.readOnly ? 'true' : 'false'}
+     85|           ontextchange={(e: CustomEvent<{ text: string }>) => {
+       |                                        ^
+     86|             question.description = e.detail.text;
+     87|             this.block.dispatchChange();
+ ❯ src/tools/__tests__/TrueFalseTool.test.ts:52:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/tools/__tests__/TrueFalseTool.test.ts > TrueFalseTool > render > 应该包含正确和错误选项
+TypeError: Right-hand side of 'instanceof' is not an object
+ ❯ applySingleProp ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:585:26
+ ❯ ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:611:5
+ ❯ applyPropsToElement ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:610:25
+ ❯ createElementWithPropsAndChildren ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:633:3
+ ❯ h ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:1222:19
+ ❯ TrueFalseTool.render src/tools/TrueFalseTool.wsx:78:334
+     83|           text={question.description || ''}
+     84|           readonly={this.readOnly ? 'true' : 'false'}
+     85|           ontextchange={(e: CustomEvent<{ text: string }>) => {
+       |                                        ^
+     86|             question.description = e.detail.text;
+     87|             this.block.dispatchChange();
+ ❯ src/tools/__tests__/TrueFalseTool.test.ts:60:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/tools/__tests__/TrueFalseTool.test.ts > TrueFalseTool > save > 应该返回更新的数据
+TypeError: Right-hand side of 'instanceof' is not an object
+ ❯ applySingleProp ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:585:26
+ ❯ ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:611:5
+ ❯ applyPropsToElement ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:610:25
+ ❯ createElementWithPropsAndChildren ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:633:3
+ ❯ h ../../node_modules/.pnpm/@wsxjs+wsx-core@0.1.0_typescript@5.9.3/node_modules/@wsxjs/wsx-core/dist/chunk-PNIWQQN6.mjs:1222:19
+ ❯ TrueFalseTool.render src/tools/TrueFalseTool.wsx:78:334
+     83|           text={question.description || ''}
+     84|           readonly={this.readOnly ? 'true' : 'false'}
+     85|           ontextchange={(e: CustomEvent<{ text: string }>) => {
+       |                                        ^
+     86|             question.description = e.detail.text;
+     87|             this.block.dispatchChange();
+ ❯ src/tools/__tests__/TrueFalseTool.test.ts:73:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 9 passed (13)
+   Start at  16:09:04
+   Duration  480ms (transform 179ms, setup 0ms, collect 199ms, tests 8ms, environment 61ms, prepare 46ms)
+
