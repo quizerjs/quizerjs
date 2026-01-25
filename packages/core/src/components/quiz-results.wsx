@@ -6,6 +6,7 @@
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import type { ResultDSL } from '@quizerjs/dsl';
+import { marked } from 'marked';
 import styles from './quiz-results.css?inline';
 
 @autoRegister({ tagName: 'wsx-quiz-results' })
@@ -128,7 +129,10 @@ export class QuizResults extends LightComponent {
                       {result.score} / {result.maxScore} 分
                     </span>
                   </div>
-                  <div className="quiz-results-question-text">{question.text}</div>
+                  <div
+                    className="quiz-results-question-text"
+                    innerHTML={marked.parse(question.text || '') as string}
+                  />
                   <div className="quiz-results-question-answers">
                     <div className="quiz-results-answer-item">
                       <span className="quiz-results-answer-label">您的答案：</span>
@@ -152,7 +156,10 @@ export class QuizResults extends LightComponent {
                   {question.explanation && (
                     <div className="quiz-results-question-explanation">
                       <strong>解析：</strong>
-                      {question.explanation}
+                      <div
+                        className="quiz-results-question-explanation-content"
+                        innerHTML={marked.parse(question.explanation || '') as string}
+                      />
                     </div>
                   )}
                 </div>
