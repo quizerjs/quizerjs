@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/svelte",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "quizerjs Svelte 集成包",
   "type": "module",
   "main": "./dist/index.cjs",

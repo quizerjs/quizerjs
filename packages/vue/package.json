@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/vue",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "quizerjs Vue 3 集成包",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
