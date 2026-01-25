@@ -11,6 +11,7 @@
 ### 1. Vue 响应式系统的自动解包机制
 
 #### 在 `<script setup>` 中：
+
 ```typescript
 // ✅ 正确：在 script 中访问 ref 需要使用 .value
 const count = ref(0);
@@ -22,17 +23,18 @@ console.log(double.value); // 0
 ```
 
 #### 在 `<template>` 中：
+
 ```vue
 <template>
   <!-- ✅ 正确：Vue 自动解包 ref -->
   <div>{{ count }}</div>
-  
+
   <!-- ❌ 错误：不需要 .value -->
   <div>{{ count.value }}</div>
-  
+
   <!-- ✅ 正确：Vue 自动解包 computed -->
   <div>{{ double }}</div>
-  
+
   <!-- ❌ 错误：不需要 .value -->
   <div>{{ double.value }}</div>
 </template>
@@ -51,6 +53,7 @@ Vue 3 的模板编译器会在编译时自动处理：
 ```
 
 **但是**，如果你手动写 `.value`，Vue 会认为：
+
 - `isDark` 是一个普通对象
 - `.value` 是访问它的属性
 - **不会建立响应式追踪关系**
@@ -58,6 +61,7 @@ Vue 3 的模板编译器会在编译时自动处理：
 ### 3. 响应式追踪的工作原理
 
 #### 正确的追踪（使用 `isDark`）：
+
 ```vue
 <template>
   <ThemeToggle :is-dark="isDark" />
@@ -69,6 +73,7 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ```
 
 **追踪链**：
+
 ```
 1. 模板访问 isDark
    ↓
@@ -86,10 +91,9 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ```
 
 #### 错误的追踪（使用 `isDark.value`）：
+
 ```vue
-<template>
-  <ThemeToggle :is-dark="isDark.value" />  ❌
-</template>
+<template><ThemeToggle :is-dark="isDark.value" /> ❌</template>
 
 <script setup>
 const isDark = computed(() => isDarkRef?.value ?? false);
@@ -97,6 +101,7 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ```
 
 **追踪链（断裂）**：
+
 ```
 1. 模板访问 isDark.value
    ↓
@@ -118,11 +123,10 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ### 4. 实际代码对比
 
 #### 错误代码（导致无限刷新）：
+
 ```vue
 <!-- AppHeader.vue -->
-<template>
-  <ThemeToggle :is-dark="isDark.value" />  ❌ 错误！
-</template>
+<template><ThemeToggle :is-dark="isDark.value" /> ❌ 错误！</template>
 
 <script setup>
 const isDarkRef = inject<Ref<boolean> | undefined>('isDark');
@@ -131,6 +135,7 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ```
 
 **问题**：
+
 1. `isDark` 是 `computed`
 2. 模板中使用 `isDark.value`
 3. Vue 无法正确追踪 `isDark` 的变化
@@ -139,11 +144,10 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 6. 状态不一致触发新的更新，形成循环
 
 #### 正确代码（已修复）：
+
 ```vue
 <!-- AppHeader.vue -->
-<template>
-  <ThemeToggle :is-dark="isDark" />  ✅ 正确！
-</template>
+<template><ThemeToggle :is-dark="isDark" /> ✅ 正确！</template>
 
 <script setup>
 const isDarkRef = inject<Ref<boolean> | undefined>('isDark');
@@ -152,6 +156,7 @@ const isDark = computed(() => isDarkRef?.value ?? false);
 ```
 
 **正确流程**：
+
 1. `isDark` 是 `computed`
 2. 模板中直接使用 `isDark`（Vue 自动解包）
 3. Vue 正确追踪 `isDark` 的依赖
@@ -183,6 +188,7 @@ const { isDark, toggleTheme } = useTheme();
 ```
 
 但如果你用了 `.value`，Vue 也能工作，因为：
+
 - `isDark` 是 `ref`，不是 `computed`
 - Vue 仍然可以追踪 `isDark.value` 的变化
 - 但这不是最佳实践
@@ -190,6 +196,7 @@ const { isDark, toggleTheme } = useTheme();
 ### 6. 类型系统 vs 运行时行为
 
 #### TypeScript 类型：
+
 ```typescript
 const isDark = computed(() => isDarkRef?.value ?? false);
 // TypeScript 类型：ComputedRef<boolean>
@@ -199,6 +206,7 @@ console.log(isDark.value); // ✅ TypeScript 要求使用 .value
 ```
 
 #### Vue 模板行为：
+
 ```vue
 <!-- 模板中 -->
 <ThemeToggle :is-dark="isDark" />
@@ -206,6 +214,7 @@ console.log(isDark.value); // ✅ TypeScript 要求使用 .value
 ```
 
 **关键点**：
+
 - **TypeScript** 要求你在 `<script>` 中使用 `.value`
 - **Vue 模板** 会自动解包，不需要 `.value`
 - 如果你在模板中手动写 `.value`，会破坏响应式追踪
@@ -244,6 +253,7 @@ toggleTheme(); // isDarkRef.value = true
 ### 8. 正确的模式总结
 
 #### 模式 1：直接使用 ref（最简单）
+
 ```typescript
 // App.vue
 const { isDark } = useTheme(); // ref<boolean>
@@ -255,12 +265,11 @@ const isDark = inject<Ref<boolean>>('isDark', ref(false));
 ```
 
 ```vue
-<template>
-  <ThemeToggle :is-dark="isDark" />  ✅
-</template>
+<template><ThemeToggle :is-dark="isDark" /> ✅</template>
 ```
 
 #### 模式 2：使用 computed（当前方案）
+
 ```typescript
 // AppHeader.vue
 const isDarkRef = inject<Ref<boolean>>('isDark', ref(false));
@@ -270,12 +279,13 @@ const isDark = computed(() => isDarkRef.value);
 
 ```vue
 <template>
-  <ThemeToggle :is-dark="isDark" />  ✅
+  <ThemeToggle :is-dark="isDark" /> ✅
   <!-- 不要写 isDark.value -->
 </template>
 ```
 
 #### 模式 3：直接传递值（不推荐，失去响应式）
+
 ```typescript
 // ❌ 错误：失去响应式
 const isDark = inject<boolean>('isDark', false);
@@ -284,10 +294,12 @@ const isDark = inject<boolean>('isDark', false);
 ### 9. 记忆规则
 
 **简单规则**：
+
 - 在 `<script>` 中：`ref` 和 `computed` 都需要 `.value`
 - 在 `<template>` 中：`ref` 和 `computed` 都**不需要** `.value`
 
 **详细规则**：
+
 - `ref` 在模板中自动解包
 - `computed` 在模板中自动解包
 - `reactive` 对象在模板中不需要解包
@@ -298,30 +310,33 @@ const isDark = inject<boolean>('isDark', false);
 如果遇到无限刷新，检查：
 
 1. **模板中是否对 computed 使用了 .value？**
+
    ```vue
    <!-- ❌ 错误 -->
    <Component :prop="computedValue.value" />
-   
+
    <!-- ✅ 正确 -->
    <Component :prop="computedValue" />
    ```
 
 2. **inject 是否有默认值？**
+
    ```typescript
    // ❌ 可能返回 undefined
    const value = inject<Ref<boolean>>('key');
-   
+
    // ✅ 有默认值
    const value = inject<Ref<boolean>>('key', ref(false));
    ```
 
 3. **watch 是否检查了值变化？**
+
    ```typescript
    // ❌ 可能重复触发
-   watch(value, (newValue) => {
+   watch(value, newValue => {
      // ...
    });
-   
+
    // ✅ 避免重复处理
    watch(value, (newValue, oldValue) => {
      if (newValue === oldValue) return;
@@ -340,6 +355,6 @@ const isDark = inject<boolean>('isDark', false);
 5. ❌ 状态不一致会触发循环更新
 
 **正确的做法：**
+
 - 在模板中直接使用 `isDark`
 - 让 Vue 自动处理解包和追踪
-

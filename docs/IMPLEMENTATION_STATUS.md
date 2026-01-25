@@ -27,6 +27,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 已完成并投入使用
 
 **核心功能**:
+
 - ✅ DSL 类型定义 (`QuizDSL`, `QuestionDSL`, `ResultDSL`)
 - ✅ JSON Schema 验证规范
 - ✅ 验证器实现 (`validateQuizDSL`)
@@ -35,6 +36,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - ✅ 错误消息定义和错误代码
 
 **关键文件**:
+
 - `packages/dsl/src/types.ts` - 类型定义
 - `packages/dsl/src/validator.ts` - 验证器
 - `packages/dsl/src/parser.ts` - 解析器
@@ -51,6 +53,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **核心功能**:
 
 #### WSX 组件 (100% 完成) ✅
+
 - ✅ `quiz-question.wsx` - 问题容器组件
 - ✅ `quiz-question-title.wsx` - 问题标题组件
 - ✅ `quiz-question-description.wsx` - 问题描述组件
@@ -65,6 +68,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - ✅ `quiz-results.wsx` - 结果展示组件 (新增)
 
 #### 状态管理 (90% 完成) 🔄
+
 - ✅ `QuizStore.ts` - 核心状态管理类
 - ✅ `quizActions.ts` - 状态操作函数
 - ✅ 答案收集和进度跟踪
@@ -72,11 +76,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 事件订阅机制优化中
 
 **关键文件**:
+
 - `packages/core/src/components/` - WSX 组件
 - `packages/core/src/store/QuizStore.ts` - 状态管理
 - `packages/core/src/store/quizActions.ts` - 状态操作
 
 **最近变更**:
+
 - 新增 `quiz-submit` 和 `quiz-results` 组件
 - 实现 `QuizStore` 状态管理系统
 - 拆分问题类型为独立组件
@@ -92,6 +98,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **核心功能**:
 
 #### QuizEditor (95% 完成) ✅
+
 - ✅ Editor.js 集成
 - ✅ Quiz DSL 转换
 - ✅ 自动保存机制
@@ -99,6 +106,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 UI 优化和错误处理增强
 
 #### QuizPlayer (90% 完成) 🔄
+
 - ✅ 生命周期方法 (`init`, `start`, `reset`, `destroy`)
 - ✅ 答案管理 (`setAnswer`, `getAnswer`, `clearAnswer`)
 - ✅ 状态查询 (`getProgress`, `isComplete`, `isSubmitted`)
@@ -108,11 +116,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - ✅ `isComplete()` 逻辑修复：`total > 0 && answered === total`
 
 **关键文件**:
+
 - `packages/quizerjs/src/editor/QuizEditor.ts` - 编辑器实现
 - `packages/quizerjs/src/player/QuizPlayer.ts` - 播放器实现
 - `packages/quizerjs/src/player/types.ts` - 播放器类型定义
 
 **最近变更**:
+
 - 实现完整的播放器生命周期
 - 集成 Reveal.js 用于 Slide 渲染
 - 实现答案收集和提交流程
@@ -127,6 +137,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 核心组件完成，优化和测试中
 
 **核心功能**:
+
 - ✅ `QuizEditor` React 组件
 - ✅ `QuizPlayer` React 组件 (新增完整实现)
 - ✅ 生命周期管理 (useEffect hooks)
@@ -135,11 +146,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 错误边界和异常处理
 
 **关键文件**:
+
 - `packages/react/src/QuizEditor.tsx` - 编辑器组件
 - `packages/react/src/QuizPlayer.tsx` - 播放器组件 (新增)
 - `packages/react/src/QuizPlayer.css` - 播放器样式 (新增)
 
 **最近变更**:
+
 - 新增完整的 `QuizPlayer` React 组件实现
 - 实现事件传递机制 (onAnswerChange, onSubmit 等)
 - 添加响应式样式和主题支持
@@ -153,6 +166,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 核心组件完成，文档化中
 
 **核心功能**:
+
 - ✅ `QuizEditor` Vue 组件
 - ✅ `QuizPlayer` Vue 组件 (新增完整实现)
 - ✅ Composition API 集成
@@ -161,11 +175,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 TypeScript 类型定义优化
 
 **关键文件**:
+
 - `packages/vue/src/QuizEditor.vue` - 编辑器组件
 - `packages/vue/src/QuizPlayer.vue` - 播放器组件 (新增)
 - `packages/vue/src/types.ts` - 类型定义
 
 **最近变更**:
+
 - 新增完整的 `QuizPlayer` Vue 组件实现
 - 使用 `slideOptions` 替代旧的 `swiperOptions`
 - 实现响应式状态和事件系统
@@ -179,6 +195,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 基础框架搭建，核心功能待实现
 
 **核心功能**:
+
 - ✅ 基础包结构
 - ✅ 构建配置
 - ⏳ `QuizEditor` Svelte 组件
@@ -194,6 +211,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 基础结构完成，工具实现待完善
 
 **核心功能**:
+
 - ✅ Editor.js 工具接口
 - ⏳ 单选题工具 (`SingleChoiceTool`)
 - ⏳ 多选题工具 (`MultipleChoiceTool`)
@@ -209,6 +227,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 主题定义完成，应用机制优化中
 
 **核心功能**:
+
 - ✅ 主题定义和类型
 - ✅ 编辑器主题 (`editor.ts`)
 - ✅ 播放器主题 (`player.ts`)
@@ -217,11 +236,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 自定义主题支持
 
 **关键文件**:
+
 - `packages/theme/src/index.ts` - 主题入口
 - `packages/theme/src/editor.ts` - 编辑器主题
 - `packages/theme/src/player.ts` - 播放器主题
 
 **最近变更**:
+
 - 重构主题系统，拆分为 `editor` 和 `player` 两部分
 - 移除旧的 SCSS 文件，改用 TypeScript 定义
 - 简化构建配置
@@ -235,6 +256,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 完整演示应用，UI 设计完成
 
 **核心功能**:
+
 - ✅ 编辑器面板 (`EditorPanel`)
 - ✅ 播放器面板 (`PlayerPanel`)
 - ✅ 数据面板 (`DataPanel`)
@@ -243,6 +265,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - ✅ 响应式布局和设计
 
 **最近变更**:
+
 - 实现完整的面板化布局
 - 添加实时数据展示
 - 优化 UI/UX 设计
@@ -254,6 +277,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 功能完整，UI 优化中
 
 **核心功能**:
+
 - ✅ 编辑器集成
 - ✅ 播放器集成
 - ✅ 数据面板 (`DataPanel.vue`)
@@ -262,6 +286,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 - 🔄 主题系统集成
 
 **最近变更**:
+
 - 新增 `DataPanel` 和 `PlayerPanel` 组件
 - 重构分屏布局系统
 - 修复 `isDark` 状态管理问题
@@ -274,11 +299,13 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 功能完整，设计复刻中
 
 **核心功能**:
+
 - ✅ 基础编辑器和播放器集成
 - ✅ 主题切换功能
 - 🔄 复刻 React demo 的布局和设计
 
 **最近变更**:
+
 - 开始复刻 React demo 的 UI 设计
 
 ---
@@ -290,6 +317,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 功能完整，内容持续更新
 
 **核心功能**:
+
 - ✅ 首页和功能展示
 - ✅ 交互式演示
 - ✅ API 文档
@@ -315,7 +343,7 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 
 **原因**: 简化架构，将 Slide 功能直接集成到 `QuizPlayer` 中，使用 Reveal.js 作为唯一的 Slide 渲染引擎。
 
-### demos/slidejs-* (已移除)
+### demos/slidejs-\* (已移除)
 
 - ❌ `demos/slidejs-revealjs` - 已废弃
 - ❌ `demos/slidejs-splide` - 已废弃
@@ -332,16 +360,19 @@ QuizerJS 是一个使用 Editor.js 和 wsx 构建交互式测验的开源库。�
 **状态**: 已创建并投入使用
 
 **功能**:
+
 - ✅ 交互式开发菜单
 - ✅ 多项目管理（网站、演示、包）
 - ✅ 构建和预览功能
 - ✅ 部署脚本
 
 **关键文件**:
+
 - `packages/@systembug/pangu/src/index.ts` - CLI 入口
 - `dev.config.json` - 开发配置
 
 **最近变更**:
+
 - 从 `scripts/dev.ts` 迁移为独立 CLI 包
 - 增强交互式菜单体验
 

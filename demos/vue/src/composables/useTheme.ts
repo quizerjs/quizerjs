@@ -1,5 +1,5 @@
 import { ref, watch, onMounted } from 'vue';
-import { setPlayerTheme , setEditorTheme } from '@quizerjs/theme';
+import { setPlayerTheme, setEditorTheme } from '@quizerjs/theme';
 
 const THEME_STORAGE_KEY = 'quizerjs-demo-theme';
 

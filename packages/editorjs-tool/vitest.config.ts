@@ -11,7 +11,7 @@ export default defineConfig({
   ],
   test: {
     globals: true,
-    environment: 'happy-dom',
+    environment: 'jsdom',
     include: ['src/**/__tests__/**/*.test.ts'],
     testTimeout: 10000,
     hookTimeout: 10000,

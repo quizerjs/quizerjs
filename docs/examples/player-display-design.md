@@ -160,19 +160,19 @@
   width: 100%;
   height: 100%;
   min-height: 600px;
-  
+
   /* 背景和边框 */
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
+
   /* 内边距 */
   padding: 2rem;
-  
+
   /* 定位和溢出 */
   position: relative;
   overflow: hidden;
-  
+
   /* 过渡效果 */
   transition: all 0.3s ease;
 }
@@ -243,7 +243,7 @@
     min-height: 300px;
     border-radius: 0;
   }
-  
+
   .app-main {
     padding: 1rem;
   }
@@ -304,7 +304,7 @@ class PlayerDemo {
       const options: QuizPlayerOptions = {
         container: this.playerContainerRef,
         quizDSL: this.getCurrentDSL(),
-        onSubmit: (result) => {
+        onSubmit: result => {
           this.resultDSL = result;
           this.isPlaying = false;
         },
@@ -316,7 +316,7 @@ class PlayerDemo {
 
       this.playerInstance = new QuizPlayer(options);
       await this.playerInstance.init();
-      
+
       // 移除加载状态
       this.playerContainerRef.classList.remove('loading');
       this.isPlaying = true;
@@ -387,7 +387,7 @@ const initPlayer = async () => {
     const options: QuizPlayerOptions = {
       container: playerContainer.value,
       quizDSL: props.quizDSL,
-      onSubmit: (result) => {
+      onSubmit: result => {
         emit('submit', result);
         isPlaying.value = false;
       },
@@ -399,7 +399,7 @@ const initPlayer = async () => {
 
     player = new QuizPlayer(options);
     await player.init();
-    
+
     loading.value = false;
     isPlaying.value = true;
   } catch (err) {
@@ -482,7 +482,7 @@ try {
   } else {
     this.error = '未知错误，请查看控制台';
   }
-  
+
   console.error('Player 初始化错误:', error);
 }
 ```
@@ -500,15 +500,9 @@ try {
     <span class="toolbar-title">测验播放器</span>
   </div>
   <div class="toolbar-right">
-    <button v-if="isPlaying" @click="submit" class="btn-primary">
-      提交答案
-    </button>
-    <button v-if="isPlaying" @click="reset" class="btn-secondary">
-      重置
-    </button>
-    <button v-if="resultDSL" @click="restart" class="btn-primary">
-      重新开始
-    </button>
+    <button v-if="isPlaying" @click="submit" class="btn-primary">提交答案</button>
+    <button v-if="isPlaying" @click="reset" class="btn-secondary">重置</button>
+    <button v-if="resultDSL" @click="restart" class="btn-primary">重新开始</button>
   </div>
 </div>
 ```
@@ -569,8 +563,8 @@ try {
     <div class="stat-item">
       <span class="stat-label">得分:</span>
       <span class="stat-value">
-        {{ resultDSL.scoring.totalScore }} / {{ resultDSL.scoring.maxScore }}
-        ({{ resultDSL.scoring.percentage.toFixed(1) }}%)
+        {{ resultDSL.scoring.totalScore }} / {{ resultDSL.scoring.maxScore }} ({{
+        resultDSL.scoring.percentage.toFixed(1) }}%)
       </span>
     </div>
     <div class="stat-item">
@@ -581,9 +575,7 @@ try {
     </div>
     <div class="stat-item">
       <span class="stat-label">答题时长:</span>
-      <span class="stat-value">
-        {{ formatDuration(resultDSL.metadata.duration) }}
-      </span>
+      <span class="stat-value"> {{ formatDuration(resultDSL.metadata.duration) }} </span>
     </div>
   </div>
 </div>
@@ -789,27 +781,9 @@ export class PlayerDemo extends WebComponent {
     <header class="demo-header">
       <h1>QuizPlayer Demo</h1>
       <div class="header-controls">
-        <button
-          v-if="isPlaying"
-          @click="handleSubmit"
-          class="btn-primary"
-        >
-          提交答案
-        </button>
-        <button
-          v-if="isPlaying"
-          @click="handleReset"
-          class="btn-secondary"
-        >
-          重置
-        </button>
-        <button
-          v-if="resultDSL"
-          @click="handleRestart"
-          class="btn-primary"
-        >
-          重新开始
-        </button>
+        <button v-if="isPlaying" @click="handleSubmit" class="btn-primary">提交答案</button>
+        <button v-if="isPlaying" @click="handleReset" class="btn-secondary">重置</button>
+        <button v-if="resultDSL" @click="handleRestart" class="btn-primary">重新开始</button>
       </div>
     </header>
 
@@ -834,16 +808,14 @@ export class PlayerDemo extends WebComponent {
           <div class="stat-item">
             <span class="stat-label">得分:</span>
             <span class="stat-value">
-              {{ resultDSL.scoring.totalScore }} / {{ resultDSL.scoring.maxScore }}
-              ({{ resultDSL.scoring.percentage.toFixed(1) }}%)
+              {{ resultDSL.scoring.totalScore }} / {{ resultDSL.scoring.maxScore }} ({{
+                resultDSL.scoring.percentage.toFixed(1)
+              }}%)
             </span>
           </div>
           <div class="stat-item">
             <span class="stat-label">状态:</span>
-            <span
-              class="stat-value"
-              :class="resultDSL.scoring.passed ? 'passed' : 'failed'"
-            >
+            <span class="stat-value" :class="resultDSL.scoring.passed ? 'passed' : 'failed'">
               {{ resultDSL.scoring.passed ? '✅ 通过' : '❌ 未通过' }}
             </span>
           </div>

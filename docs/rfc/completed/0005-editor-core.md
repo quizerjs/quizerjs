@@ -1830,11 +1830,13 @@ await editor.load(dsl);
 #### 1. 细粒度 wsx 组件
 
 ##### ❌ `quiz-points` 组件
+
 - **状态**: 未实现
 - **影响**: 用户无法在编辑器中设置问题分值
 - **需要**: 在所有 Editor.js 工具中集成
 
 ##### ❌ `quiz-explanation` 组件
+
 - **状态**: 未实现
 - **影响**: 用户无法在编辑器中添加问题解析
 - **需要**: 在所有 Editor.js 工具中集成
@@ -1842,6 +1844,7 @@ await editor.load(dsl);
 #### 2. 错误处理类
 
 ##### ❌ `QuizEditorError` 类
+
 - **状态**: 未实现
 - **影响**: 缺少结构化的错误处理
 - **当前**: 使用标准 `Error` 类
@@ -1850,6 +1853,7 @@ await editor.load(dsl);
 ### 🟡 中优先级（设计一致性）
 
 #### 3. `quiz-correct-answer` 组件
+
 - **状态**: 使用原生元素替代（功能可用）
 - **TextInputTool**: 使用 `<input>` 元素
 - **TrueFalseTool**: 使用 `<select>` 元素
@@ -1858,6 +1862,7 @@ await editor.load(dsl);
 ### 🟢 低优先级（未来优化）
 
 #### 4. 性能优化（v1.1+）
+
 - 虚拟滚动（大量问题场景）
 - 组件懒加载
 - 性能监控
@@ -1866,16 +1871,16 @@ await editor.load(dsl);
 
 **总体完成度**: 约 **85%**
 
-| 功能模块 | 完成度 | 状态 |
-|---------|--------|------|
-| QuizEditor 核心类 | 100% | ✅ 完成 |
-| Editor.js 集成 | 100% | ✅ 完成 |
-| DSL 转换器 | 100% | ✅ 完成 |
-| Editor.js 工具 | 80% | ⚠️ 缺少 points/explanation |
-| 细粒度组件 | 60% | ⚠️ 缺少 2 个组件 |
-| 错误处理 | 30% | ❌ 未实现 |
-| 性能优化 | 0% | 📋 计划中 (v1.1+) |
-| 框架集成 | 100% | ✅ 完成 |
+| 功能模块          | 完成度 | 状态                       |
+| ----------------- | ------ | -------------------------- |
+| QuizEditor 核心类 | 100%   | ✅ 完成                    |
+| Editor.js 集成    | 100%   | ✅ 完成                    |
+| DSL 转换器        | 100%   | ✅ 完成                    |
+| Editor.js 工具    | 80%    | ⚠️ 缺少 points/explanation |
+| 细粒度组件        | 60%    | ⚠️ 缺少 2 个组件           |
+| 错误处理          | 30%    | ❌ 未实现                  |
+| 性能优化          | 0%     | 📋 计划中 (v1.1+)          |
+| 框架集成          | 100%   | ✅ 完成                    |
 
 ## 依赖关系
 
@@ -2311,13 +2316,16 @@ export class QuizPoints extends LightComponent {
 ```
 
 **属性**:
+
 - `points: string` - 分值（字符串形式，默认 "10"）
 - `readonly: "true" | "false"` - 是否只读
 
 **事件**:
+
 - `pointschange` - 分值变化时触发（CustomEvent<{ points: number }>）
 
 **方法**:
+
 - `getPoints(): number` - 获取当前分值
 
 ##### 1.2 实现 `quiz-explanation` 组件
@@ -2412,16 +2420,20 @@ export class QuizExplanation extends LightComponent {
 ```
 
 **属性**:
+
 - `explanation: string` - 解析说明文本（HTML 格式）
 - `readonly: "true" | "false"` - 是否只读
 
 **事件**:
+
 - `explanationchange` - 解析说明变化时触发（CustomEvent<{ explanation: string }>）
 
 **方法**:
+
 - `getExplanation(): string` - 获取当前解析说明（**HTML 格式**，供 Editor.js 使用）
 
 **实现要点**:
+
 - 使用 `contentEditable` div
 - 启用 Editor.js inline toolbar（通过 Block Tool 配置 `inlineToolbar: true`）
 - 支持加粗、斜体、链接等格式化
@@ -2437,23 +2449,26 @@ export class QuizExplanation extends LightComponent {
 **需要修改**:
 
 1. 导入组件类型：
+
 ```typescript
 import type {
   QuizQuestionHeaderComponent,
   QuizQuestionDescriptionComponent,
   QuizOptionListComponent,
-  QuizPointsComponent,        // 新增
-  QuizExplanationComponent,   // 新增
+  QuizPointsComponent, // 新增
+  QuizExplanationComponent, // 新增
 } from './editor-api';
 ```
 
 2. 添加组件引用：
+
 ```typescript
 private pointsComponent: QuizPointsComponent | null = null;
 private explanationComponent: QuizExplanationComponent | null = null;
 ```
 
 3. 在 `render()` 方法中添加组件：
+
 ```typescript
 render(): HTMLElement {
   return (
@@ -2461,7 +2476,7 @@ render(): HTMLElement {
       <quiz-question-header ... />
       <quiz-question-description ... />
       <quiz-option-list ... />
-      
+
       {/* 新增：分值组件 */}
       <quiz-points
         points={this.data.question.points?.toString() || "10"}
@@ -2474,7 +2489,7 @@ render(): HTMLElement {
           this.pointsComponent = component;
         }}
       ></quiz-points>
-      
+
       {/* 新增：解析说明组件 */}
       <quiz-explanation
         explanation={this.data.question.explanation || ""}
@@ -2493,20 +2508,21 @@ render(): HTMLElement {
 ```
 
 4. 在 `save()` 方法中收集数据：
+
 ```typescript
 save(): SingleChoiceData {
   // ... 现有代码 ...
-  
+
   if (this.pointsComponent?.getPoints) {
     this.data.question.points = this.pointsComponent.getPoints();
   }
-  
+
   if (this.explanationComponent?.getExplanation) {
     const explanationHTML = this.explanationComponent.getExplanation();
     // 注意：explanation 在 DSL 中存储为 Markdown，转换由 blockToDSL 处理
     this.data.question.explanation = explanationHTML;
   }
-  
+
   return this.data;
 }
 ```
@@ -2514,6 +2530,7 @@ save(): SingleChoiceData {
 ##### 2.2 更新其他工具
 
 同样的修改需要应用到：
+
 - `MultipleChoiceTool.wsx`
 - `TextInputTool.wsx`
 - `TrueFalseTool.wsx`
@@ -2553,7 +2570,7 @@ export class QuizEditorError extends Error {
   ) {
     super(message);
     this.name = 'QuizEditorError';
-    
+
     // 保持堆栈跟踪
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, QuizEditorError);
@@ -2568,24 +2585,24 @@ export enum QuizEditorErrorCode {
   // 初始化错误
   NOT_INITIALIZED = 'NOT_INITIALIZED',
   EDITOR_INIT_FAILED = 'EDITOR_INIT_FAILED',
-  
+
   // DSL 验证错误
   INVALID_DSL = 'INVALID_DSL',
   DSL_SCHEMA_ERROR = 'DSL_SCHEMA_ERROR',
-  
+
   // 编辑器操作错误
   EDITOR_ERROR = 'EDITOR_ERROR',
   BLOCK_RENDER_ERROR = 'BLOCK_RENDER_ERROR',
-  
+
   // 转换错误
   CONVERSION_ERROR = 'CONVERSION_ERROR',
   MARKDOWN_PARSE_ERROR = 'MARKDOWN_PARSE_ERROR',
   HTML_PARSE_ERROR = 'HTML_PARSE_ERROR',
-  
+
   // 组件错误
   COMPONENT_RENDER_ERROR = 'COMPONENT_RENDER_ERROR',
   COMPONENT_STATE_ERROR = 'COMPONENT_STATE_ERROR',
-  
+
   // 数据同步错误
   STATE_SYNC_ERROR = 'STATE_SYNC_ERROR',
   SAVE_ERROR = 'SAVE_ERROR',
@@ -2709,7 +2726,7 @@ export { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
-.quiz-explanation-editor[contenteditable="false"] {
+.quiz-explanation-editor[contenteditable='false'] {
   background-color: #f5f5f5;
   cursor: not-allowed;
 }
@@ -2720,18 +2737,21 @@ export { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
 ##### 5.1 组件单元测试
 
 创建测试文件：
+
 - `packages/core/tests/components/quiz-points.test.ts`
 - `packages/core/tests/components/quiz-explanation.test.ts`
 
 ##### 5.2 工具集成测试
 
 更新现有测试：
+
 - `packages/editorjs-tool/src/tools/__tests__/SingleChoiceTool.test.ts`
 - `packages/editorjs-tool/src/tools/__tests__/MultipleChoiceTool.test.ts`
 - `packages/editorjs-tool/src/tools/__tests__/TextInputTool.test.ts`
 - `packages/editorjs-tool/src/tools/__tests__/TrueFalseTool.test.ts`
 
 测试要点：
+
 - 组件正确渲染
 - 属性传递正确
 - 事件触发正确
@@ -2741,9 +2761,11 @@ export { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
 ##### 5.3 错误处理测试
 
 创建测试文件：
+
 - `packages/quizerjs/tests/QuizEditorError.test.ts`
 
 测试要点：
+
 - 错误类正确创建
 - 错误代码正确
 - 堆栈跟踪正确
@@ -2822,6 +2844,7 @@ export { QuizEditorError, QuizEditorErrorCode } from './QuizEditorError';
 完成本计划后，RFC 0005 的完成度将达到约 95%（性能优化除外）。
 
 剩余工作（可选）：
+
 - 实现 `quiz-correct-answer` 组件以替代原生元素（设计一致性）
 - 性能优化（v1.1+）
 

@@ -13,11 +13,7 @@
 
 ```vue
 <template>
-  <QuizEditor
-    :initial-dsl="quizDSL"
-    @change="handleChange"
-    @save="handleSave"
-  />
+  <QuizEditor :initial-dsl="quizDSL" @change="handleChange" @save="handleSave" />
 </template>
 
 <script setup lang="ts">
@@ -42,11 +38,7 @@ function handleSave(dsl: QuizDSL) {
 
 ```vue
 <template>
-  <QuizPlayer
-    :quiz-dsl="quizDSL"
-    @submit="handleSubmit"
-    @answer-change="handleAnswerChange"
-  />
+  <QuizPlayer :quiz-dsl="quizDSL" @submit="handleSubmit" @answer-change="handleAnswerChange" />
 </template>
 
 <script setup lang="ts">
@@ -78,7 +70,7 @@ function handleAnswerChange(questionId: string, answer: AnswerValue) {
       <button @click="mode = 'editor'">编辑</button>
       <button @click="handlePlay">播放</button>
     </div>
-    
+
     <QuizEditor
       v-if="mode === 'editor'"
       ref="editorRef"
@@ -86,7 +78,7 @@ function handleAnswerChange(questionId: string, answer: AnswerValue) {
       @change="handleEditorChange"
       @save="handleEditorSave"
     />
-    
+
     <QuizPlayer
       v-if="mode === 'player' && playDSL"
       :quiz="playDSL"
@@ -102,7 +94,9 @@ import { QuizEditor, QuizPlayer } from '@quizerjs/vue';
 import type { QuizDSL, ResultDSL, AnswerValue } from '@quizerjs/vue';
 
 const mode = ref<'editor' | 'player'>('editor');
-const quizDSL = ref<QuizDSL>({ /* ... */ });
+const quizDSL = ref<QuizDSL>({
+  /* ... */
+});
 const playDSL = ref<QuizDSL | null>(null);
 const editorRef = ref<InstanceType<typeof QuizEditor> | null>(null);
 

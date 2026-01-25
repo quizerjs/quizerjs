@@ -7,11 +7,7 @@
 // 导出类型
 export * from './types';
 // 显式导出 Result DSL 相关类型
-export type {
-  AnswerValue,
-  QuestionResult,
-  ResultDSL,
-} from './types';
+export type { AnswerValue, QuestionResult, ResultDSL } from './types';
 
 // 导出验证器
 export { validateQuizDSL, type ValidationError, type ValidationResult } from './validator';

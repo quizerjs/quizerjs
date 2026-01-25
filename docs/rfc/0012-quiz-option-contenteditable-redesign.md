@@ -9,6 +9,7 @@
 ## 摘要
 
 本 RFC 描述了将 contentEditable 逻辑封装为独立的 `editable-text` 组件，以解决：
+
 1. 添加新选项时已有选项文本被清空的问题
 2. 多个组件重复实现 contentEditable 逻辑的问题
 3. contentEditable 与响应式框架的固有冲突
@@ -35,11 +36,13 @@ DOM.innerHTML = "Hello"（用户操作，非框架控制）
 
 ```jsx
 // 方案 A：绑定但不更新 state
-<div contentEditable>{this.text}</div>
+<div contentEditable>{this.text}</div>;
 // 问题：重新渲染时用空值覆盖用户输入
 
 // 方案 B：绑定且更新 state
-handleInput = () => { this.text = el.innerHTML; }
+handleInput = () => {
+  this.text = el.innerHTML;
+};
 // 问题：每次输入触发重新渲染，光标跳动
 
 // 方案 C：不绑定，手动 innerHTML 同步
@@ -61,9 +64,9 @@ RFC 最初假设 `onRendered()` 总是被调用，但实际情况是：
 ```typescript
 // connectedCallback 中（第 117-122 行）
 if (hasActualContent === false || hasErrorElement) {
-    requestAnimationFrame(() => {
-        this.onRendered?.();
-    });
+  requestAnimationFrame(() => {
+    this.onRendered?.();
+  });
 }
 // 当 hasActualContent === true 时，onRendered() 不会被调用！
 ```
@@ -77,11 +80,7 @@ if (hasActualContent === false || hasErrorElement) {
 **将所有 contentEditable 复杂性封装到单一组件中**，使用者只需：
 
 ```jsx
-<editable-text
-  value={this.text}
-  readonly={this.readonly}
-  ontextchange={this.handleTextChange}
-/>
+<editable-text value={this.text} readonly={this.readonly} ontextchange={this.handleTextChange} />
 ```
 
 ### 组件接口
@@ -400,13 +399,14 @@ export class QuizOption extends LightComponent {
 
 ### 代码量对比
 
-| 组件 | 之前 | 之后 |
-|------|------|------|
-| `quiz-option.wsx` | ~230 行 | ~120 行 |
-| `editable-text.wsx` | 不存在 | ~130 行 |
-| **总计** | ~230 行 | ~250 行 |
+| 组件                | 之前    | 之后    |
+| ------------------- | ------- | ------- |
+| `quiz-option.wsx`   | ~230 行 | ~120 行 |
+| `editable-text.wsx` | 不存在  | ~130 行 |
+| **总计**            | ~230 行 | ~250 行 |
 
 虽然总代码量略有增加，但：
+
 - 复杂性集中在一处
 - 其他使用 contentEditable 的组件可以直接复用
 - 测试和维护更容易
@@ -414,6 +414,7 @@ export class QuizOption extends LightComponent {
 ### 可复用的组件
 
 以下组件可以使用 `editable-text`：
+
 - `quiz-option` - 选项文本
 - `quiz-question-header` - 问题标题
 - `quiz-question-description` - 问题描述

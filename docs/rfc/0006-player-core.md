@@ -1181,19 +1181,18 @@ function analyzeResults(resultDSL: ResultDSL) {
   private quizDSLToMarkdown(quizDSL: QuizDSL): string {
   let markdown = '';
 
+  // 标题
+  markdown += `# ${quizDSL.quiz.title}\n\n`;
 
-    // 标题
-    markdown += `# ${quizDSL.quiz.title}\n\n`;
+  // 描述
+  if (quizDSL.quiz.description) {
+  markdown += `${quizDSL.quiz.description}\n\n`;
+  }
 
-    // 描述
-    if (quizDSL.quiz.description) {
-      markdown += `${quizDSL.quiz.description}\n\n`;
-    }
-
-    // 问题列表
-    quizDSL.quiz.questions.forEach((question, index) => {
-      markdown += `## 问题 ${index + 1}\n\n`;
-      markdown += `${question.text}\n\n`;
+  // 问题列表
+  quizDSL.quiz.questions.forEach((question, index) => {
+  markdown += `## 问题 ${index + 1}\n\n`;
+  markdown += `${question.text}\n\n`;
 
       // 在问题文本后插入占位符，用于嵌入答题组件
       markdown += `<!-- QUIZ_BLOCK_PLACEHOLDER:${question.id} -->\n\n`;
@@ -1202,9 +1201,10 @@ function analyzeResults(resultDSL: ResultDSL) {
       if (question.explanation) {
         markdown += `> **解释**: ${question.explanation}\n\n`;
       }
-    });
 
-    return markdown;
+  });
+
+  return markdown;
 
 }
 
@@ -1220,27 +1220,26 @@ function analyzeResults(resultDSL: ResultDSL) {
   null
   );
 
+  const placeholders: Array<{ node: Comment; questionId: string }> = [];
+  let node: Node | null;
 
-    const placeholders: Array<{ node: Comment; questionId: string }> = [];
-    let node: Node | null;
+  while ((node = walker.nextNode())) {
+  const comment = node as Comment;
+  const match = comment.textContent?.match(/^ QUIZ_BLOCK_PLACEHOLDER:(.+)$/);
+  if (match) {
+  placeholders.push({
+  node: comment,
+  questionId: match[1],
+  });
+  }
+  }
 
-    while ((node = walker.nextNode())) {
-      const comment = node as Comment;
-      const match = comment.textContent?.match(/^ QUIZ_BLOCK_PLACEHOLDER:(.+)$/);
-      if (match) {
-        placeholders.push({
-          node: comment,
-          questionId: match[1],
-        });
-      }
-    }
-
-    // 为每个占位符创建答题组件
-    placeholders.forEach(({ node, questionId }) => {
-      const question = quizDSL.quiz.questions.find(q => q.id === questionId);
-      if (!question) {
-        return;
-      }
+  // 为每个占位符创建答题组件
+  placeholders.forEach(({ node, questionId }) => {
+  const question = quizDSL.quiz.questions.find(q => q.id === questionId);
+  if (!question) {
+  return;
+  }
 
       // 创建答题组件
       const quizBlock = document.createElement('quiz-block');
@@ -1248,7 +1247,8 @@ function analyzeResults(resultDSL: ResultDSL) {
 
       // 替换占位符注释
       node.parentNode?.replaceChild(quizBlock, node);
-    });
+
+  });
 
 }
 
