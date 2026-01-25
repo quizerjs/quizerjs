@@ -11,7 +11,7 @@ import styles from './quiz-question-header.css?inline';
 @autoRegister({ tagName: 'quiz-question-header' })
 export class QuizQuestionHeader extends LightComponent {
   // 响应式状态 - 使用 @state 装饰器
-  @state private text = '';
+  private text = ''; // 不再使用 @state
   @state private readonly = false;
 
   private editableElement: HTMLElement | null = null;
@@ -31,9 +31,11 @@ export class QuizQuestionHeader extends LightComponent {
     switch (name) {
       case 'text':
         this.text = newValue || '';
-        // 如果 editableElement 已经存在，立即更新内容
-        if (this.editableElement) {
-          this.editableElement.innerHTML = this.text;
+        // 外部属性更新时，如果不是焦点，同步 DOM
+        if (this.editableElement && document.activeElement !== this.editableElement) {
+          if (this.editableElement.innerHTML !== this.text) {
+            this.editableElement.innerHTML = this.text;
+          }
         }
         break;
       case 'readonly':

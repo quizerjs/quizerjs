@@ -17,7 +17,7 @@ import styles from './quiz-option.css?inline';
 export class QuizOption extends LightComponent {
   // 响应式状态 - 使用 @state 装饰器
   @state private optionId = '';
-  @state private text = '';
+  private text = ''; // 不再使用 @state，避免输入时重绘导致光标跳转
   @state private selected = false;
   @state private type: typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE =
     QuestionTypes.SINGLE_CHOICE;
@@ -46,10 +46,13 @@ export class QuizOption extends LightComponent {
         this.optionId = newValue || '';
         break;
       case 'text':
-        // 更新 text 状态
         this.text = newValue || '';
-        // 标记需要同步内容，由 onRendered 统一处理
-        this._needsContentSync = true;
+        // 外部属性通过 setAttribute 更新时，如果不是当前编辑焦点，同步 DOM
+        if (this.textElement && document.activeElement !== this.textElement) {
+          if (this.textElement.innerHTML !== this.text) {
+            this.textElement.innerHTML = this.text;
+          }
+        }
         break;
       case 'selected':
         this.selected = newValue === 'true';
@@ -83,15 +86,11 @@ export class QuizOption extends LightComponent {
    * 这是设置 contentEditable 内容的最佳时机
    */
   onRendered() {
-    // 只在需要同步且元素存在时设置 innerHTML
-    if (this._needsContentSync && this.textElement) {
-      // 如果元素没有焦点，更新内容
-      if (document.activeElement !== this.textElement) {
-        if (this.textElement.innerHTML !== this.text) {
-          this.textElement.innerHTML = this.text;
-        }
+    // 组件重绘后（例如 selected 改变），确保内容依然正确
+    if (this.textElement && document.activeElement !== this.textElement) {
+      if (this.textElement.innerHTML !== this.text) {
+        this.textElement.innerHTML = this.text;
       }
-      this._needsContentSync = false;
     }
   }
 
@@ -132,6 +131,7 @@ export class QuizOption extends LightComponent {
       new CustomEvent('select', {
         detail: { optionId: this.optionId, selected: this.selected },
         bubbles: true,
+        composed: true,
       })
     );
   };
@@ -142,6 +142,7 @@ export class QuizOption extends LightComponent {
       new CustomEvent('delete', {
         detail: { optionId: this.optionId },
         bubbles: true,
+        composed: true,
       })
     );
   };
@@ -186,14 +187,15 @@ export class QuizOption extends LightComponent {
           ref={(el: HTMLElement) => {
             this.textElement = el;
 
-            // 首次同步：如果 state 有值且 DOM 为空，同步它
+            // 首次挂载或重新引用时同步内容
             if (el && this.text && el.innerHTML === '') {
               el.innerHTML = this.text;
-              this._needsContentSync = false;
             }
 
             this.updateEditableState();
           }}
+          // 不在 JSX 中显式使用此属性，通过 updateEditableState 动态控制
+          // 或者保持开启，但要确保不引起 re-render
           contentEditable={!isReadonly}
         />
         {!isReadonly && (
