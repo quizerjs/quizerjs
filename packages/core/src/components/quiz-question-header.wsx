@@ -80,12 +80,14 @@ export class QuizQuestionHeader extends LightComponent {
   private handleInput = () => {
     if (this.editableElement) {
       const html = this.editableElement.innerHTML;
-      // 不更新 textState，避免重新渲染
+      this.text = html;
+
       // 直接派发 textchange 事件，实时更新父组件的值
       this.dispatchEvent(
         new CustomEvent('textchange', {
           detail: { text: html },
           bubbles: true,
+          composed: true,
         })
       );
     }
@@ -95,7 +97,8 @@ export class QuizQuestionHeader extends LightComponent {
    * 获取当前文本（HTML 格式）
    */
   getText(): string {
-    return this.editableElement?.innerHTML || '';
+    const domText = this.editableElement?.innerHTML;
+    return domText !== undefined && domText !== '' ? domText : this.text;
   }
 
   /**
@@ -117,14 +120,14 @@ export class QuizQuestionHeader extends LightComponent {
       <div className="quiz-question-header">
         <h3
           className={className}
-          ref={el => {
+          ref={(el: HTMLElement) => {
             this.editableElement = el;
-            // Use setTimeout to ensure DOM is ready and bypass race conditions
-            setTimeout(() => {
-              if (el && this.text) {
-                el.innerHTML = this.text;
-              }
-            }, 0);
+
+            // 首次同步：如果 state 有值且 DOM 为空，同步它
+            if (el && this.text && el.innerHTML === '') {
+              el.innerHTML = this.text;
+            }
+
             this.setupEditableElement();
           }}
           contentEditable={!isReadonly}

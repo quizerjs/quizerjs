@@ -15,6 +15,7 @@
 - [Ryan Dahl](docs/persona/ryan-dahl.md) - Node.js 和 Deno 创造者
 - [John Carmack](docs/persona/john-carmack.md) - 游戏引擎大师，id Software 联合创始人
 - [Nikola Tesla](docs/persona/nikola-tesla.md) - 发明家和电气工程先驱
+- [Albert Li](docs/persona/albert-li.md) - WSX & Web Components 专家，偏好 Pythonic 访问器与延迟加载
 
 ### 软件工程
 

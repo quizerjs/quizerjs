@@ -90,6 +90,7 @@ export class QuizOptionList extends LightComponent {
       new CustomEvent('optionschange', {
         detail: { options: this.getOptions() },
         bubbles: true,
+        composed: true,
       })
     );
   }
@@ -270,13 +271,13 @@ export class QuizOptionList extends LightComponent {
             <button
               className="quiz-option-list-add-button"
               type="button"
-              ref={(el: HTMLButtonElement) => {
+              ref={(el: HTMLElement) => {
                 // 清理旧的事件监听器
                 if (this.addButtonRef) {
                   this.addButtonRef.removeEventListener('click', this.handleAddOption);
                 }
                 // 保存引用并添加事件监听器
-                this.addButtonRef = el;
+                this.addButtonRef = el as HTMLButtonElement;
                 if (el) {
                   el.addEventListener('click', this.handleAddOption);
                 }

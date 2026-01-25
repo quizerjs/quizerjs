@@ -3,24 +3,15 @@
  * 单个选项组件
  * 用于 Editor.js 工具中编辑单个选项
  * 支持编辑选项文本、设置正确答案、删除选项
+ *
+ * 渲染优化 (RFC 0012):
+ * 使用 onRendered 生命周期和 _needsContentSync 标志位
+ * 确保 contentEditable 文本同步时不会产生竞争或清空用户输入
  */
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
-import { QuestionTypes, type QuestionType } from '@quizerjs/dsl';
+import { QuestionTypes } from '@quizerjs/dsl';
 import styles from './quiz-option.css?inline';
-
-interface QuizOptionProps {
-  /** 选项 ID */
-  optionId?: string;
-  /** 选项文本（HTML 格式） */
-  text?: string;
-  /** 是否选中（作为正确答案） */
-  selected?: string | boolean;
-  /** 选项类型 */
-  type?: typeof QuestionTypes.SINGLE_CHOICE | typeof QuestionTypes.MULTIPLE_CHOICE;
-  /** 是否只读模式 */
-  readonly?: string | boolean;
-}
 
 @autoRegister({ tagName: 'quiz-option' })
 export class QuizOption extends LightComponent {
@@ -33,6 +24,10 @@ export class QuizOption extends LightComponent {
   @state private readonly = false;
 
   private textElement: HTMLElement | null = null;
+
+  // 标志位：是否需要同步内容到 DOM
+  // 只在 text 属性变化时设置为 true
+  private _needsContentSync = false;
 
   constructor() {
     super({
@@ -53,11 +48,8 @@ export class QuizOption extends LightComponent {
       case 'text':
         // 更新 text 状态
         this.text = newValue || '';
-        // 关键：在 onAttributeChanged 中更新 DOM，因为此时 newValue 是正确的值
-        // ref 回调可能在 onAttributeChanged 之前执行，导致使用旧的 this.text 值
-        if (this.textElement && document.activeElement !== this.textElement) {
-          this.textElement.innerHTML = newValue || '';
-        }
+        // 标记需要同步内容，由 onRendered 统一处理
+        this._needsContentSync = true;
         break;
       case 'selected':
         this.selected = newValue === 'true';
@@ -69,41 +61,48 @@ export class QuizOption extends LightComponent {
         break;
       case 'readonly':
         this.readonly = newValue === 'true';
-        this.setupTextElement();
+        this.updateEditableState();
         break;
     }
   }
 
   onConnected() {
-    this.setupTextElement();
-    // 初始文本由 onAttributeChanged('text', ...) 设置
-    // 不在这里重复设置，避免时序问题
+    this.updateEditableState();
   }
 
   onDisconnected() {
-    // 清理事件监听器
     if (this.textElement) {
       this.textElement.removeEventListener('input', this.handleInput);
+      this.textElement = null;
     }
   }
 
-  private setupTextElement() {
+  /**
+   * wsx 框架生命周期钩子
+   * 在 DOM 完全更新后通过 requestAnimationFrame 调用
+   * 这是设置 contentEditable 内容的最佳时机
+   */
+  onRendered() {
+    // 只在需要同步且元素存在时设置 innerHTML
+    if (this._needsContentSync && this.textElement) {
+      // 如果元素没有焦点，更新内容
+      if (document.activeElement !== this.textElement) {
+        if (this.textElement.innerHTML !== this.text) {
+          this.textElement.innerHTML = this.text;
+        }
+      }
+      this._needsContentSync = false;
+    }
+  }
+
+  private updateEditableState() {
     if (!this.textElement) return;
-
     const isReadonly = this.readonly;
-
-    // 显式设置 contentEditable（与 quiz-question-header 保持一致）
-    // 这确保了即使组件重新渲染，contentEditable 也会被正确设置
     this.textElement.contentEditable = isReadonly ? 'false' : 'true';
     this.textElement.setAttribute('spellcheck', 'true');
 
-    // 清理旧的事件监听器
     this.textElement.removeEventListener('input', this.handleInput);
-
-    // 只在非只读模式下添加事件监听器
     if (!isReadonly) {
-      // 使用 input 事件监听任何变化，不需要 blur 事件
-      // 因为不会重新渲染，所以可以实时更新值
       this.textElement.addEventListener('input', this.handleInput);
     }
   }
@@ -111,35 +110,34 @@ export class QuizOption extends LightComponent {
   private handleInput = () => {
     if (this.textElement) {
       const html = this.textElement.innerHTML;
-      // 不更新 text 状态，避免重新渲染
-      // 直接派发 textchange 事件，实时更新父组件的值
+      // 同步更新内部状态
+      this.text = html;
+      this._needsContentSync = false;
+
+      // 派发事件通知父组件
       this.dispatchEvent(
         new CustomEvent('textchange', {
           detail: { optionId: this.optionId, text: html },
           bubbles: true,
+          composed: true,
         })
       );
     }
   };
 
   private handleSelect = () => {
-    const isReadonly = this.readonly;
-    if (isReadonly) return;
-
-    const newSelected = !this.selected;
-    this.selected = newSelected;
+    if (this.readonly) return;
+    this.selected = !this.selected;
     this.dispatchEvent(
       new CustomEvent('select', {
-        detail: { optionId: this.optionId, selected: newSelected },
+        detail: { optionId: this.optionId, selected: this.selected },
         bubbles: true,
       })
     );
   };
 
   private handleDelete = () => {
-    const isReadonly = this.readonly;
-    if (isReadonly) return;
-
+    if (this.readonly) return;
     this.dispatchEvent(
       new CustomEvent('delete', {
         detail: { optionId: this.optionId },
@@ -148,29 +146,14 @@ export class QuizOption extends LightComponent {
     );
   };
 
-  /**
-   * 获取选项文本（HTML 格式）
-   */
-  getText(): string {
-    return this.textElement?.innerHTML || '';
-  }
-
-  /**
-   * 设置选项文本（HTML 格式）
-   */
-  setText(html: string): void {
-    if (this.textElement) {
-      this.textElement.innerHTML = html;
-    }
-  }
-
-  /**
-   * 获取选项数据
-   */
   getData(): { id: string; text: string; isCorrect: boolean } {
+    // 优先从 DOM 获取最新值，DOM 未就绪时返回 state 值
+    const domText = this.textElement?.innerHTML;
+    const finalText = domText !== undefined && domText !== '' ? domText : this.text;
+
     return {
       id: this.optionId,
-      text: this.getText(),
+      text: finalText,
       isCorrect: this.selected,
     };
   }
@@ -180,8 +163,6 @@ export class QuizOption extends LightComponent {
     const isSelected = this.selected;
     const currentType = this.type;
     const inputType = currentType === QuestionTypes.SINGLE_CHOICE ? 'radio' : 'checkbox';
-    // Sử optionid 作为 key 的一部分，确保组件在选项变化时正确更新
-    const initialText = this.text;
 
     const classNames = ['quiz-option'];
     if (isSelected) classNames.push('quiz-option-selected');
@@ -202,24 +183,18 @@ export class QuizOption extends LightComponent {
         />
         <div
           className="quiz-option-text"
-          contentEditable={!isReadonly}
-          ref={el => {
-            if (el && el !== this.textElement) {
-              // 清理旧元素的事件监听器
-              if (this.textElement) {
-                this.textElement.removeEventListener('input', this.handleInput);
-              }
-              // 保存引用
-              this.textElement = el;
+          ref={(el: HTMLElement) => {
+            this.textElement = el;
 
-              // 不在这里设置 innerHTML！
-              // DOM 内容由 onAttributeChanged('text', ...) 统一管理
-              // ref 回调可能在 onAttributeChanged 之前执行，此时 this.text 可能是旧值
-
-              // 设置事件监听器
-              this.setupTextElement();
+            // 首次同步：如果 state 有值且 DOM 为空，同步它
+            if (el && this.text && el.innerHTML === '') {
+              el.innerHTML = this.text;
+              this._needsContentSync = false;
             }
+
+            this.updateEditableState();
           }}
+          contentEditable={!isReadonly}
         />
         {!isReadonly && (
           <div className="quiz-option-actions">
