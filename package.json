@@ -67,6 +67,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@eslint/js": "^9.39.2",
     "@systembug/pangu": "^0.0.8",
     "@systembug/qingniao": "^0.0.8",
@@ -76,7 +77,6 @@
     "@vue/eslint-config-typescript": "^14.6.0",
     "@wsxjs/wsx-press": "^0.1.0",
     "chalk": "^5.6.2",
-    "@changesets/cli": "^2.29.5",
     "cross-env": "^7.0.3",
     "eslint": "^9.39.2",
     "eslint-plugin-svelte": "^3.13.1",
