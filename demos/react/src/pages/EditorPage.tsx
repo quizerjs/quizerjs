@@ -7,7 +7,8 @@ import { type QuizEditorRef } from '@quizerjs/react';
 import type { QuizDSL } from '@quizerjs/dsl';
 
 export default function EditorPage() {
-  const { currentDSL, initialDSL, updatePreviews, dslPreview, blockDataPreview } = useQuiz();
+  const { currentDSL, initialDSL, updatePreviews, dslPreview, blockDataPreview, selectedSampleId } =
+    useQuiz();
   const editorRef = useRef<QuizEditorRef | null>(null);
 
   // Sync editor with initialDSL when it changes (e.g. sample switch)
@@ -15,22 +16,25 @@ export default function EditorPage() {
     if (editorRef.current && initialDSL) {
       editorRef.current.load(initialDSL).catch(err => console.error(err));
     }
-  }, [initialDSL]);
+  }, [selectedSampleId]);
 
-  const handleChange = async (dsl: QuizDSL) => {
-    let blockData = null;
-    if (editorRef.current) {
-      const editorInstance = editorRef.current.getEditorInstance();
-      if (editorInstance) {
-        try {
-          blockData = await editorInstance.save();
-        } catch (error) {
-          console.error('Failed to save block data:', error);
+  const handleChange = React.useCallback(
+    async (dsl: QuizDSL) => {
+      let blockData = null;
+      if (editorRef.current) {
+        const editorInstance = editorRef.current.getEditorInstance();
+        if (editorInstance) {
+          try {
+            blockData = await editorInstance.save();
+          } catch (error) {
+            console.error('Failed to save block data:', error);
+          }
         }
       }
-    }
-    updatePreviews(dsl, blockData);
-  };
+      updatePreviews(dsl, blockData);
+    },
+    [updatePreviews]
+  );
 
   const handleSave = handleChange; // Reuse logic for now
 

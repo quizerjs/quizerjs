@@ -27,7 +27,7 @@ export interface QuizEditorRef {
   isDirty: () => boolean;
 }
 
-export const QuizEditor = forwardRef<QuizEditorRef, QuizEditorProps>(
+const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
   ({ initialDSL, readOnly = false, onChange, onSave }, ref) => {
     const editorContainerRef = useRef<HTMLDivElement>(null);
     const editorRef = useRef<QuizEditorClass | null>(null);
@@ -44,11 +44,8 @@ export const QuizEditor = forwardRef<QuizEditorRef, QuizEditorProps>(
     useEffect(() => {
       if (!editorContainerRef.current) return;
 
-      // 如果已经初始化过，先销毁
-      if (editorRef.current) {
-        editorRef.current.destroy();
-        editorRef.current = null;
-      }
+      let isCancelled = false;
+      let editorInstance: QuizEditorClass | null = null;
 
       const initEditor = async () => {
         try {
@@ -68,30 +65,38 @@ export const QuizEditor = forwardRef<QuizEditorRef, QuizEditorProps>(
             },
           };
 
-          const editor = new QuizEditorClass(options);
-          await editor.init();
-          editorRef.current = editor;
+          editorInstance = new QuizEditorClass(options);
+          await editorInstance.init();
+
+          if (isCancelled) {
+            await editorInstance.destroy();
+            return;
+          }
+
+          editorRef.current = editorInstance;
         } catch (error) {
-          console.error('初始化 QuizEditor 失败:', error);
+          if (!isCancelled) {
+            console.error('初始化 QuizEditor 失败:', error);
+          }
         }
       };
 
       initEditor();
 
       return () => {
+        isCancelled = true;
+        if (editorInstance) {
+          editorInstance.destroy();
+        }
         if (editorRef.current) {
-          editorRef.current.destroy();
+          // In case it was assigned
+          if (editorRef.current !== editorInstance) {
+            editorRef.current.destroy();
+          }
           editorRef.current = null;
         }
       };
-    }, [initialDSL, readOnly]);
-
-    // 监听 initialDSL 变化
-    useEffect(() => {
-      if (editorRef.current && initialDSL) {
-        editorRef.current.load(initialDSL);
-      }
-    }, [initialDSL]);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // 监听 readOnly 变化
     useEffect(() => {
@@ -132,6 +137,14 @@ export const QuizEditor = forwardRef<QuizEditorRef, QuizEditorProps>(
 
     return <div ref={editorContainerRef} className="quiz-editor" />;
   }
-);
+); // Closing forwardRef
+QuizEditorComponent.displayName = 'QuizEditorComponent';
+
+// Memoize the component to prevent re-renders when parent state changes (like context)
+// We only care if initialDSL or readOnly (value props) change.
+// Functions (onChange, onSave) are handled by refs and don't need to trigger re-render.
+export const QuizEditor = React.memo(QuizEditorComponent, (prevProps, nextProps) => {
+  return prevProps.initialDSL === nextProps.initialDSL && prevProps.readOnly === nextProps.readOnly;
+});
 
 QuizEditor.displayName = 'QuizEditor';

@@ -651,6 +651,7 @@ export class QuizPlayer {
    */
   private setupAnswerListeners(): void {
     // 保存监听器引用，以便后续清理
+
     this.answerChangeListener = (event: Event) => {
       // Prevent infinite loop: ignore events dispatched by the player container itself
       if (this.containerElement && event.target === this.containerElement) {
@@ -664,7 +665,7 @@ export class QuizPlayer {
     document.addEventListener('answer-change', this.answerChangeListener);
 
     // 监听提交事件：Linus 风格，严格锁定在容器内
-    this._submitListener = (event: Event) => {
+    this._submitListener = (_event: Event) => {
       // 捕获到冒泡上来的提交信号
       this.submit();
     };

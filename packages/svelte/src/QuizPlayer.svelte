@@ -1,4 +1,5 @@
 <script lang="ts">
+  /* eslint-disable svelte/infinite-reactive-loop */
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import {
     QuizPlayer,
@@ -90,6 +91,7 @@
         initialAnswers,
         resultSource,
         readOnly,
+
         showResults,
         slideOptions,
         onSubmit: (result: ResultDSL) => dispatch('submit', result),
@@ -98,12 +100,12 @@
         onStart: () => dispatch('start'),
         onComplete: () => dispatch('complete'),
         onReset: () => dispatch('reset'),
-      };
+      } as unknown as QuizPlayerOptions;
 
       player = new QuizPlayer(options);
       await player.init();
       player.start();
-      lastQuizId = currentQuizId;
+      lastQuizId = currentQuizId; // eslint-disable-line svelte/infinite-reactive-loop
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       error = errorMessage;
@@ -125,7 +127,7 @@
   $: if (hasValidQuiz && playerContainer) {
     // Svelte reactive statements run after mount usually, but let's be safe
     // Use setTimeout to allow render cycle to complete if needed, or rely on internal locks
-    initPlayer();
+    initPlayer(); // eslint-disable-line svelte/infinite-reactive-loop
   } else if (!hasValidQuiz && player) {
     player.destroy();
     player = null;

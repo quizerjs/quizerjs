@@ -33,7 +33,10 @@ const emit = defineEmits<QuizEditorEmits>();
 const editorContainer = ref<HTMLElement | null>(null);
 let editor: QuizEditor | null = null;
 
+let isMounted = false;
+
 onMounted(async () => {
+  isMounted = true;
   if (!editorContainer.value) return;
 
   try {
@@ -49,29 +52,28 @@ onMounted(async () => {
       },
     };
 
-    editor = new QuizEditor(options);
-    await editor.init();
+    const instance = new QuizEditor(options);
+    await instance.init();
+
+    if (isMounted) {
+      editor = instance;
+    } else {
+      await instance.destroy();
+    }
   } catch (error) {
-    console.error('初始化 QuizEditor 失败:', error);
+    if (isMounted) {
+      console.error('初始化 QuizEditor 失败:', error);
+    }
   }
 });
 
 onBeforeUnmount(async () => {
+  isMounted = false;
   if (editor) {
     await editor.destroy();
     editor = null;
   }
 });
-
-watch(
-  () => props.initialDSL,
-  async newDsl => {
-    if (editor && newDsl) {
-      await editor.load(newDsl);
-    }
-  },
-  { deep: true }
-);
 
 watch(
   () => props.readOnly,
