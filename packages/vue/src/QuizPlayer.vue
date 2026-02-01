@@ -5,7 +5,12 @@
       <div class="error-content">
         <strong>加载失败</strong>
         <p>{{ error }}</p>
-        <button @click="retry" class="retry-button">重试</button>
+        <button
+          class="retry-button"
+          @click="retry"
+        >
+          重试
+        </button>
       </div>
     </div>
     <!-- 默认视图：没有 quiz 数据时显示 -->
@@ -40,8 +45,12 @@
             />
           </svg>
         </div>
-        <h3 class="placeholder-title">等待测验数据</h3>
-        <p class="placeholder-description">请提供有效的 Quiz 数据以开始测验</p>
+        <h3 class="placeholder-title">
+          等待测验数据
+        </h3>
+        <p class="placeholder-description">
+          请提供有效的 Quiz 数据以开始测验
+        </p>
         <div class="placeholder-features">
           <div class="feature-item">
             <span class="feature-icon">✓</span>
@@ -59,7 +68,11 @@
       </div>
     </div>
     <!-- 播放器容器：始终存在，使用 v-show 控制显示 -->
-    <div ref="playerContainer" v-show="hasValidQuiz && !error" class="quiz-player"></div>
+    <div
+      v-show="hasValidQuiz && !error"
+      ref="playerContainer"
+      class="quiz-player"
+    />
   </div>
 </template>
 

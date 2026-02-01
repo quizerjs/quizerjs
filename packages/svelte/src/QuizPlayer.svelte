@@ -105,7 +105,7 @@
       player = new QuizPlayer(options);
       await player.init();
       player.start();
-      lastQuizId = currentQuizId; // eslint-disable-line svelte/infinite-reactive-loop
+      lastQuizId = currentQuizId;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       error = errorMessage;
@@ -127,7 +127,7 @@
   $: if (hasValidQuiz && playerContainer) {
     // Svelte reactive statements run after mount usually, but let's be safe
     // Use setTimeout to allow render cycle to complete if needed, or rely on internal locks
-    initPlayer(); // eslint-disable-line svelte/infinite-reactive-loop
+    initPlayer();
   } else if (!hasValidQuiz && player) {
     player.destroy();
     player = null;
