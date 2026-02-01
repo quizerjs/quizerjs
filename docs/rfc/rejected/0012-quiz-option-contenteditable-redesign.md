@@ -1,6 +1,6 @@
 # RFC 0012: ContentEditable 组件封装
 
-**状态**: 草案 (Draft)
+**状态**: 已放弃 (Dropped)
 **创建日期**: 2025-01-22
 **更新日期**: 2025-01-24
 **作者**: AI Assistant

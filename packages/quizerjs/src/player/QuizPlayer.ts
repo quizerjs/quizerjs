@@ -60,6 +60,7 @@ export class QuizPlayer {
   private options: QuizPlayerOptions;
   private containerElement: HTMLElement | null = null;
   private answerChangeListener: ((event: Event) => void) | null = null;
+  private _submitListener: ((event: Event) => void) | null = null;
   private store: QuizStore;
   private hasCompleted: boolean = false;
 
@@ -388,13 +389,18 @@ export class QuizPlayer {
       // 提交成功：Dispatch SUBMIT_SUCCESS action
       this.store.dispatch(quizActions.submitSuccess(resultSource));
 
-      // 触发提交回调
-      this.options.onSubmit?.(resultSource);
-
-      // 如果启用结果显示，渲染结果
-      if (this.options.showResults !== false) {
-        this.renderResults(resultSource);
+      // 触发外部 DOM 事件，携带所有信息 (Host should listen to this to switch views)
+      if (this.containerElement) {
+        const completeEvent = new CustomEvent('quiz-complete', {
+          detail: resultSource,
+          bubbles: true,
+          composed: true,
+        });
+        this.containerElement.dispatchEvent(completeEvent);
       }
+
+      // 触发提交回调（向后兼容）
+      this.options.onSubmit?.(resultSource);
 
       return resultSource;
     } catch (error) {
@@ -526,6 +532,11 @@ export class QuizPlayer {
       this.answerChangeListener = null;
     }
 
+    if (this._submitListener && this.containerElement) {
+      this.containerElement.removeEventListener('quiz-submit', this._submitListener);
+      this._submitListener = null;
+    }
+
     if (this.runner) {
       try {
         this.runner.destroy();
@@ -651,101 +662,15 @@ export class QuizPlayer {
       this.setAnswer(questionId, answer);
     };
     document.addEventListener('answer-change', this.answerChangeListener);
-  }
 
-  /**
-   * 渲染结果界面
-   */
-  private renderResults(resultSource: ResultDSL): void {
-    if (!this.containerElement) {
-      console.warn('Container element not found, cannot render results');
-      return;
+    // 监听提交事件：Linus 风格，严格锁定在容器内
+    this._submitListener = (event: Event) => {
+      // 捕获到冒泡上来的提交信号
+      this.submit();
+    };
+
+    if (this.containerElement) {
+      this.containerElement.addEventListener('quiz-submit', this._submitListener);
     }
-
-    // @quizerjs/core 已在文件顶部静态导入，组件会自动注册
-
-    // 创建结果容器
-    const resultsContainer = document.createElement('div');
-    resultsContainer.className = 'quiz-player-results-container';
-    resultsContainer.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      overflow-y: auto;
-      padding: 2rem;
-    `;
-
-    // 创建结果内容区域
-    const resultsContent = document.createElement('div');
-    resultsContent.style.cssText = `
-      background-color: white;
-      border-radius: 12px;
-      max-width: 900px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    `;
-
-    // 创建关闭按钮
-    const closeButton = document.createElement('button');
-    closeButton.textContent = '×';
-    closeButton.style.cssText = `
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      cursor: pointer;
-      color: #666;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: background-color 0.2s;
-    `;
-    closeButton.onmouseover = () => {
-      closeButton.style.backgroundColor = '#f0f0f0';
-    };
-    closeButton.onmouseout = () => {
-      closeButton.style.backgroundColor = 'transparent';
-    };
-    closeButton.onclick = () => {
-      resultsContainer.remove();
-    };
-
-    const resultsElement = document.createElement('wsx-quiz-results');
-    resultsElement.setAttribute('result-source', JSON.stringify(resultSource));
-    resultsElement.style.cssText = 'display: block;';
-
-    // 组装结构
-    resultsContent.appendChild(closeButton);
-    resultsContent.appendChild(resultsElement);
-    resultsContainer.appendChild(resultsContent);
-
-    // 点击背景关闭
-    resultsContainer.onclick = e => {
-      if (e.target === resultsContainer) {
-        resultsContainer.remove();
-      }
-    };
-
-    // 添加到页面
-    document.body.appendChild(resultsContainer);
-
-    // 等待组件渲染后滚动到顶部
-    setTimeout(() => {
-      resultsContent.scrollTop = 0;
-    }, 100);
   }
 }

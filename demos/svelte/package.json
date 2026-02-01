@@ -16,7 +16,9 @@
     "@quizerjs/sample-data": "workspace:*",
     "@quizerjs/svelte": "workspace:*",
     "@quizerjs/theme": "workspace:*",
-    "svelte": "^4.2.0"
+    "svelte": "^4.2.0",
+    "svelte-routing": "^2.13.0",
+    "svelte-splitpanes": "^8.0.12"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.0",

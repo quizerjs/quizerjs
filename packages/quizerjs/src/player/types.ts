@@ -152,6 +152,7 @@ export interface QuizPlayerOptions {
 
   /**
    * 显示结果（可选，默认 true）
+   * 当只读模式或提交后，是否显示正确/错误反馈
    */
   showResults?: boolean;
 

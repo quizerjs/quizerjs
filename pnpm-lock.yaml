@@ -156,6 +156,12 @@ importers:
       svelte:
         specifier: ^4.2.0
         version: 4.2.20
+      svelte-routing:
+        specifier: ^2.13.0
+        version: 2.13.0
+      svelte-splitpanes:
+        specifier: ^8.0.12
+        version: 8.0.12(svelte@4.2.20)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
@@ -236,6 +242,9 @@ importers:
       vue-resizable-panels:
         specifier: ^0.0.1
         version: 0.0.1
+      vue-router:
+        specifier: ^4.6.4
+        version: 4.6.4(vue@3.5.26(typescript@5.9.3))
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
@@ -2306,6 +2315,9 @@ packages:
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
+
+  '@vue/devtools-api@6.6.4':
+    resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
 
   '@vue/devtools-api@7.7.9':
     resolution: {integrity: sha512-kIE8wvwlcZ6TJTbNeU2HQNtaxLx3a84aotTITUuL/4bzfPxzajGBOoqjMhwZJ8L9qFYDU/lAYMEEm11dnZOD6g==}
@@ -4787,6 +4799,14 @@ packages:
       typescript:
         optional: true
 
+  svelte-routing@2.13.0:
+    resolution: {integrity: sha512-/NTxqTwLc7Dq306hARJrH2HLXOBtKd7hu8nxgoFDlK0AC4SOKnzisiX/9m8Uksei1QAWtlAEdF91YphNM8iDMg==}
+
+  svelte-splitpanes@8.0.12:
+    resolution: {integrity: sha512-HJ07HgbtY0Q/35TEuJquGy47dtgCVavV7ay9r1FhWRx3boyUs3RpeiHlwMKliznCKy2ZotNeT+8GG+mIoNjgRA==}
+    peerDependencies:
+      svelte: ^5.43.0
+
   svelte@4.2.20:
     resolution: {integrity: sha512-eeEgGc2DtiUil5ANdtd8vPwt9AgaMdnuUFnPft9F5oMvU/FHu5IHFic+p1dR/UOB7XU2mX2yHW+NcTch4DCh5Q==}
     engines: {node: '>=16'}
@@ -5208,6 +5228,11 @@ packages:
 
   vue-resizable-panels@0.0.1:
     resolution: {integrity: sha512-8al3kvbhZWnE6bS14lrKkJ6tc55N/wFeVIo+A/Ip8ZPBc5BIJYOdQU3pexhp+hj6pfxhV9UNynwJYZzAtvkCSg==}
+
+  vue-router@4.6.4:
+    resolution: {integrity: sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==}
+    peerDependencies:
+      vue: ^3.5.0
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
@@ -7257,6 +7282,8 @@ snapshots:
     dependencies:
       de-indent: 1.0.2
       he: 1.2.0
+
+  '@vue/devtools-api@6.6.4': {}
 
   '@vue/devtools-api@7.7.9':
     dependencies:
@@ -10067,6 +10094,12 @@ snapshots:
       sass: 1.97.1
       typescript: 5.9.3
 
+  svelte-routing@2.13.0: {}
+
+  svelte-splitpanes@8.0.12(svelte@4.2.20):
+    dependencies:
+      svelte: 4.2.20
+
   svelte@4.2.20:
     dependencies:
       '@ampproject/remapping': 2.3.0
@@ -10595,6 +10628,11 @@ snapshots:
   vue-flow-layout@0.2.0: {}
 
   vue-resizable-panels@0.0.1: {}
+
+  vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.26(typescript@5.9.3)
 
   vue-template-compiler@2.7.16:
     dependencies:

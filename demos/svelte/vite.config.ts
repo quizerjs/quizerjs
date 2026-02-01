@@ -23,6 +23,7 @@ export default defineConfig({
       '@quizerjs/core': path.resolve(__dirname, '../../packages/core/src'),
       '@quizerjs/dsl': path.resolve(__dirname, '../../packages/dsl/src'),
       '@quizerjs/editorjs-tool': path.resolve(__dirname, '../../packages/editorjs-tool/src'),
+      '$app/environment': path.resolve(__dirname, './src/mocks/app-environment.ts'),
     },
     // 在开发环境中优先使用源码（source 字段）
     conditions: ['source', 'import', 'module', 'browser', 'default'],
@@ -34,6 +35,7 @@ export default defineConfig({
       '@quizerjs/core',
       '@quizerjs/dsl',
       '@quizerjs/editorjs-tool',
+      'svelte-splitpanes',
     ],
     // 强制重新预构建
     force: true,

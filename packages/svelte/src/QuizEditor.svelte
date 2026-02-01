@@ -15,6 +15,8 @@
   // 导出 ref 给父组件使用（通过 bind:this 访问）
   export let editorRef = null;
 
+  let mounted = true;
+
   onMount(async () => {
     if (!editorContainer) return;
 
@@ -35,9 +37,15 @@
         },
       };
 
-      const editor = new QuizEditor(options);
-      await editor.init();
-      editorInstance = editor;
+      const instance = new QuizEditor(options);
+      await instance.init();
+
+      if (!mounted) {
+        instance.destroy();
+        return;
+      }
+
+      editorInstance = instance;
 
       // 创建 ref 对象
       editorRef = {
@@ -72,6 +80,7 @@
   });
 
   onDestroy(() => {
+    mounted = false;
     if (editorInstance) {
       editorInstance.destroy();
       editorInstance = null;

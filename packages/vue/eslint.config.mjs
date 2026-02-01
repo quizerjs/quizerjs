@@ -16,6 +16,8 @@ export default tseslint.config(
         parser: tsParser,
         extraFileExtensions: ['.vue'],
         sourceType: 'module',
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
       },
       globals: {
         HTMLElement: 'readonly',
@@ -41,7 +43,11 @@ export default tseslint.config(
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsParser,
-      sourceType: 'module',
+      parserOptions: {
+        sourceType: 'module',
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
       globals: {
         HTMLElement: 'readonly',
         HTMLDivElement: 'readonly',
@@ -63,4 +69,3 @@ export default tseslint.config(
     ignores: ['**/dist/**', '**/node_modules/**'],
   }
 );
-
