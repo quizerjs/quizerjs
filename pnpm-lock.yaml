@@ -429,6 +429,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.0
         version: 18.3.7(@types/react@18.3.27)
+      '@wsxjs/wsx-vite-plugin':
+        specifier: ^0.1.0
+        version: 0.1.0(esbuild@0.27.2)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.2))
       happy-dom:
         specifier: ^20.3.7
         version: 20.3.7
