@@ -76,6 +76,8 @@ export class QuizEditor {
    * 4. 注册新实例到全局注册表
    */
   async init(): Promise<void> {
+    if (this.isDestroyed) return;
+
     // === 第 1 层：实例级别检查 ===
     if (this.editor) {
       throw new Error('QuizEditor 已经初始化');
@@ -97,8 +99,12 @@ export class QuizEditor {
       }
     }
 
+    if (this.isDestroyed) return;
+
     // === 第 3 层：强制清理孤立的 DOM ===
     await this.forceCleanupDOM();
+
+    if (this.isDestroyed) return;
 
     // === 第 4 层：注册当前实例 ===
     editorRegistry.set(this.container, this);
@@ -156,13 +162,35 @@ export class QuizEditor {
       data: initialData,
       readOnly: this.options.readOnly ?? false,
       onChange: async () => {
+        if (this.isDestroyed) return;
         this.isDirtyFlag = true;
         const dsl = await this.save();
         this.options.onChange?.(dsl);
       },
     });
 
-    await this.editor.isReady;
+    try {
+      await this.editor.isReady;
+    } catch (error) {
+      // If isReady fails, we should still check destroyed status
+      console.warn('[QuizEditor] EditorJS isReady promise rejected:', error);
+    }
+
+    //如果在等待 isReady 期间被销毁，则立即清理
+    if (this.isDestroyed) {
+      if (this.editor && typeof this.editor.destroy === 'function') {
+        try {
+          // editor.destroy is async but we are in a "destroyed" state context
+          // so we just trigger it.
+          this.editor.destroy();
+        } catch (e) {
+          console.warn('[QuizEditor] Cleanup of destroyed instance failed:', e);
+        }
+      }
+      this.editor = null;
+      editorRegistry.delete(this.container);
+      return;
+    }
   }
 
   /**
