@@ -104,5 +104,5 @@ if (!result.valid) {
 
 ## 相关
 
-- [错误代码](/dsl/error-codes.md) - 所有错误代码列表
-- [验证规则](/dsl/validation.md) - 验证规则说明
+- [错误代码](../dsl/error-codes.md) - 所有错误代码列表
+- [验证规则](../dsl/validation.md) - 验证规则说明

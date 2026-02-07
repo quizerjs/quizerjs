@@ -133,4 +133,4 @@ const englishMessages = {
 ## 下一步
 
 - [验证规则](./validation.md) - 了解验证规则
-- [API 参考](/api/) - 查看完整 API
+- [API 参考](../api/index.md) - 查看完整 API

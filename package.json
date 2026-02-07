@@ -99,5 +99,10 @@
   "volta": {
     "node": "22.12.0",
     "pnpm": "10.27.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "punycode": "2.3.1"
+    }
   }
 }

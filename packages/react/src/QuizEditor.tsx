@@ -44,11 +44,23 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
     useEffect(() => {
       if (!editorContainerRef.current) return;
 
+      // 防止重复初始化（StrictMode 双重挂载保护）
+      if (editorRef.current) {
+        if (import.meta.env.DEV) {
+          console.debug('[QuizEditor] 已初始化，跳过重复初始化');
+        }
+        return;
+      }
+
       let isCancelled = false;
       let editorInstance: QuizEditorClass | null = null;
 
       const initEditor = async () => {
         try {
+          if (import.meta.env.DEV) {
+            console.debug('[QuizEditor] 开始初始化');
+          }
+
           const options: QuizEditorOptions = {
             container: editorContainerRef.current!,
             initialDSL,
@@ -69,11 +81,17 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
           await editorInstance.init();
 
           if (isCancelled) {
+            if (import.meta.env.DEV) {
+              console.debug('[QuizEditor] 初始化已取消，销毁实例');
+            }
             await editorInstance.destroy();
             return;
           }
 
           editorRef.current = editorInstance;
+          if (import.meta.env.DEV) {
+            console.debug('[QuizEditor] 初始化完成');
+          }
         } catch (error) {
           if (!isCancelled) {
             console.error('初始化 QuizEditor 失败:', error);
@@ -85,15 +103,43 @@ const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
 
       return () => {
         isCancelled = true;
-        if (editorInstance) {
-          editorInstance.destroy();
+
+        if (import.meta.env.DEV) {
+          console.debug('[QuizEditor] 清理开始', {
+            hasLocal: !!editorInstance,
+            hasRef: !!editorRef.current,
+          });
         }
+
+        // 销毁局部实例
+        if (editorInstance) {
+          try {
+            editorInstance.destroy();
+            if (import.meta.env.DEV) {
+              console.debug('[QuizEditor] 局部实例已销毁');
+            }
+          } catch (error) {
+            console.warn('[QuizEditor] 销毁局部实例失败:', error);
+          }
+        }
+
+        // 销毁 ref 实例（处理竞态条件）
         if (editorRef.current) {
-          // In case it was assigned
           if (editorRef.current !== editorInstance) {
-            editorRef.current.destroy();
+            try {
+              editorRef.current.destroy();
+              if (import.meta.env.DEV) {
+                console.debug('[QuizEditor] Ref 实例已销毁（孤立实例）');
+              }
+            } catch (error) {
+              console.warn('[QuizEditor] 销毁 ref 实例失败:', error);
+            }
           }
           editorRef.current = null;
+        }
+
+        if (import.meta.env.DEV) {
+          console.debug('[QuizEditor] 清理完成');
         }
       };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps

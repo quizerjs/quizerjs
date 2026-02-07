@@ -13,6 +13,13 @@ import type { QuizDSL } from '@quizerjs/dsl';
 import { validateQuizDSL } from '@quizerjs/dsl';
 
 /**
+ * 全局编辑器注册表
+ * 使用 WeakMap 确保容器被垃圾回收时，注册表条目也会被清理
+ * 核心不变量：一个容器最多对应一个 QuizEditor 实例
+ */
+const editorRegistry = new WeakMap<HTMLElement, QuizEditor>();
+
+/**
  * QuizEditor 选项
  */
 export interface QuizEditorOptions {
@@ -49,6 +56,7 @@ export class QuizEditor {
   private options: QuizEditorOptions;
   private currentDSL: QuizDSL | null = null;
   private isDirtyFlag: boolean = false;
+  private isDestroyed: boolean = false;
 
   constructor(options: QuizEditorOptions) {
     this.container = options.container;
@@ -60,11 +68,40 @@ export class QuizEditor {
 
   /**
    * 初始化编辑器
+   *
+   * 防护层级：
+   * 1. 检查当前实例是否已初始化
+   * 2. 检查注册表中的旧实例并自动销毁
+   * 3. 强制清理容器中的孤立 DOM
+   * 4. 注册新实例到全局注册表
    */
   async init(): Promise<void> {
+    // === 第 1 层：实例级别检查 ===
     if (this.editor) {
       throw new Error('QuizEditor 已经初始化');
     }
+
+    // === 第 2 层：注册表检查 + 自动销毁旧实例 ===
+    const existingInstance = editorRegistry.get(this.container);
+    if (existingInstance && existingInstance !== this) {
+      console.warn(
+        '[QuizEditor] 检测到容器中的旧实例，自动销毁。' +
+          '建议使用 load() 方法而非 key prop 切换内容。'
+      );
+
+      try {
+        await existingInstance.destroy();
+      } catch (error) {
+        console.error('[QuizEditor] 销毁旧实例失败:', error);
+        // 继续执行，依赖第 3 层清理
+      }
+    }
+
+    // === 第 3 层：强制清理孤立的 DOM ===
+    await this.forceCleanupDOM();
+
+    // === 第 4 层：注册当前实例 ===
+    editorRegistry.set(this.container, this);
 
     const initialData = this.options.initialDSL
       ? dslToBlock(this.options.initialDSL)
@@ -240,14 +277,41 @@ export class QuizEditor {
    * 销毁编辑器
    */
   async destroy(): Promise<void> {
-    if (this.editor) {
-      try {
+    if (this.isDestroyed) {
+      return; // 防止重复销毁
+    }
+
+    this.isDestroyed = true;
+
+    try {
+      if (this.editor) {
         await this.editor.destroy();
-      } catch (error) {
-        // 忽略销毁错误
-        console.warn('Editor.js destroy 警告:', error);
       }
+    } catch (error) {
+      console.warn('[QuizEditor] destroy 失败:', error);
+    } finally {
+      // 确保清理
       this.editor = null;
+
+      // 从注册表移除（仅当是当前注册的实例时）
+      if (editorRegistry.get(this.container) === this) {
+        editorRegistry.delete(this.container);
+      }
+    }
+  }
+
+  /**
+   * 强制清理容器中的孤立 DOM
+   * 用于清理异步销毁未完成时残留的编辑器 DOM
+   */
+  private async forceCleanupDOM(): Promise<void> {
+    const existingEditors = this.container.querySelectorAll('.codex-editor');
+    if (existingEditors.length > 0) {
+      console.warn(`[QuizEditor] 发现 ${existingEditors.length} 个孤立的编辑器 DOM，强制移除`);
+      existingEditors.forEach(el => el.remove());
+
+      // 等待 DOM 更新
+      await new Promise(resolve => setTimeout(resolve, 0));
     }
   }
 

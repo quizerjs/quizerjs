@@ -2,15 +2,9 @@
 
 这是一个可以在浏览器中运行的交互式演示。
 
-## 在线演示
-
-<ClientOnly>
-  <QuizDemo />
-</ClientOnly>
-
 ## 说明
 
-上面的演示展示了 quizerjs 的完整功能：
+演示展示 quizerjs 的完整功能：
 
 - ✅ 支持所有问题类型（单选题、多选题、文本输入、判断题）
 - ✅ 实时答案验证
@@ -53,9 +47,9 @@ console.log('验证结果:', result.valid);
 
 - [CodeSandbox](https://codesandbox.io) - 在线代码编辑器
 - [StackBlitz](https://stackblitz.com) - 在线 IDE
-- [GitHub Pages](https://wsxjs.github.io/quizerjs) - 项目演示站点
+- 项目 [Demos](/demos/) 页面 - 官方演示站点
 
 ## 下一步
 
 - [真实使用案例](./real-world.md) - 查看实际项目中的使用
-- [API 参考](/api/) - 查看完整 API
+- [API 参考](../api/index.md) - 查看完整 API

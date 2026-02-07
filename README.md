@@ -275,9 +275,7 @@ Svelte 集成包，提供 Svelte 组件包装器。
 ## 文档
 
 - **官方网站**: [quizerjs.io](https://quizerjs.io)
-- **DSL 规范**: [docs/dsl/](./docs/dsl/)
-- **API 参考**: [docs/api/](./docs/api/)
-- **使用示例**: [docs/examples/](./docs/examples/)
+- **DSL 规范 / API 参考 / 使用示例**: 见官网 [文档 - Guide](https://quizerjs.io/docs/guide/getting-started)（[DSL](https://quizerjs.io/docs/guide/dsl) · [API](https://quizerjs.io/docs/guide/api) · [示例](https://quizerjs.io/docs/guide/examples)）
 - **RFC 文档**: [docs/rfc/](./docs/rfc/) - 技术规范和架构设计
 - **实施状态**: [docs/IMPLEMENTATION_STATUS.md](./docs/IMPLEMENTATION_STATUS.md) - 项目实施进度和状态报告
 

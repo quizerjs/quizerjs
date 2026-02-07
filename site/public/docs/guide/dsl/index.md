@@ -55,5 +55,4 @@ if (result.valid) {
 
 ## 相关资源
 
-- [API 参考](/api/) - 完整的 API 文档
-- [RFC 0001](/rfc/0001-quiz-dsl-specification) - 详细的技术规范
+- [API 参考](../api/index.md) - 完整的 API 文档

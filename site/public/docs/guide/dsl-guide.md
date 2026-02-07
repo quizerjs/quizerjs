@@ -782,7 +782,6 @@ DSL 设计支持未来扩展：
 
 ## 相关资源
 
-- [RFC 0001: Quiz DSL 规范](../../docs/rfc/0001-quiz-dsl-specification.md) - 详细的技术规范
-- [错误代码参考](../../docs/dsl/error-codes.md) - 所有错误代码列表
+- [错误代码参考](./dsl/error-codes.md) - 所有错误代码列表
 - [GitHub 仓库](https://github.com/quizerjs/quizerjs)
 - [npm 包](https://www.npmjs.com/package/@quizerjs/dsl)

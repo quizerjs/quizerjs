@@ -240,5 +240,5 @@ const { dsl, answers, submitted, score, setAnswer, submit } = useQuiz({
 
 ## 相关
 
-- [DSL 规范](../../docs/dsl/)
-- [API 参考](../../docs/api/)
+- [DSL 规范](https://quizerjs.io/docs/guide/dsl)
+- [API 参考](https://quizerjs.io/docs/guide/api)

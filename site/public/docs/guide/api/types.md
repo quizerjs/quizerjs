@@ -216,5 +216,5 @@ if (isSingleChoice(question)) {
 
 ## 相关
 
-- [DSL 规范](/dsl/) - DSL 规范文档
+- [DSL 规范](../dsl/index.md) - DSL 规范文档
 - [验证器](./validator.md) - 验证 API
