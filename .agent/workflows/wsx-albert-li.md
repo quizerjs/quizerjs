@@ -52,31 +52,31 @@ export class MyComponent extends LightComponent {
 
 ### 核心 API
 
-| API                | 说明                                   |
-| ------------------ | -------------------------------------- |
-| `LightComponent`   | 轻量组件基类（无 Shadow DOM，推荐）       |
-| `WebComponent`     | 完整 Web Component 基类（Shadow DOM）     |
-| `@autoRegister`    | 组件自动注册装饰器，传入 `{ tagName }`    |
-| `@state`           | 响应式状态装饰器，值变化触发 `render()`    |
-| `createLogger`     | 日志工具创建器                            |
+| API              | 说明                                    |
+| ---------------- | --------------------------------------- |
+| `LightComponent` | 轻量组件基类（无 Shadow DOM，推荐）     |
+| `WebComponent`   | 完整 Web Component 基类（Shadow DOM）   |
+| `@autoRegister`  | 组件自动注册装饰器，传入 `{ tagName }`  |
+| `@state`         | 响应式状态装饰器，值变化触发 `render()` |
+| `createLogger`   | 日志工具创建器                          |
 
 ### 生命周期钩子
 
-| 钩子                     | 触发时机                              | 典型用途                       |
-| ------------------------ | ------------------------------------- | ------------------------------ |
-| `constructor()`          | 实例创建                               | 传入 styles/styleName          |
-| `onConnected()`          | 挂载到 DOM 后                          | 初始化引用、绑定事件监听         |
-| `onDisconnected()`       | 从 DOM 移除时                          | 清理事件监听、释放资源           |
-| `onRendered()`           | DOM 更新后（requestAnimationFrame）     | contentEditable 同步、焦点恢复  |
-| `onAttributeChanged()`   | 观察属性变化时                          | 外部属性到内部状态的转换         |
+| 钩子                   | 触发时机                            | 典型用途                       |
+| ---------------------- | ----------------------------------- | ------------------------------ |
+| `constructor()`        | 实例创建                            | 传入 styles/styleName          |
+| `onConnected()`        | 挂载到 DOM 后                       | 初始化引用、绑定事件监听       |
+| `onDisconnected()`     | 从 DOM 移除时                       | 清理事件监听、释放资源         |
+| `onRendered()`         | DOM 更新后（requestAnimationFrame） | contentEditable 同步、焦点恢复 |
+| `onAttributeChanged()` | 观察属性变化时                      | 外部属性到内部状态的转换       |
 
 ### 状态分类
 
-| 类型         | 声明方式                    | 特征                        | 适用场景                   |
-| ------------ | --------------------------- | --------------------------- | -------------------------- |
-| 响应式状态   | `@state private x = 0`      | 变化触发 render()            | UI 可见的数据              |
-| 非响应式状态 | `private _x = ''`           | 变化不触发 render()          | contentEditable 文本、缓存 |
-| 属性         | `observedAttributes` + setter | 外部传入，字符串类型         | 父组件向子组件传值          |
+| 类型         | 声明方式                      | 特征                 | 适用场景                   |
+| ------------ | ----------------------------- | -------------------- | -------------------------- |
+| 响应式状态   | `@state private x = 0`        | 变化触发 render()    | UI 可见的数据              |
+| 非响应式状态 | `private _x = ''`             | 变化不触发 render()  | contentEditable 文本、缓存 |
+| 属性         | `observedAttributes` + setter | 外部传入，字符串类型 | 父组件向子组件传值         |
 
 ---
 
@@ -154,7 +154,9 @@ export class EditableText extends LightComponent {
   private _text = ''; // 非响应式，避免输入时焦点丢失
 
   // 对外暴露干净的 getter/setter
-  get value(): string { return this.editableEl?.innerHTML || this._text; }
+  get value(): string {
+    return this.editableEl?.innerHTML || this._text;
+  }
   set value(html: string) {
     this._text = html;
     if (this.editableEl) this.editableEl.innerHTML = html;
@@ -230,41 +232,41 @@ constructor() {
 
 ### 1. 严禁重复查询
 
-| Do                                                  | Don't                                                      |
-| --------------------------------------------------- | ---------------------------------------------------------- |
-| 使用 Lazy Getter 缓存 DOM 引用                        | 在 `onConnected`、`onRendered` 和方法中重复 `querySelector` |
-| 检查 `isConnected` 处理引用失效                        | 假设引用在组件整个生命周期内始终有效                           |
+| Do                              | Don't                                                       |
+| ------------------------------- | ----------------------------------------------------------- |
+| 使用 Lazy Getter 缓存 DOM 引用  | 在 `onConnected`、`onRendered` 和方法中重复 `querySelector` |
+| 检查 `isConnected` 处理引用失效 | 假设引用在组件整个生命周期内始终有效                        |
 
 ### 2. 严禁滥用 @state
 
-| Do                                                  | Don't                                                      |
-| --------------------------------------------------- | ---------------------------------------------------------- |
-| 只对 UI 可见数据使用 `@state`                          | 对 contentEditable 文本使用 `@state`（会导致焦点丢失）       |
-| 使用有效默认值（`''`, `0`, `false`, `{}`, `[]`）        | 使用 `null` 或 `undefined` 作为 `@state` 初始值              |
+| Do                                               | Don't                                                  |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| 只对 UI 可见数据使用 `@state`                    | 对 contentEditable 文本使用 `@state`（会导致焦点丢失） |
+| 使用有效默认值（`''`, `0`, `false`, `{}`, `[]`） | 使用 `null` 或 `undefined` 作为 `@state` 初始值        |
 
 ### 3. 严禁臃肿的生命周期钩子
 
-| Do                                                  | Don't                                                      |
-| --------------------------------------------------- | ---------------------------------------------------------- |
-| 钩子只负责高层调度，具体逻辑拆分到子方法                  | 在 `onConnected` 中塞满 50 行初始化代码                      |
-| Ref 回调只获取引用和绑定监听器                           | 在 ref 回调中写复杂的业务逻辑                                |
+| Do                                       | Don't                                   |
+| ---------------------------------------- | --------------------------------------- |
+| 钩子只负责高层调度，具体逻辑拆分到子方法 | 在 `onConnected` 中塞满 50 行初始化代码 |
+| Ref 回调只获取引用和绑定监听器           | 在 ref 回调中写复杂的业务逻辑           |
 
 ### 4. 严禁裸露的 DOM 操作
 
-| Do                                                  | Don't                                                      |
-| --------------------------------------------------- | ---------------------------------------------------------- |
-| 将复杂 DOM 操作封装为独立原子组件                       | 在父组件中直接操作子组件的 DOM 内部结构                       |
-| 通过 CustomEvent 进行组件通信                           | 通过 `querySelector` 跨层级操纵元素                          |
+| Do                                | Don't                                   |
+| --------------------------------- | --------------------------------------- |
+| 将复杂 DOM 操作封装为独立原子组件 | 在父组件中直接操作子组件的 DOM 内部结构 |
+| 通过 CustomEvent 进行组件通信     | 通过 `querySelector` 跨层级操纵元素     |
 
 ### 5. 命名规范
 
-| 分类             | 规则                           | 示例                                    |
-| ---------------- | ------------------------------ | --------------------------------------- |
-| 私有 backing field | 下划线前缀                     | `_value`, `_editableElement`            |
-| 状态标志位        | 下划线前缀 + 语义命名           | `_needsContentSync`, `_isInitialized`   |
-| 自定义事件名      | 小写连字符                     | `textchange`, `optionselect`            |
-| 自定义元素标签    | 项目前缀 + 语义                | `quiz-question`, `quiz-option`          |
-| CSS 类名         | 与 styleName 关联              | `.quiz-option`, `.quiz-option--active`  |
+| 分类               | 规则                  | 示例                                   |
+| ------------------ | --------------------- | -------------------------------------- |
+| 私有 backing field | 下划线前缀            | `_value`, `_editableElement`           |
+| 状态标志位         | 下划线前缀 + 语义命名 | `_needsContentSync`, `_isInitialized`  |
+| 自定义事件名       | 小写连字符            | `textchange`, `optionselect`           |
+| 自定义元素标签     | 项目前缀 + 语义       | `quiz-question`, `quiz-option`         |
+| CSS 类名           | 与 styleName 关联     | `.quiz-option`, `.quiz-option--active` |
 
 ---
 
