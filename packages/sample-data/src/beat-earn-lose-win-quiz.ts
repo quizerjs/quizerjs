@@ -23,6 +23,7 @@ export const beatEarnLoseWinQuizDSL: QuizDSL = {
             id: 'q-1',
             type: 'single_choice',
             text: 'She ______ the championship last year.',
+            description: 'Hint: The event happened in the past and refers to a competition.',
             options: [
               { id: 'opt-1-1', text: 'beat', isCorrect: false },
               { id: 'opt-1-2', text: 'won', isCorrect: true },
@@ -34,6 +35,7 @@ export const beatEarnLoseWinQuizDSL: QuizDSL = {
             id: 'q-2',
             type: 'single_choice',
             text: 'He ______ a fortune through his investments.',
+            description: 'Context: Relating to financial gain from business or investment.',
             options: [
               { id: 'opt-2-1', text: 'beat', isCorrect: false },
               { id: 'opt-2-2', text: 'won', isCorrect: false },

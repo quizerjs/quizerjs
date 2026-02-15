@@ -3,9 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseQuizDSL, parseQuizDSLFromObject } from '../src/parser';
-import { QuestionType, type QuizDSL } from '../src/types';
-import { ValidationErrorCode } from '../src/messages';
+import { parseQuizDSL, parseQuizDSLFromObject } from '../src/index'; // Import from index to cover it
 import { createMinimalValidDSL } from './fixtures';
 
 const validDSL = createMinimalValidDSL();
@@ -53,11 +51,26 @@ describe('parseQuizDSL', () => {
     expect(result.success).toBe(false);
     expect(result.error).toBeDefined();
   });
+
+  it('应该在严格模式下抛出错误 (非对象)', () => {
+    const result = parseQuizDSL('null', { strict: true, validate: false });
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+    expect(result.error?.message).toContain('DSL 必须是对象');
+  });
+
+  it('应该在严格模式下抛出错误 (数组)', () => {
+    const result = parseQuizDSL('[]', { strict: true, validate: false });
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+    expect(result.error?.message).toContain('DSL 必须是对象');
+  });
 });
 
 describe('parseQuizDSLFromObject', () => {
   it('应该成功解析有效的对象', () => {
-    const result = parseQuizDSLFromObject(validDSL);
+    // 使用严格模式覆盖 strictParse
+    const result = parseQuizDSLFromObject(validDSL, { strict: true });
 
     expect(result.success).toBe(true);
     expect(result.dsl).not.toBeNull();
@@ -79,5 +92,23 @@ describe('parseQuizDSLFromObject', () => {
 
     expect(result.success).toBe(true);
     expect(result.dsl).not.toBeNull();
+  });
+
+  it('应该捕获未知错误', () => {
+    // 构造一个在属性访问时抛出错误的 Proxy 对象
+    const errorProxy = new Proxy(
+      {},
+      {
+        get: () => {
+          throw new Error('Proxy error');
+        },
+      }
+    );
+    // 使用 validate: true 会在 validation 阶段访问属性从而抛出错误
+    // 或者 strict mode check
+    const result = parseQuizDSLFromObject(errorProxy);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
   });
 });

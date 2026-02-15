@@ -1,14 +1,21 @@
+import { L10nService } from '@quizerjs/core';
+
+/**
+ * 生成默认 Slide 源代码
+ * 使用 L10nService 获取本地化字符串
+ */
 export const getDefaultSlideSource = (): string => {
+  const t = L10nService.t;
+
   return `
 present quiz "quiz" {
   rules {
-    // 开始规则：介绍页
     rule start "intro" {
       slide {
         content text {
           quiz.title
           quiz.description
-          "本测验包含 " + quiz.questions.length + " 道题目"
+          "${t.player.quizIntroTemplate.replace('{n}', '" + quiz.questions.length + "')}"
         }
         behavior {
           transition zoom {
@@ -18,7 +25,6 @@ present quiz "quiz" {
       }
     }
 
-    // 内容规则：问题 slides
     rule content "questions" {
       for question in quiz.questions {
         slide {
@@ -39,13 +45,12 @@ present quiz "quiz" {
       }
     }
 
-    // 结束规则：提交页
     rule end "submit" {
       slide {
         content dynamic {
           name: "wsx-quiz-submit"
           attrs {
-            label: "提交答案"
+            label: "${t.player.submitButton}"
             show-progress: true
             quiz-id: quiz.id
           }

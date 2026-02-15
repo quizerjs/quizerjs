@@ -2,9 +2,10 @@
  * QuizEditor - React 组件，包装 QuizEditor
  */
 
-import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
-import { QuizEditor as QuizEditorClass, type QuizEditorOptions } from '@quizerjs/quizerjs';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import { useQuizEditor } from './useQuizEditor';
 import type { QuizDSL } from '@quizerjs/dsl';
+import type { QuizLocalization } from '@quizerjs/core';
 import type EditorJS from '@editorjs/editorjs';
 import './QuizEditor.css';
 
@@ -17,6 +18,8 @@ export interface QuizEditorProps {
   onChange?: (dsl: QuizDSL) => void;
   /** 保存事件 */
   onSave?: (dsl: QuizDSL) => void;
+  /** 国际化配置 */
+  localization?: QuizLocalization;
 }
 
 export interface QuizEditorRef {
@@ -28,131 +31,17 @@ export interface QuizEditorRef {
 }
 
 const QuizEditorComponent = forwardRef<QuizEditorRef, QuizEditorProps>(
-  ({ initialDSL, readOnly = false, onChange, onSave }, ref) => {
+  ({ initialDSL, readOnly = false, onChange, onSave, localization }, ref) => {
     const editorContainerRef = useRef<HTMLDivElement>(null);
-    const editorRef = useRef<QuizEditorClass | null>(null);
-    // 使用 ref 存储回调，避免 useEffect 重复执行
-    const onChangeRef = useRef(onChange);
-    const onSaveRef = useRef(onSave);
 
-    // 更新回调 ref
-    useEffect(() => {
-      onChangeRef.current = onChange;
-      onSaveRef.current = onSave;
-    }, [onChange, onSave]);
-
-    useEffect(() => {
-      if (!editorContainerRef.current) return;
-
-      // 防止重复初始化（StrictMode 双重挂载保护）
-      if (editorRef.current) {
-        if (import.meta.env.DEV) {
-          console.debug('[QuizEditor] 已初始化，跳过重复初始化');
-        }
-        return;
-      }
-
-      let isCancelled = false;
-      let editorInstance: QuizEditorClass | null = null;
-
-      const initEditor = async () => {
-        try {
-          if (import.meta.env.DEV) {
-            console.debug('[QuizEditor] 开始初始化');
-          }
-
-          const options: QuizEditorOptions = {
-            container: editorContainerRef.current!,
-            initialDSL,
-            readOnly,
-            onChange: dsl => {
-              if (onChangeRef.current) {
-                onChangeRef.current(dsl);
-              }
-            },
-            onSave: dsl => {
-              if (onSaveRef.current) {
-                onSaveRef.current(dsl);
-              }
-            },
-          };
-
-          editorInstance = new QuizEditorClass(options);
-          await editorInstance.init();
-
-          if (isCancelled) {
-            if (import.meta.env.DEV) {
-              console.debug('[QuizEditor] 初始化已取消，销毁实例');
-            }
-            await editorInstance.destroy();
-            return;
-          }
-
-          editorRef.current = editorInstance;
-          if (import.meta.env.DEV) {
-            console.debug('[QuizEditor] 初始化完成');
-          }
-        } catch (error) {
-          if (!isCancelled) {
-            console.error('初始化 QuizEditor 失败:', error);
-          }
-        }
-      };
-
-      initEditor();
-
-      return () => {
-        isCancelled = true;
-
-        if (import.meta.env.DEV) {
-          console.debug('[QuizEditor] 清理开始', {
-            hasLocal: !!editorInstance,
-            hasRef: !!editorRef.current,
-          });
-        }
-
-        // 销毁局部实例
-        if (editorInstance) {
-          try {
-            editorInstance.destroy();
-            if (import.meta.env.DEV) {
-              console.debug('[QuizEditor] 局部实例已销毁');
-            }
-          } catch (error) {
-            console.warn('[QuizEditor] 销毁局部实例失败:', error);
-          }
-        }
-
-        // 销毁 ref 实例（处理竞态条件）
-        if (editorRef.current) {
-          if (editorRef.current !== editorInstance) {
-            try {
-              editorRef.current.destroy();
-              if (import.meta.env.DEV) {
-                console.debug('[QuizEditor] Ref 实例已销毁（孤立实例）');
-              }
-            } catch (error) {
-              console.warn('[QuizEditor] 销毁 ref 实例失败:', error);
-            }
-          }
-          editorRef.current = null;
-        }
-
-        if (import.meta.env.DEV) {
-          console.debug('[QuizEditor] 清理完成');
-        }
-      };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // 监听 readOnly 变化
-    useEffect(() => {
-      if (editorRef.current) {
-        const editorInstance = editorRef.current.getEditorInstance();
-        if (editorInstance) {
-          editorInstance.readOnly.toggle(readOnly);
-        }
-      }
-    }, [readOnly]);
+    const editorRef = useQuizEditor({
+      containerRef: editorContainerRef,
+      initialDSL,
+      readOnly,
+      onChange,
+      onSave,
+      localization,
+    });
 
     useImperativeHandle(ref, () => ({
       getEditorInstance: () => {

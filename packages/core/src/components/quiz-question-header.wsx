@@ -7,6 +7,7 @@
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import styles from './quiz-question-header.css?inline';
+import { L10nService } from '../l10n';
 
 @autoRegister({ tagName: 'quiz-question-header' })
 export class QuizQuestionHeader extends LightComponent {
@@ -133,6 +134,7 @@ export class QuizQuestionHeader extends LightComponent {
             this.setupEditableElement();
           }}
           contentEditable={!isReadonly}
+          data-placeholder={L10nService.t.editor.titlePlaceholder}
         />
       </div>
     );

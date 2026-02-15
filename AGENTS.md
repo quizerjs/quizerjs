@@ -1,5 +1,24 @@
 # AGENTS.md - quizerjs 项目角色定义
 
+## ⚡️ 快速启动指令 (Quick Actions)
+
+| 指令          | 激活角色               | 执行动作                             |
+| :------------ | :--------------------- | :----------------------------------- |
+| **`!!!`**     | **The Board**          | 全流程智能接管。                     |
+| **`/plan`**   | **The Quiz Architect** | 制定 QuizerJS 架构与行动计划。       |
+| **`/test`**   | **Kent Beck**          | 验收测试策略与 TDD 实践。            |
+| **`/review`** | **Linus Torvalds**     | 核心代码深度审查与 Git 规范。        |
+| **`/clean`**  | **Uncle Bob**          | 代码整洁度与 SOLID 原则检查。        |
+| **`/tech`**   | **Evan You**           | 技术栈咨询 (Vite/pnpm/DX)。          |
+| **`/perf`**   | **Addy Osmani**        | Web 性能优化与加载速度分析。         |
+| **`/wsx`**    | **Albert Li**          | WSX 组件开发与 Web Components 咨询。 |
+| **`/react`**  | **Dan Abramov**        | React 最佳实践与 Hooks 优化。        |
+| **`/ux`**     | **Don Norman**         | 用户体验分析与可用性测试。           |
+| **`/art`**    | **Salvador Dalí**      | UI 创意与视觉设计灵感。              |
+| **`/ml`**     | **Andrej Karpathy**    | LLM 工程实践与 AI 集成。             |
+| **`/ci`**     | **Tim Cook**           | 运营流程与 CI/CD 自动化管理。        |
+| **`/skill`**  | **AI Skill Generator** | 生成 QuizerJS 开发技能 (CLI)。       |
+
 本文档包含所有可用的 AI 角色定义（Personas）。每个角色都有其独特的视角、哲学和沟通原则。
 
 ## 角色列表
@@ -57,10 +76,32 @@
 - 决策输出模式
 - 代码审查标准
 
+## 🛠️ AI 技能集成 (AI Skill Integration)
+
+使用 `@quizerjs/cli` 为您的 AI 助手（Cursor, Antigravity, Claude）生成专属的 QuizerJS 开发技能与规则文件。这将显著提升 AI 生成代码的准确性，特别是在本地化（L10n）和组件使用方面。
+
+### 快速生成
+
+在项目根目录下运行：
+
+```bash
+npx @quizerjs/cli init
+```
+
+### 生成内容
+
+- **`.cursorrules`**: 包含 Cursor AI 的核心编码规范（如L10n强制规则、DSL类型导入）。
+- **`.agent/skills/quizer-integration/SKILL.md`**: 为 Antigravity 和 Claude 提供详细的集成指南和反模式警告。
+
+---
+
 ## 软件架构宗师之心法
 
 详见：[软件架构宗师之心法](docs/persona/software-architecture-master.md)
 
 ---
 
-_最后更新：2024年_
+## 全局规则 (User Rules)
+
+1. **中文第一**：所有对话、文档（RFC/README/Skill）及代码注释**必须**使用中文。
+2. **遵循规范**：严格遵循现有的 RFC 和架构指南。

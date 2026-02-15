@@ -5,7 +5,7 @@ import { StoreDebugger } from '../components/StoreDebugger';
 import { useQuiz } from '../context/QuizContext';
 
 export default function PlayerPage() {
-  const { dslPreview } = useQuiz();
+  const { dslPreview, locale } = useQuiz();
 
   let quizId = 'quiz-demo';
   try {
@@ -23,7 +23,7 @@ export default function PlayerPage() {
     <div className="h-full w-full" style={{ height: '100%', width: '100%' }}>
       <Group orientation="vertical">
         <Panel defaultSize={70} minSize={30}>
-          <PlayerPanel dslPreview={dslPreview} />
+          <PlayerPanel dslPreview={dslPreview} localization={locale} />
         </Panel>
 
         <Separator className="resize-handle-vertical" />

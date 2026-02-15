@@ -22,6 +22,8 @@
 
 ### 草案中
 
+- [RFC 0020: 核心库国际化支持 (Internationalization Support)](./0020-internationalization-support.md)
+- [RFC 0021: 韧性 DSL 转换与宽松验证](./0021-resilient-dsl-transformation.md)
 - RFC 0014: Vue 集成设计（计划中）- Vue QuizPlayer 组件已实现，待文档化
 - RFC 0015: 插件系统设计（计划中）
 

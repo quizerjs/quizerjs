@@ -7,8 +7,8 @@ import {
   TextInputTool,
   TrueFalseTool,
 } from '@quizerjs/editorjs-tool';
-import { dslToBlock, blockToDSL } from '@quizerjs/core';
-import type { EditorJSOutput, EditorJSBlock } from '@quizerjs/core';
+import { dslToBlock, blockToDSL, L10nService } from '@quizerjs/core';
+import type { EditorJSOutput, EditorJSBlock, QuizLocalization } from '@quizerjs/core';
 import type { QuizDSL } from '@quizerjs/dsl';
 import { validateQuizDSL } from '@quizerjs/dsl';
 
@@ -43,6 +43,10 @@ export interface QuizEditorOptions {
    * 只读模式
    */
   readOnly?: boolean;
+  /**
+   * 国际化配置
+   */
+  localization?: QuizLocalization;
 }
 
 /**
@@ -78,12 +82,18 @@ export class QuizEditor {
   async init(): Promise<void> {
     if (this.isDestroyed) return;
 
+    // 配置全局本地化服务
+    if (this.options.localization) {
+      L10nService.configure(this.options.localization);
+    }
+
     // === 第 1 层：实例级别检查 ===
     if (this.editor) {
       throw new Error('QuizEditor 已经初始化');
     }
 
-    // === 第 2 层：注册表检查 + 自动销毁旧实例 ===
+    // === 立即注册当前实例（防止并发初始化竞态） ===
+    // 在任何 await 之前注册，确保后续的 init 调用能看到这个正在初始化的实例
     const existingInstance = editorRegistry.get(this.container);
     if (existingInstance && existingInstance !== this) {
       console.warn(
@@ -99,31 +109,29 @@ export class QuizEditor {
       }
     }
 
-    if (this.isDestroyed) return;
+    // 注册（覆盖旧的或设置新的）
+    editorRegistry.set(this.container, this);
+
+    if (this.isDestroyed) {
+      // 如果在等待旧实例销毁期间被销毁了
+      editorRegistry.delete(this.container);
+      return;
+    }
 
     // === 第 3 层：强制清理孤立的 DOM ===
     await this.forceCleanupDOM();
 
     if (this.isDestroyed) return;
 
-    // === 第 4 层：注册当前实例 ===
-    editorRegistry.set(this.container, this);
-
     const initialData = this.options.initialDSL
-      ? dslToBlock(this.options.initialDSL)
+      ? dslToBlock(this.options.initialDSL, { localization: this.options.localization })
       : {
           blocks: [
             {
               type: 'header',
               data: {
-                text: '欢迎使用 Quiz Editor',
+                text: this.options.localization?.quiz.defaultTitle || '',
                 level: 1,
-              },
-            },
-            {
-              type: 'paragraph',
-              data: {
-                text: '开始编写你的测验内容...',
               },
             },
           ],
@@ -161,12 +169,12 @@ export class QuizEditor {
       },
       data: initialData,
       readOnly: this.options.readOnly ?? false,
-      onChange: async () => {
+      onChange: debounce(async () => {
         if (this.isDestroyed) return;
         this.isDirtyFlag = true;
         const dsl = await this.save();
         this.options.onChange?.(dsl);
-      },
+      }, 500),
     });
 
     try {
@@ -176,18 +184,19 @@ export class QuizEditor {
       console.warn('[QuizEditor] EditorJS isReady promise rejected:', error);
     }
 
-    //如果在等待 isReady 期间被销毁，则立即清理
+    // 如果在等待 isReady 期间被销毁，则立即清理（含 destroy + 清空容器）
     if (this.isDestroyed) {
       if (this.editor && typeof this.editor.destroy === 'function') {
         try {
-          // editor.destroy is async but we are in a "destroyed" state context
-          // so we just trigger it.
-          this.editor.destroy();
+          await this.editor.destroy();
         } catch (e) {
           console.warn('[QuizEditor] Cleanup of destroyed instance failed:', e);
         }
       }
       this.editor = null;
+      if (this.container && typeof this.container.innerHTML !== 'undefined') {
+        this.container.innerHTML = '';
+      }
       editorRegistry.delete(this.container);
       return;
     }
@@ -203,11 +212,15 @@ export class QuizEditor {
 
     const validation = validateQuizDSL(dsl);
     if (!validation.valid) {
-      throw new Error(`Invalid DSL: ${validation.errors.map(e => e.message).join(', ')}`);
+      // 验证现在仅作为警告（Lint 模式），不再阻塞加载
+      console.warn(
+        '[QuizEditor] DSL Validation Warnings:',
+        validation.errors.map(e => e.message).join(', ')
+      );
     }
 
     this.currentDSL = dsl;
-    const editorData = dslToBlock(dsl);
+    const editorData = dslToBlock(dsl, { localization: this.options.localization });
 
     try {
       // 检查编辑器是否有内容
@@ -247,13 +260,19 @@ export class QuizEditor {
     }
 
     const editorData = await this.editor.save();
+
+    // Async Guard: save() is async, check destroyed status again
+    if (this.isDestroyed) {
+      throw new Error('Editor instance destroyed during save');
+    }
+
     // 类型转换：Editor.js 的 OutputData 转换为 EditorJSOutput
     const editorJSOutput: EditorJSOutput = {
       blocks: editorData.blocks as EditorJSBlock[],
       time: editorData.time,
       version: editorData.version,
     };
-    const dsl = blockToDSL(editorJSOutput);
+    const dsl = blockToDSL(editorJSOutput, { localization: this.options.localization });
 
     this.currentDSL = dsl;
     this.isDirtyFlag = false;
@@ -274,14 +293,8 @@ export class QuizEditor {
       version: '1.0.0',
       quiz: {
         id: `quiz-${Date.now()}`,
-        title: '未命名测验',
-        sections: [
-          {
-            id: `section-${Date.now()}`,
-            title: '默认章节',
-            questions: [],
-          },
-        ],
+        title: '',
+        sections: [],
       },
     };
     this.isDirtyFlag = false;
@@ -303,6 +316,10 @@ export class QuizEditor {
 
   /**
    * 销毁编辑器
+   *
+   * 行为（对齐 Editor.js 文档 https://editorjs.io/destroyer/）：
+   * 1. 调用 editor.destroy() 移除 UI、解绑监听、释放资源
+   * 2. 显式清空 holder 容器，确保同一容器可安全重新初始化（Strict Mode 二次挂载或路由复用时无残留 DOM）
    */
   async destroy(): Promise<void> {
     if (this.isDestroyed) {
@@ -318,8 +335,12 @@ export class QuizEditor {
     } catch (error) {
       console.warn('[QuizEditor] destroy 失败:', error);
     } finally {
-      // 确保清理
       this.editor = null;
+
+      // 显式清空 holder：Editor.js destroy() 会移除其 UI，但文档建议若需在同一元素上重新初始化则手动清空容器
+      if (this.container && typeof this.container.innerHTML !== 'undefined') {
+        this.container.innerHTML = '';
+      }
 
       // 从注册表移除（仅当是当前注册的实例时）
       if (editorRegistry.get(this.container) === this) {
@@ -350,12 +371,16 @@ export class QuizEditor {
     const container = this.container;
     const readOnly = this.options.readOnly ?? false;
 
-    // 销毁旧编辑器
+    // 销毁旧编辑器并清空 holder，便于在同一容器上重新创建
     if (this.editor) {
       try {
         await this.editor.destroy();
       } catch {
         // 忽略销毁错误
+      }
+      this.editor = null;
+      if (container && typeof container.innerHTML !== 'undefined') {
+        container.innerHTML = '';
       }
     }
 
@@ -399,4 +424,30 @@ export class QuizEditor {
 
     await this.editor.isReady;
   }
+
+  /**
+   * 设置只读状态 (Safe API)
+   * 封装了内部属性访问，提供更安全的接口
+   */
+  public async setReadOnly(state: boolean): Promise<void> {
+    if (!this.editor || this.isDestroyed) return;
+    try {
+      this.editor.readOnly.toggle(state);
+    } catch (error) {
+      console.warn('[QuizEditor] setReadOnly failed:', error);
+    }
+  }
+}
+
+/**
+ * 简单的防抖工具函数
+ */
+function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number): T {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  return function (this: unknown, ...args: Parameters<T>) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(this, args);
+    }, wait);
+  } as T;
 }

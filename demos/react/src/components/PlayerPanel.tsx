@@ -1,17 +1,19 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { QuizPlayer } from '@quizerjs/react';
 import type { QuizDSL, ResultDSL, AnswerValue } from '@quizerjs/dsl';
+import type { QuizLocalization } from '@quizerjs/core';
 import './PlayerPanel.css';
 
 interface PlayerPanelProps {
   dslPreview: string;
+  localization?: QuizLocalization;
 }
 
 /**
  * PlayerPanel 组件
  * 显示 QuizPlayer
  */
-export default function PlayerPanel({ dslPreview }: PlayerPanelProps) {
+export default function PlayerPanel({ dslPreview, localization }: PlayerPanelProps) {
   const [dslError, setDslError] = useState<string | null>(null);
   const [dslKey, setDslKey] = useState(0);
 
@@ -172,6 +174,7 @@ export default function PlayerPanel({ dslPreview }: PlayerPanelProps) {
             onComplete={handleComplete}
             onReset={handleReset}
             onError={handlePlayerError}
+            localization={localization}
           />
         ) : (
           <div className="empty-state">

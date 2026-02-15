@@ -24,6 +24,7 @@ import {
   type AnswerValue,
 } from '@quizerjs/quizerjs';
 import type { QuizDSL } from '@quizerjs/dsl';
+import type { QuizLocalization } from '@quizerjs/core';
 import './QuizPlayer.css';
 
 /**
@@ -56,6 +57,8 @@ export interface QuizPlayerProps {
   onReset?: () => void;
   /** 错误事件：当播放器初始化或运行出错时触发 */
   onError?: (error: Error) => void;
+  /** 国际化配置 */
+  localization?: QuizLocalization;
 }
 
 /**
@@ -100,6 +103,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
       onComplete,
       onReset,
       onError,
+      localization,
     },
     ref
   ) => {
@@ -192,6 +196,7 @@ export const QuizPlayer = forwardRef<QuizPlayerRef, QuizPlayerProps>(
           onReset: () => {
             if (onResetRef.current) onResetRef.current();
           },
+          localization,
         };
         playerRef.current = new QuizPlayerClass(options);
         await playerRef.current.init();

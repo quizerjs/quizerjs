@@ -23,6 +23,7 @@ export const spellingQuizDSL: QuizDSL = {
             id: 'q-1',
             type: 'single_choice',
             text: 'Which is the correct spelling?',
+            description: 'Common mistake: double r, double s.',
             options: [
               { id: 'opt-1-1', text: 'embarasment', isCorrect: false },
               { id: 'opt-1-2', text: 'embarrasment', isCorrect: false },
@@ -34,6 +35,7 @@ export const spellingQuizDSL: QuizDSL = {
             id: 'q-2',
             type: 'single_choice',
             text: 'Which is correct?',
+            description: 'Common mistake: double c, double m.',
             options: [
               { id: 'opt-2-1', text: 'acomodate', isCorrect: false },
               { id: 'opt-2-2', text: 'accomodate', isCorrect: false },

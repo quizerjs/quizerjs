@@ -12,6 +12,7 @@ import { QuestionTypes, type Option } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
+import { L10nService } from '@quizerjs/core';
 
 const logger = createLogger('MultipleChoiceTool');
 
@@ -38,7 +39,7 @@ export default class MultipleChoiceTool implements BlockTool {
 
   static get toolbox() {
     return {
-      title: '多选题',
+      title: L10nService.t.editor.multipleChoiceTitle,
       icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
         <rect x="7" y="7" width="10" height="10" rx="1" fill="currentColor"/>
@@ -190,9 +191,11 @@ export default class MultipleChoiceTool implements BlockTool {
   renderSettings(): HTMLElement {
     return (
       <div style="padding: 16px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: bold;">多选题设置</label>
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">
+          {L10nService.t.editor.multipleChoiceSettings}
+        </label>
         <p style="color: #666; font-size: 14px;">
-          使用 wsx 组件构建的多选题编辑器。支持编辑问题标题、描述和选项。
+          {L10nService.t.editor.multipleChoiceDescription}
         </p>
       </div>
     ) as unknown as HTMLElement;

@@ -14,7 +14,7 @@
 }
 
 .quiz-question-description-editable:empty::before {
-  content: '输入问题描述（可选）...';
+  content: attr(data-placeholder);
   color: var(--quiz-text-placeholder, #999999);
 }
 

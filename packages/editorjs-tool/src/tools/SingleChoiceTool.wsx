@@ -12,6 +12,7 @@ import { QuestionTypes, type Option } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
+import { L10nService } from '@quizerjs/core';
 
 const logger = createLogger('SingleChoiceTool');
 
@@ -38,7 +39,7 @@ export default class SingleChoiceTool implements BlockTool {
 
   static get toolbox() {
     return {
-      title: '单选题',
+      title: L10nService.t.editor.singleChoiceTitle,
       icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
         <circle cx="12" cy="12" r="3" fill="currentColor"/>
@@ -201,10 +202,10 @@ export default class SingleChoiceTool implements BlockTool {
   renderSettings(): HTMLElement {
     return (
       <div style="padding: 16px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: bold;">单选题设置</label>
-        <p style="color: #666; font-size: 14px;">
-          使用 wsx 组件构建的单选题编辑器。支持编辑问题标题、描述和选项。
-        </p>
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">
+          {L10nService.t.editor.singleChoiceSettings}
+        </label>
+        <p style="color: #666; font-size: 14px;">{L10nService.t.editor.singleChoiceDescription}</p>
       </div>
     ) as unknown as HTMLElement;
   }

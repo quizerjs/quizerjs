@@ -8,5 +8,5 @@
     "jsxFragmentFactory": "Fragment"
   },
   "include": ["src/**/*", "src/**/*.wsx", "src/types/**/*.d.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["node_modules", "dist"]
 }

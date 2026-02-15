@@ -72,6 +72,8 @@ export interface SingleChoiceQuestion {
   type: SingleChoiceType;
   /** 问题文本 */
   text: string;
+  /** 问题描述 */
+  description?: string;
   /** 选项列表 */
   options: Option[];
   /** 题目分值 */
@@ -92,6 +94,8 @@ export interface MultipleChoiceQuestion {
   type: MultipleChoiceType;
   /** 问题文本 */
   text: string;
+  /** 问题描述 */
+  description?: string;
   /** 选项列表 */
   options: Option[];
   /** 题目分值 */
@@ -112,6 +116,8 @@ export interface TextInputQuestion {
   type: TextInputType;
   /** 问题文本 */
   text: string;
+  /** 问题描述 */
+  description?: string;
   /** 正确答案（可以是字符串或字符串数组） */
   correctAnswer: string | string[];
   /** 是否区分大小写 */
@@ -134,6 +140,8 @@ export interface TrueFalseQuestion {
   type: TrueFalseType;
   /** 问题文本 */
   text: string;
+  /** 问题描述 */
+  description?: string;
   /** 正确答案 */
   correctAnswer: boolean;
   /** 题目分值 */
@@ -295,6 +303,6 @@ export interface ResultDSL {
     /** 通过分数线 */
     passingScore: number;
     /** 每题评分详情 */
-    questionResults: QuestionResult[];
+    questionResults?: QuestionResult[];
   };
 }

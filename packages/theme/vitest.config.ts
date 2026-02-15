@@ -11,6 +11,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: ['**/*.test.ts', '**/dist/**', '**/node_modules/**'],
+      // 当前基线（无测试文件），后续只可提高不可降低
+      thresholds: { statements: 0, branches: 0, functions: 0, lines: 0 },
     },
   },
   resolve: {

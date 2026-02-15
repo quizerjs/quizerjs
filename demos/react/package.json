@@ -16,6 +16,7 @@
     "@quizerjs/react": "workspace:*",
     "@quizerjs/sample-data": "workspace:*",
     "@quizerjs/theme": "workspace:*",
+    "@quizerjs/i18n": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-resizable-panels": "^4.3.3",

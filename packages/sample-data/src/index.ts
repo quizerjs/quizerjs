@@ -6,6 +6,7 @@
 import type { QuizDSL } from '@quizerjs/dsl';
 import { spellingQuizDSL } from './spelling-quiz';
 import { beatEarnLoseWinQuizDSL } from './beat-earn-lose-win-quiz';
+import { newQuizDSL } from './new-quiz';
 
 export interface SampleDataItem {
   id: string;
@@ -18,6 +19,12 @@ export interface SampleDataItem {
  * 所有可用的示例数据列表
  */
 export const sampleDataList: SampleDataItem[] = [
+  {
+    id: 'new',
+    name: 'New Quiz',
+    description: 'Fresh quiz with one multiple choice question',
+    dsl: newQuizDSL,
+  },
   {
     id: 'spelling-quiz',
     name: 'Spelling Quiz',
@@ -48,3 +55,4 @@ export const defaultSampleDataId = 'spelling-quiz';
 // 导出所有示例数据 DSL（用于直接导入）
 export { spellingQuizDSL } from './spelling-quiz';
 export { beatEarnLoseWinQuizDSL } from './beat-earn-lose-win-quiz';
+export { newQuizDSL } from './new-quiz';

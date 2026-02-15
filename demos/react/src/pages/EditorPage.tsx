@@ -7,8 +7,15 @@ import { type QuizEditorRef } from '@quizerjs/react';
 import type { QuizDSL } from '@quizerjs/dsl';
 
 export default function EditorPage() {
-  const { currentDSL, initialDSL, updatePreviews, dslPreview, blockDataPreview, selectedSampleId } =
-    useQuiz();
+  const {
+    currentDSL,
+    initialDSL,
+    updatePreviews,
+    dslPreview,
+    blockDataPreview,
+    selectedSampleId,
+    locale,
+  } = useQuiz();
   const editorRef = useRef<QuizEditorRef | null>(null);
 
   // Sync editor with initialDSL when it changes (e.g. sample switch)
@@ -47,6 +54,7 @@ export default function EditorPage() {
           initialDSL={initialDSL}
           onChange={handleChange}
           onSave={handleSave}
+          localization={locale}
         />
       </Panel>
 

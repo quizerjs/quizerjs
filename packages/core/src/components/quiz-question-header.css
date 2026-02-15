@@ -15,7 +15,7 @@
 }
 
 .quiz-question-header-editable:empty::before {
-  content: '输入问题标题...';
+  content: attr(data-placeholder);
   color: var(--quiz-text-placeholder, #999999);
 }
 

@@ -146,9 +146,10 @@ describe('blockToDSL', () => {
 
     const result = blockToDSL(editorData);
 
-    expect(result.quiz.title).toBe('未命名测验');
+    // WYSIWYG: 不再自动填充中文标题，应为空字符串
+    expect(result.quiz.title).toBe('');
     expect(result.quiz.sections).toBeDefined();
-    expect(result.quiz.sections?.length).toBe(1);
+    expect(result.quiz.sections?.length).toBe(0);
   });
 
   it('应该正确分组 sections', () => {

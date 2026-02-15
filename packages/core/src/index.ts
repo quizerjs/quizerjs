@@ -19,9 +19,11 @@ import './components/quiz-submit.wsx';
 // 导出工具函数
 export { calculateQuestionScore, checkAnswer, calculateQuizResult } from './utils/quizCalculator';
 
-// 导出转换器
 export { dslToBlock, blockToDSL } from './transformer';
 export type { EditorJSOutput, EditorJSBlock, EditorJSQuestionData } from './transformer';
 
 // 导出 QuizStore（Quiz Lite Redux）
 export * from './store';
+
+// 导出 L10nService（全局本地化服务）
+export { L10nService } from './l10n';

@@ -2,6 +2,7 @@
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import type { Question } from '@quizerjs/dsl';
 import styles from './quiz-question.css?inline';
+import { L10nService } from '../l10n';
 
 @autoRegister({ tagName: 'wsx-quiz-question-title' })
 export class QuizQuestionTitle extends LightComponent {
@@ -25,7 +26,11 @@ export class QuizQuestionTitle extends LightComponent {
     return (
       <h3 className="quiz-question-title">
         {q.text}
-        {q.points && <span className="quiz-question-points">({q.points} 分)</span>}
+        {q.points && (
+          <span className="quiz-question-points">
+            ({q.points} {L10nService.t.player.pointsUnit})
+          </span>
+        )}
       </h3>
     );
   }

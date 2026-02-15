@@ -10,6 +10,7 @@ import {
   quizActions,
   registerQuizStore,
   unregisterQuizStore,
+  L10nService,
 } from '@quizerjs/core';
 import type { Question as CoreQuestion } from '@quizerjs/core';
 import type { QuizStore } from '@quizerjs/core';
@@ -79,6 +80,11 @@ export class QuizPlayer {
    * 初始化播放器
    */
   async init(): Promise<void> {
+    // 配置全局本地化服务
+    if (this.options.localization) {
+      L10nService.configure(this.options.localization);
+    }
+
     const { container, quizSource, slideSource, slideOptions } = this.options;
 
     // 验证 quizSource 是否存在且格式正确

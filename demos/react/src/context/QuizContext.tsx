@@ -3,6 +3,18 @@ import { sampleDataList, defaultSampleDataId, getSampleDataById } from '@quizerj
 import { dslToBlock } from '@quizerjs/core';
 import type { QuizDSL } from '@quizerjs/dsl';
 import { useTheme } from '../hooks/useTheme';
+import type { QuizLocalization } from '@quizerjs/core';
+import { zhCN, enUS, jaJP, koKR, esES, deDE, frFR } from '@quizerjs/i18n';
+
+const availableLocales: Record<string, { label: string; data: QuizLocalization }> = {
+  'zh-CN': { label: '🇨🇳 中文', data: zhCN },
+  'en-US': { label: '🇺🇸 English', data: enUS },
+  'ja-JP': { label: '🇯🇵 日本語', data: jaJP },
+  'ko-KR': { label: '🇰🇷 한국어', data: koKR },
+  'es-ES': { label: '🇪🇸 Español', data: esES },
+  'de-DE': { label: '🇩🇪 Deutsch', data: deDE },
+  'fr-FR': { label: '🇫🇷 Français', data: frFR },
+};
 
 interface QuizContextType {
   // Data
@@ -20,6 +32,12 @@ interface QuizContextType {
   // Theme
   isDark: boolean;
   toggleTheme: () => void;
+
+  // L10n
+  localeKey: string;
+  locale: QuizLocalization;
+  setLocaleKey: (key: string) => void;
+  availableLocales: Record<string, { label: string; data: QuizLocalization }>;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -38,6 +56,9 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   const [currentDSL, setCurrentDSL] = useState<QuizDSL>(() => {
     return getSampleDataById(defaultSampleDataId) || sampleDataList[0].dsl;
   });
+
+  const [localeKey, setLocaleKey] = useState<string>('zh-CN');
+  const locale = availableLocales[localeKey].data;
 
   const { isDark, toggleTheme } = useTheme();
 
@@ -73,6 +94,10 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       setSelectedSampleId,
       isDark,
       toggleTheme,
+      localeKey,
+      locale,
+      setLocaleKey,
+      availableLocales,
     }),
     [
       initialDSL,
@@ -83,6 +108,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       updatePreviews,
       isDark,
       toggleTheme,
+      localeKey,
     ]
   );
 

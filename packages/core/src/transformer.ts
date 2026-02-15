@@ -9,8 +9,8 @@ import { marked } from 'marked';
 import TurndownService from 'turndown';
 import type {
   QuizDSL,
-  Question,
   Section,
+  Question,
   SingleChoiceQuestion,
   MultipleChoiceQuestion,
   TextInputQuestion,
@@ -18,6 +18,7 @@ import type {
   Option,
   QuestionMetadata,
 } from '@quizerjs/dsl';
+import type { TransformerOptions } from './types';
 
 /**
  * Editor.js Header Block 数据
@@ -128,8 +129,9 @@ function questionToBlock(question: Question): EditorJSBlock<`quiz-${string}`> {
     text: question.text || '',
   };
 
-  // 处理可选字段（description 在 DSL 中不存在，但可能在 Editor.js 中使用）
-  // 注意：当前 DSL 类型定义中没有 description 字段，如果需要，应该在 DSL 类型中添加
+  if (question.description) {
+    questionData.description = question.description;
+  }
 
   if (question.type === 'single_choice' || question.type === 'multiple_choice') {
     questionData.options = question.options;
@@ -167,31 +169,30 @@ function questionToBlock(question: Question): EditorJSBlock<`quiz-${string}`> {
 /**
  * 将 Quiz DSL 转换为 Editor.js 块格式（纯函数）
  *
- * 转换规则：
- * 1. quiz.title → header block (level 1)，作为第一个 block
- * 2. quiz.description → paragraph block（可选，紧跟 H1）
- * 3. sections[].title → header block (level 2)
- * 4. sections[].description → paragraph block（可选）
- * 5. sections[].questions → quiz-* blocks
- *
- * 如果 DSL 没有 sections，则使用 questions 数组（向后兼容）
- *
  * Markdown → HTML 转换：使用 `marked` 库
  */
-export function dslToBlock(dsl: QuizDSL): EditorJSOutput {
+export function dslToBlock(dsl: QuizDSL, options?: TransformerOptions): EditorJSOutput {
   const blocks: EditorJSBlock[] = [];
-
-  // 1. H1 文档标题（必需，作为第一个 block）
-  const titleHTML = markdownToHTML(dsl.quiz.title);
-  if (titleHTML) {
-    blocks.push({
-      type: 'header',
-      data: {
-        text: titleHTML,
-        level: 1,
-      },
-    });
+  const l10n = options?.localization;
+  if (!l10n) {
+    // RFC 0020 Section 3: 禁止硬编码回退，宁可显示占位符
+    console.warn('[QuizTransformer] Missing localization configuration. RFC-0020 violation risk.');
   }
+
+  // 1. H1 文档标题
+  // 韧性处理：如果标题为空，尝试使用配置中的默认值。
+  // 如果配置也缺失，回退到 RFC 建议的非中文占位符。
+  const rawTitle = dsl.quiz.title || l10n?.quiz.defaultTitle || '';
+  const titleHTML = markdownToHTML(rawTitle);
+
+  // WYSIWYG: 即使是空标题也应该渲染，以便用户看到这个 Block
+  blocks.push({
+    type: 'header',
+    data: {
+      text: titleHTML,
+      level: 1,
+    },
+  });
 
   // 2. 文档描述（可选）
   if (dsl.quiz.description) {
@@ -205,13 +206,17 @@ export function dslToBlock(dsl: QuizDSL): EditorJSOutput {
   }
 
   // 3. 处理 sections 或 questions
-  if (dsl.quiz.sections && dsl.quiz.sections.length > 0) {
-    // 使用 sections
-    for (const section of dsl.quiz.sections) {
+  const sections = dsl.quiz.sections || [];
+  const legacyQuestions = dsl.quiz.questions || [];
+
+  if (sections.length > 0) {
+    for (const section of sections) {
       // Section Header (H2)
-      const sectionTitleHTML = markdownToHTML(section.title);
+      const rawSectionTitle = section.title || l10n?.section.defaultTitle || '';
+      const sectionTitleHTML = markdownToHTML(rawSectionTitle);
       blocks.push({
         type: 'header',
+        id: section.id,
         data: {
           text: sectionTitleHTML,
           level: 2,
@@ -230,15 +235,12 @@ export function dslToBlock(dsl: QuizDSL): EditorJSOutput {
       }
 
       // Section Questions
-      // 注意：不再将 section.title 合并到 question.text 中
-      // section.title 已经作为 H2 header block 显示，question.text 只包含问题文本
       for (const question of section.questions) {
         blocks.push(questionToBlock(question));
       }
     }
-  } else if (dsl.quiz.questions && dsl.quiz.questions.length > 0) {
-    // 向后兼容：直接使用 questions 数组
-    for (const question of dsl.quiz.questions) {
+  } else if (legacyQuestions.length > 0) {
+    for (const question of legacyQuestions) {
       blocks.push(questionToBlock(question));
     }
   }
@@ -284,100 +286,53 @@ function blockToQuestion(block: EditorJSBlock<`quiz-${string}`>): Question | nul
   const questionType = questionData.type;
   const id = questionData.id || generateId();
   const text = questionData.text;
+  const description = questionData.description;
+
+  // 通用属性填充辅助函数
+  const fillCommonProps = (q: Question) => {
+    if (description) q.description = description;
+    if (questionData.points !== undefined) q.points = questionData.points;
+    if (questionData.explanation !== undefined) q.explanation = questionData.explanation;
+    if (questionData.metadata !== undefined) q.metadata = questionData.metadata;
+  };
 
   // 根据问题类型构建正确的 Question 对象
   switch (questionType) {
     case 'single_choice': {
-      if (!questionData.options) {
-        return null;
-      }
-
+      if (!questionData.options) return null;
       const question: SingleChoiceQuestion = {
         id,
         type: questionType,
         text,
         options: questionData.options,
       };
-
-      // 注意：当前 DSL 类型定义中没有 description 字段
-      // 如果需要支持 description，应该在 DSL 类型定义中添加
-
-      if (questionData.points !== undefined) {
-        question.points = questionData.points;
-      }
-
-      if (questionData.explanation !== undefined) {
-        question.explanation = questionData.explanation;
-      }
-
-      if (questionData.metadata !== undefined) {
-        question.metadata = questionData.metadata;
-      }
-
+      fillCommonProps(question);
       return question;
     }
 
     case 'multiple_choice': {
-      if (!questionData.options) {
-        return null;
-      }
-
+      if (!questionData.options) return null;
       const question: MultipleChoiceQuestion = {
         id,
         type: questionType,
         text,
         options: questionData.options,
       };
-
-      // 注意：当前 DSL 类型定义中没有 description 字段
-      // 如果需要支持 description，应该在 DSL 类型定义中添加
-
-      if (questionData.points !== undefined) {
-        question.points = questionData.points;
-      }
-
-      if (questionData.explanation !== undefined) {
-        question.explanation = questionData.explanation;
-      }
-
-      if (questionData.metadata !== undefined) {
-        question.metadata = questionData.metadata;
-      }
-
+      fillCommonProps(question);
       return question;
     }
 
     case 'text_input': {
-      if (questionData.correctAnswer === undefined) {
-        return null;
-      }
-
+      if (questionData.correctAnswer === undefined) return null;
       const question: TextInputQuestion = {
         id,
         type: questionType,
         text,
         correctAnswer: questionData.correctAnswer as string | string[],
       };
-
-      // 注意：当前 DSL 类型定义中没有 description 字段
-      // 如果需要支持 description，应该在 DSL 类型定义中添加
-
-      if (questionData.caseSensitive !== undefined) {
+      if (questionData.caseSensitive !== undefined)
         question.caseSensitive = questionData.caseSensitive;
-      }
-
-      if (questionData.points !== undefined) {
-        question.points = questionData.points;
-      }
-
-      if (questionData.explanation !== undefined) {
-        question.explanation = questionData.explanation;
-      }
-
-      if (questionData.metadata !== undefined) {
-        question.metadata = questionData.metadata;
-      }
-
+      fillCommonProps(question);
       return question;
     }
 
@@ -385,32 +340,15 @@ function blockToQuestion(block: EditorJSBlock<`quiz-${string}`>): Question | nul
       if (
         questionData.correctAnswer === undefined ||
         typeof questionData.correctAnswer !== 'boolean'
-      ) {
+      )
         return null;
-      }
-
       const question: TrueFalseQuestion = {
         id,
         type: questionType,
         text,
         correctAnswer: questionData.correctAnswer,
       };
-
-      // 注意：当前 DSL 类型定义中没有 description 字段
-      // 如果需要支持 description，应该在 DSL 类型定义中添加
-
-      if (questionData.points !== undefined) {
-        question.points = questionData.points;
-      }
-
-      if (questionData.explanation !== undefined) {
-        question.explanation = questionData.explanation;
-      }
-
-      if (questionData.metadata !== undefined) {
-        question.metadata = questionData.metadata;
-      }
-
+      fillCommonProps(question);
       return question;
     }
 
@@ -422,32 +360,22 @@ function blockToQuestion(block: EditorJSBlock<`quiz-${string}`>): Question | nul
 /**
  * 将 Editor.js 块格式转换为 Quiz DSL（纯函数）
  *
- * 转换规则：
- * 1. 第一个 header block (level 1) → quiz.title
- * 2. 紧跟 H1 的 paragraph block → quiz.description（可选）
- * 3. header block (level 2) → sections[].title
- * 4. header 后的 paragraph block → sections[].description（可选）
- * 5. quiz-* blocks → sections[].questions
- *
  * HTML → Markdown 转换：使用 `turndown` 库
  */
-export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
+export function blockToDSL(editorData: EditorJSOutput, options?: TransformerOptions): QuizDSL {
   const blocks = editorData.blocks;
 
+  const quizId = generateId();
+  const defaultTitle = options?.localization?.quiz.defaultTitle || '';
+
   if (blocks.length === 0) {
-    // 空编辑器，返回默认 DSL（包含一个默认 section）
+    // 空编辑器，返回基础结构。不再硬编码中文。
     return {
       version: '1.0.0',
       quiz: {
-        id: generateId(),
-        title: '未命名测验',
-        sections: [
-          {
-            id: generateId(),
-            title: '默认章节',
-            questions: [],
-          },
-        ],
+        id: quizId,
+        title: defaultTitle,
+        sections: [],
       },
     };
   }
@@ -456,7 +384,7 @@ export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
   const titleBlock = blocks.find(
     (b): b is EditorJSBlock<'header'> => isHeaderBlock(b) && b.data.level === 1
   );
-  const title = titleBlock ? turndownService.turndown(titleBlock.data.text || '') : '未命名测验';
+  const title = titleBlock ? turndownService.turndown(titleBlock.data.text || '') : defaultTitle;
 
   // 2. 从紧跟标题的 paragraph block 提取描述
   let description = '';
@@ -494,8 +422,6 @@ export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
       currentSection.description = turndownService.turndown(block.data.text || '');
     } else if (isQuizBlock(block)) {
       // Question block
-      // 注意：不再从 question.text 中提取章节标题
-      // section.title 通过前面的 H2 header block 确定
       const question = blockToQuestion(block);
       if (question) {
         if (currentSection) {
@@ -504,7 +430,7 @@ export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
           // 没有 section，创建一个默认 section
           currentSection = {
             id: generateId(),
-            title: '默认章节',
+            title: '', // WYSIWYG: 不再填充“默认章节”
             questions: [question],
           };
         }
@@ -515,15 +441,6 @@ export function blockToDSL(editorData: EditorJSOutput): QuizDSL {
   // 添加最后一个 section
   if (currentSection) {
     sections.push(currentSection);
-  }
-
-  // 如果没有 sections，创建空数组
-  if (sections.length === 0) {
-    sections.push({
-      id: generateId(),
-      title: '默认章节',
-      questions: [],
-    });
   }
 
   return {

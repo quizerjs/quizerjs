@@ -4,8 +4,10 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '../../index'; // 触发组件注册
-import { QuizResults } from '../quiz-results.wsx';
 import type { ResultDSL } from '@quizerjs/dsl';
+
+/** 测试用：wsx-quiz-results 自定义元素类型 */
+type QuizResultsElement = HTMLElement & { setAttribute(name: string, value: string): void; shadowRoot: ShadowRoot | null };
 
 describe('QuizResults', () => {
   let container: HTMLElement;
@@ -30,6 +32,7 @@ describe('QuizResults', () => {
         duration: 1000,
       },
       quiz: {
+        version: '1.0.0',
         quiz: {
           id: 'quiz-1',
           title: 'Test Quiz',
@@ -64,7 +67,7 @@ describe('QuizResults', () => {
       },
     };
 
-    const results = document.createElement('wsx-quiz-results') as QuizResults;
+    const results = document.createElement('wsx-quiz-results') as QuizResultsElement;
     results.setAttribute('result-source', JSON.stringify(mockResult));
     container.appendChild(results);
 

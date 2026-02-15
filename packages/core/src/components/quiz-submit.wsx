@@ -7,12 +7,13 @@
 
 import { LightComponent, autoRegister, state } from '@wsxjs/wsx-core';
 import { getQuizStoreById, quizActions } from '../store';
+import { L10nService } from '../l10n';
 import styles from './quiz-submit.css?inline';
 
 @autoRegister({ tagName: 'wsx-quiz-submit' })
 export class QuizSubmit extends LightComponent {
   // 响应式状态
-  @state private label = '提交答案';
+  @state private label = '';
   @state private showProgress = true;
   @state private disabled = true;
   @state private loading = false;
@@ -37,7 +38,7 @@ export class QuizSubmit extends LightComponent {
   protected onAttributeChanged(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'label':
-        this.label = newValue || '提交答案';
+        this.label = newValue || L10nService.t.player.submitButton;
         break;
       case 'show-progress':
         this.showProgress = newValue !== 'false';
@@ -56,14 +57,14 @@ export class QuizSubmit extends LightComponent {
         this.setupSubscription();
         this.updateProgress();
         break;
-      case 'quiz-id':
-        // quiz-id changed, we must re-subscribe to the new store
-        this.setupSubscription();
-        break;
     }
   }
 
   onConnected() {
+    // 初始化 label（如果未通过属性传入）
+    if (!this.label) {
+      this.label = L10nService.t.player.submitButton;
+    }
     this.setupSubscription();
     this.updateProgress();
   }
@@ -91,12 +92,9 @@ export class QuizSubmit extends LightComponent {
   }
 
   /**
-   * 处理答案变更事件（向后兼容，但订阅是首选）
+   * 处理答案变更事件（向后兼容）
    */
   private handleAnswerChange = () => {
-    // If we have a store subscription, we don't strictly need this,
-    // but it serves as a fallback or for external events.
-    // For now, let's just trigger a store sync if possible.
     const quizId = this.getAttribute('quiz-id');
     if (quizId) {
       const store = getQuizStoreById(quizId);
@@ -114,10 +112,9 @@ export class QuizSubmit extends LightComponent {
     this.total = total;
     this.loading = state.isSubmitting;
 
-    // If submitted, disable button
     if (state.isSubmitted) {
       this.disabled = true;
-      this.label = '已提交';
+      this.label = L10nService.t.player.submitted;
     }
   }
 
@@ -133,7 +130,6 @@ export class QuizSubmit extends LightComponent {
       const progress = store.getProgress();
       this.answered = progress.answered;
 
-      // 注意：total 通常由外部属性传入，但如果 store 中有更准确的值，则以 store 为准
       if (progress.total > 0) {
         this.total = progress.total;
       }
@@ -146,7 +142,6 @@ export class QuizSubmit extends LightComponent {
       if (!isComplete) {
         this.disabled = true;
       } else {
-        // 只有在未被手动禁用（如 loading）时才启用
         if (this.getAttribute('disabled') !== 'true' && !this.loading) {
           this.disabled = false;
         }
@@ -162,19 +157,15 @@ export class QuizSubmit extends LightComponent {
   private handleSubmit = (e: Event) => {
     e.preventDefault();
 
-    // Calculate completion status
     const isComplete = this.total > 0 && this.answered >= this.total;
-    // Disable button if loading, explicitly disabled, OR NOT COMPLETE
     const isButtonDisabled = this.disabled || this.loading || !isComplete;
 
     if (isButtonDisabled) {
       return;
     }
 
-    // 设置加载状态 - Store update will confirm this
     this.loading = true;
 
-    // 触发 quiz-submit 事件
     const submitEvent = new CustomEvent('quiz-submit', {
       detail: {},
       bubbles: true,
@@ -183,7 +174,6 @@ export class QuizSubmit extends LightComponent {
 
     const dispatched = this.dispatchEvent(submitEvent);
 
-    // 如果事件被取消，恢复状态
     if (!dispatched) {
       this.loading = false;
     }
@@ -200,16 +190,14 @@ export class QuizSubmit extends LightComponent {
   };
 
   render() {
-    // 条件：total > 0 且 answered === total
+    const t = L10nService.t;
     const isComplete = this.total > 0 && this.answered >= this.total;
 
-    // Calculate progress for Ring
     const percentage = this.total > 0 ? Math.round((this.answered / this.total) * 100) : 0;
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-    // Logic to determine if button should be disabled
     const isButtonDisabled = this.disabled || this.loading || !isComplete;
 
     return (
@@ -233,7 +221,7 @@ export class QuizSubmit extends LightComponent {
               </svg>
               <div className="quiz-progress-label">
                 <span className="quiz-progress-value">{percentage}%</span>
-                <span className="quiz-progress-text">已完成</span>
+                <span className="quiz-progress-text">{t.player.completed}</span>
               </div>
             </div>
           )}
@@ -243,15 +231,15 @@ export class QuizSubmit extends LightComponent {
             <div className="quiz-stats-grid">
               <div className="stat-item completed">
                 <span className="stat-value">{this.answered}</span>
-                <span className="stat-label">已回答</span>
+                <span className="stat-label">{t.player.answered}</span>
               </div>
               <div className="stat-item remaining">
                 <span className="stat-value">{Math.max(0, this.total - this.answered)}</span>
-                <span className="stat-label">未回答</span>
+                <span className="stat-label">{t.player.unanswered}</span>
               </div>
               <div className="stat-item total">
                 <span className="stat-value">{this.total}</span>
-                <span className="stat-label">总题数</span>
+                <span className="stat-label">{t.player.totalQuestions}</span>
               </div>
             </div>
           )}
@@ -259,7 +247,9 @@ export class QuizSubmit extends LightComponent {
           {/* 3. Helper Warning */}
           {!isComplete && this.total > 0 && (
             <div className="quiz-submit-warning" role="alert">
-              还有 {this.total - this.answered} 题未作答，请完成后提交
+              {L10nService.fmt(t.player.incompleteWarningTemplate, {
+                n: this.total - this.answered,
+              })}
             </div>
           )}
 
@@ -297,7 +287,7 @@ export class QuizSubmit extends LightComponent {
                     />
                   </svg>
                 </span>
-                <span className="quiz-submit-button-text">提交中...</span>
+                <span className="quiz-submit-button-text">{t.player.submitting}</span>
               </>
             ) : (
               <>
@@ -313,7 +303,6 @@ export class QuizSubmit extends LightComponent {
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
-                    strokeLinejoin="round"
                     strokeLinejoin="round"
                   />
                 </svg>

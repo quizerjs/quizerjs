@@ -1,0 +1,36 @@
+import fs from 'fs-extra';
+import path from 'path';
+import pc from 'picocolors';
+
+export async function generateCursorRules(cwd: string) {
+  const targetFile = path.join(cwd, '.cursorrules');
+
+  // AI Rules Content (English for better model performance)
+  const content = `# QuizerJS Project Rules
+
+## Core Principles
+- **Use TypeScript**: Strictly typed checks.
+- **Components**: Use \`@quizerjs/react\` (or Vue/Svelte adapters).
+- **DSL**: Always operate on \`QuizDSL\` types from \`@quizerjs/dsl\`.
+
+## Localization (L10n)
+- **CRITICAL**: Never use hardcoded strings for UI labels.
+- **Service**: Use \`L10nService.t.xxx\` for core internal strings if modifying core.
+- **Components**: Pass \`localization\` prop to \`QuizEditor\` and \`QuizPlayer\`.
+  \`\`\`tsx
+  <QuizEditor localization={zhCN} ... />
+  \`\`\`
+- **Presets**: Import locales from \`@quizerjs/i18n\`.
+
+## Editor Usage
+- Use \`useQuizEditor\` hook for React.
+- Handle \`onChange\` with debounce if possible (though internal debounce exists).
+
+## Player Usage
+- Pass \`quizSource\` (DSL) to player.
+- Handle \`onSubmit\` to capture results.
+`;
+
+  await fs.writeFile(targetFile, content, 'utf-8');
+  console.log(pc.blue(`  ✓ Created .cursorrules`));
+}

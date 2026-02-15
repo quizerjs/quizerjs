@@ -6,6 +6,7 @@ import { QuestionTypes } from '@quizerjs/dsl';
 
 // 导入 @quizerjs/core 以触发 wsx 组件自动注册
 import '@quizerjs/core';
+import { L10nService } from '@quizerjs/core';
 
 const logger = createLogger('TrueFalseTool');
 
@@ -28,7 +29,7 @@ export default class TrueFalseTool implements BlockTool {
 
   static get toolbox() {
     return {
-      title: '判断题',
+      title: L10nService.t.editor.trueFalseTitle,
       icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -94,7 +95,7 @@ export default class TrueFalseTool implements BlockTool {
         ></quiz-question-description>
         <div style="margin-top: 16px; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa;">
           <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #333;">
-            正确答案：
+            {L10nService.t.editor.correctAnswerLabel}
           </label>
           <select
             disabled={this.readOnly}
@@ -108,8 +109,8 @@ export default class TrueFalseTool implements BlockTool {
               this.trueFalseSelect = select;
             }}
           >
-            <option value="true">正确</option>
-            <option value="false">错误</option>
+            <option value="true">{L10nService.t.editor.boolTrue}</option>
+            <option value="false">{L10nService.t.editor.boolFalse}</option>
           </select>
         </div>
       </div>
@@ -156,10 +157,10 @@ export default class TrueFalseTool implements BlockTool {
   renderSettings(): HTMLElement {
     return (
       <div style="padding: 16px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: bold;">判断题设置</label>
-        <p style="color: #666; font-size: 14px;">
-          使用 wsx 组件构建的判断题编辑器。支持编辑问题标题、描述和正确答案。
-        </p>
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">
+          {L10nService.t.editor.trueFalseSettings}
+        </label>
+        <p style="color: #666; font-size: 14px;">{L10nService.t.editor.trueFalseDescription}</p>
       </div>
     ) as unknown as HTMLElement;
   }

@@ -51,7 +51,7 @@
 }
 
 .quiz-option-text:empty::before {
-  content: '输入选项文本...';
+  content: attr(data-placeholder);
   color: var(--quiz-text-placeholder, #999999);
   pointer-events: none;
 }

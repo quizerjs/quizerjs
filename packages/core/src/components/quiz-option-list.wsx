@@ -16,6 +16,7 @@ import type { Option } from '@quizerjs/dsl';
 // WSX 组件自动注册，无需手动注册
 import './quiz-option.wsx';
 import styles from './quiz-option-list.css?inline';
+import { L10nService } from '../l10n';
 
 @autoRegister({ tagName: 'quiz-option-list' })
 export class QuizOptionList extends LightComponent {
@@ -283,13 +284,13 @@ export class QuizOptionList extends LightComponent {
                 }
               }}
             >
-              + 添加选项
+              {L10nService.t.editor.addOption}
             </button>
           )}
         </div>
         <div className="quiz-option-list-items">
           {currentItems.length === 0 ? (
-            <div className="quiz-option-list-empty">暂无选项，点击"添加选项"开始</div>
+            <div className="quiz-option-list-empty">{L10nService.t.editor.noOptionsHint}</div>
           ) : (
             currentItems.map(option => (
               <quiz-option
