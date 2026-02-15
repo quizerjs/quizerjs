@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/sample-data",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "QuizerJS Sample Data - Shared test data for demos",
   "private": true,
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/cli",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "type": "module",
   "description": "CLI for QuizerJS - Generate AI Skills and Configs",
   "main": "dist/index.js",

@@ -7,7 +7,10 @@ import '../../index'; // 触发组件注册
 import type { ResultDSL } from '@quizerjs/dsl';
 
 /** 测试用：wsx-quiz-results 自定义元素类型 */
-type QuizResultsElement = HTMLElement & { setAttribute(name: string, value: string): void; shadowRoot: ShadowRoot | null };
+type QuizResultsElement = HTMLElement & {
+  setAttribute(name: string, value: string): void;
+  shadowRoot: ShadowRoot | null;
+};
 
 describe('QuizResults', () => {
   let container: HTMLElement;

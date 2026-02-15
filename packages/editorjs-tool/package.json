@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/editorjs-tool",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "quizerjs 的 Editor.js 工具插件",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

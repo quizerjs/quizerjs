@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/demo-svelte",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "quizerjs Editor.js Svelte 测试 Demo（私有）",
   "private": true,
   "type": "module",

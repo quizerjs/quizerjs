@@ -5,6 +5,7 @@ description: Guide for integrating and consuming QuizerJS in applications
 # QuizerJS Integration Guide
 
 Use this skill when the user asks to:
+
 - Create a quiz page or component.
 - Configure the Quiz Editor or Player.
 - Fix localization issues in QuizerJS components.
@@ -17,11 +18,13 @@ Use this skill when the user asks to:
 ### How to configure:
 
 1.  **Import Presets**:
+
     ```typescript
     import { zhCN, enUS } from '@quizerjs/i18n';
     ```
 
 2.  **Pass to Components**:
+
     ```tsx
     // React Example
     <QuizEditor localization={zhCN} ... />
@@ -65,7 +68,7 @@ export function MyPlayer() {
   return (
     <QuizPlayer
       quizSource={myDSL}
-      onSubmit={(result) => console.log('Result:', result)}
+      onSubmit={result => console.log('Result:', result)}
       localization={zhCN}
     />
   );
