@@ -20,7 +20,7 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es', 'cjs'],
-      fileName: format => `index.${format === 'es' ? 'mjs' : 'js'}`,
+      fileName: format => (format === 'es' ? 'index.mjs' : 'index.cjs'),
     },
     sourcemap: true, // 生成 source map
     minify: false, // 不压缩
