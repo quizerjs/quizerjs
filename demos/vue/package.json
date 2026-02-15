@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/demo-vue",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "quizerjs Editor.js Vue 测试 Demo（私有）",
   "private": true,
   "type": "module",

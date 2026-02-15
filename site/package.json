@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/site",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "QuizerJS 开源网站",
   "private": true,
   "type": "module",

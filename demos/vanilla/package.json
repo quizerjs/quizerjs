@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/demo-vanilla",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "quizerjs Editor.js 测试 Demo - Vanilla JS（私有）",
   "private": true,
   "type": "module",
