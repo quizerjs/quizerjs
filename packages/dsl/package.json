@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/dsl",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "quizerjs Quiz DSL 定义和验证库",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

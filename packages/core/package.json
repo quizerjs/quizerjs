@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/core",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "quizerjs 核心 wsx 组件库",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

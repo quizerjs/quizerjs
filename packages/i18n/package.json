@@ -1,6 +1,6 @@
 {
   "name": "@quizerjs/i18n",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "quizerjs 国际化语言预设包",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
